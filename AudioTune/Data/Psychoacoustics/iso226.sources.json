@@ -1,0 +1,10 @@
+{
+  "model": "AudioTune human sensitivity baseline v1",
+  "correctionAlgorithmVersion": 3,
+  "reference": "ISO 226:2023 normal equal-loudness-level contours",
+  "officialUrl": "https://www.iso.org/standard/83117.html",
+  "usage": "Relative threshold-shape prior only; absolute SPL values are not treated as calibrated hearing levels.",
+  "standardRangeHz": [20, 12500],
+  "aboveStandardRange": "The 12.5 kHz anchor is held while population trust is tapered toward 18 kHz.",
+  "headphoneCaveat": "AudioTune reduces model trust at very low and very high frequencies because ISO 226 is a population/free-field reference while AudioTune measures a headphone/ear end-to-end chain."
+}

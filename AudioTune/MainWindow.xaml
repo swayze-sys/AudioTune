@@ -1,0 +1,135 @@
+<Window x:Class="AudioTune.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="AudioTune" Width="1500" Height="900" MinWidth="1180" MinHeight="720"
+        WindowStyle="None" ResizeMode="CanResize" Background="{StaticResource BgBrush}"
+        Icon="Assets/App/AudioTune.ico"
+        Foreground="{StaticResource TextBrush}" SnapsToDevicePixels="True">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="14" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Border Background="{StaticResource BgBrush}" BorderBrush="#2B4C6C" BorderThickness="1" CornerRadius="14">
+        <Grid ClipToBounds="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="72" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="230" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Top bar -->
+            <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#0B141F" BorderBrush="#1A2B3B" BorderThickness="0,0,0,1" CornerRadius="14,14,0,0">
+                <Grid Margin="22,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="360" />
+                        <ColumnDefinition Width="245" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="142" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0" MouseLeftButtonDown="TitleArea_MouseLeftButtonDown" Background="Transparent">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border Width="36" Height="36" CornerRadius="9" Background="#102C4B" VerticalAlignment="Center" ClipToBounds="True">
+                            <Image Source="Assets/App/AudioTune.png" Stretch="UniformToFill" SnapsToDevicePixels="True" />
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="AudioTune" FontWeight="SemiBold" FontSize="19" />
+                            <TextBlock Text="Hear more. Tune to you." Style="{StaticResource MutedTextStyle}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0,16,0">
+                        <TextBlock Text="Output Device" Foreground="#6F8298" FontSize="11" Margin="2,0,0,4" />
+                        <ComboBox x:Name="OutputDeviceCombo" Style="{StaticResource DarkComboStyle}" SelectionChanged="OutputDeviceCombo_SelectionChanged"
+                                  ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" Foreground="#F4F8FF" FontSize="12" TextTrimming="CharacterEllipsis" MaxWidth="330"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="0,0,18,0">
+                        <TextBlock Text="Active Profile" Foreground="#6F8298" FontSize="11" Margin="2,0,0,4" />
+                        <ComboBox x:Name="ActiveProfileCombo" Style="{StaticResource DarkComboStyle}"
+                                  DisplayMemberPath="Name" SelectionChanged="ActiveProfileCombo_SelectionChanged"
+                                  ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}" />
+                    </StackPanel>
+
+                    <Button x:Name="DspStatusButton" Grid.Column="3" Style="{StaticResource FlatButtonStyle}" Margin="0,15,12,15" Padding="10,5" Click="DspStatusButton_Click">
+                        <StackPanel><TextBlock Text="DSP" Foreground="#6F8298" FontSize="9" HorizontalAlignment="Center"/><TextBlock x:Name="DspStatusTopText" Text="OFF" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+
+                    <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0">
+                        <Border x:Name="DevBuildBadge" Background="#123154" CornerRadius="7" Padding="10,7" Margin="0,0,12,0">
+                            <TextBlock Text="Development Build" Foreground="#BCD9FF" FontSize="11" FontWeight="SemiBold" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="v0.4.16-alpha" Foreground="#6F8298" FontSize="10" HorizontalAlignment="Center" />
+                            <TextBlock x:Name="DebugStateText" Text="Debug enabled" Foreground="{StaticResource GreenBrush}" FontSize="10" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Button Style="{StaticResource FlatButtonStyle}" Width="40" Height="34" Padding="0" Margin="2" Click="Minimize_Click" Content="—" />
+                        <Button Style="{StaticResource FlatButtonStyle}" Width="40" Height="34" Padding="0" Margin="2" Click="Maximize_Click" Content="□" />
+                        <Button Style="{StaticResource FlatButtonStyle}" Width="40" Height="34" Padding="0" Margin="2" Click="Close_Click" Content="✕" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Sidebar -->
+            <Border Grid.Row="1" Grid.Column="0" Background="#09121C" BorderBrush="#172737" BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <StackPanel Margin="0,14,0,0">
+                        <Button x:Name="DashboardNav" Style="{StaticResource NavButtonStyle}" Tag="Selected" Click="DashboardNav_Click">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="⌂" FontSize="22" Width="38"/><TextBlock Text="Dashboard" FontSize="14" VerticalAlignment="Center" FontWeight="SemiBold"/></StackPanel>
+                        </Button>
+                        <Button x:Name="HearingNav" Style="{StaticResource NavButtonStyle}" Click="HearingNav_Click">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="◉" FontSize="20" Width="38"/><TextBlock Text="Hearing Test" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                        </Button>
+                        <Button x:Name="ResultsNav" Style="{StaticResource NavButtonStyle}" Click="ResultsNav_Click">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="▥" FontSize="20" Width="38"/><TextBlock Text="Results" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                        </Button>
+                        <Button x:Name="FineTuneNav" Style="{StaticResource NavButtonStyle}" Click="FineTuneNav_Click">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="≋" FontSize="20" Width="38"/><TextBlock Text="Fine Tuning" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                        </Button>
+                        <Button x:Name="ListeningNav" Style="{StaticResource NavButtonStyle}" Click="ListeningNav_Click">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="A↔B" FontFamily="Segoe UI" FontSize="13" FontWeight="Bold" Width="38"/><TextBlock Text="Listening Test" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                        </Button>
+                        <Button x:Name="ProfilesNav" Style="{StaticResource NavButtonStyle}" Click="ProfilesNav_Click">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="♙" FontSize="20" Width="38"/><TextBlock Text="Profiles" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                        </Button>
+                        <Button x:Name="DevicesNav" Style="{StaticResource NavButtonStyle}" Click="DevicesNav_Click">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="⚙" FontSize="18" Width="38"/><TextBlock Text="Devices" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                        </Button>
+                        <Button x:Name="DebugNav" Style="{StaticResource NavButtonStyle}" Click="DebugNav_Click">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="›_" FontFamily="Consolas" FontSize="18" Width="38"/><TextBlock Text="Debug" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Margin="10,0,10,14">
+                        <Border Height="1" Background="#203142" Margin="8,0,8,12" />
+                        <Button x:Name="SettingsNav" Style="{StaticResource NavButtonStyle}" Margin="0,2" Click="SettingsNav_Click">
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="⚙" FontSize="18" Width="38"/><TextBlock Text="Settings" FontSize="13" VerticalAlignment="Center"/></StackPanel>
+                        </Button>
+                        <TextBlock Text="AudioTune" Foreground="#9FB0C4" Margin="16,16,0,0" FontSize="12" />
+                        <TextBlock Text="Open sound. Personal hearing." Foreground="#617388" Margin="16,2,0,0" FontSize="10" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Grid.Column="1" Background="{StaticResource BgBrush}">
+                <ContentControl x:Name="PageHost" />
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

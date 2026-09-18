@@ -1,0 +1,88 @@
+<UserControl x:Class="AudioTune.Views.FineTuneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="24">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock Text="Optional Fine Tuning" FontSize="28" FontWeight="SemiBold"/>
+                <TextBlock Text="Refine the threshold-derived correction at a moderate listening level. This does not change your raw hearing measurements." Style="{StaticResource MutedTextStyle}" Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,20,0,0" Padding="20,16">
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Use Fine Tuning in active correction" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="FineTuneEnabledDescription" Text="Fine-tune offsets are currently included in A/B playback and Windows DSP." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,5,20,0"/>
+                        <TextBlock Text="Turning this off keeps all measured fine-tune values; they are simply ignored until you turn it back on." TextWrapping="Wrap" Foreground="#6F8298" FontSize="10" Margin="0,4,20,0"/>
+                    </StackPanel>
+                    <CheckBox x:Name="FineTuneEnabledCheck" Grid.Column="1" Content="FINE TUNE ON" Width="190" Height="58" VerticalAlignment="Center" Margin="24,0,0,0" Checked="FineTuneEnabledChanged" Unchecked="FineTuneEnabledChanged">
+                        <CheckBox.Template>
+                            <ControlTemplate TargetType="CheckBox">
+                                <Border x:Name="ToggleBorder" Background="#182839" BorderBrush="#38516A" BorderThickness="1" CornerRadius="12" Padding="18,10" Cursor="Hand">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                        <Ellipse x:Name="StatusDot" Width="14" Height="14" Fill="#6F8298" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                        <TextBlock x:Name="ToggleText" Grid.Column="1" Text="FINE TUNE OFF" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="ToggleBorder" Property="Background" Value="#0E4D79"/>
+                                        <Setter TargetName="ToggleBorder" Property="BorderBrush" Value="#1B9CFF"/>
+                                        <Setter TargetName="StatusDot" Property="Fill" Value="#40E0C0"/>
+                                        <Setter TargetName="ToggleText" Property="Text" Value="FINE TUNE ON"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="ToggleBorder" Property="BorderBrush" Value="#69C5FF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </CheckBox.Template>
+                    </CheckBox>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
+                <Grid Margin="24">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="1.3*"/><ColumnDefinition Width="0.7*"/></Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock x:Name="EarText" Text="LEFT EAR" Foreground="#78C9FF" FontSize="11" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="FrequencyText" Text="63 Hz" FontSize="46" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <TextBlock Text="AudioTune alternates a 1 kHz reference tone with the test frequency. Adjust only the test tone until both feel approximately equally loud." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="13" LineHeight="19" Margin="0,10,30,0"/>
+                        <TextBlock x:Name="LevelText" Text="Reference -36.0 dBFS · Test -36.0 dBFS" Foreground="#7BBFFF" Margin="0,14,0,0"/>
+                        <TextBlock x:Name="AdjustmentText" Text="Fine-tune delta 0.0 dB" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <Grid Margin="0,20,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Test quieter  -1 dB" Style="{StaticResource FlatButtonStyle}" Margin="0,0,5,0" Click="Quieter_Click"/>
+                            <Button Grid.Column="1" Content="≈  Equal — save &amp; continue" Style="{StaticResource PrimaryButtonStyle}" Margin="5,0" Click="Equal_Click"/>
+                            <Button Grid.Column="2" Content="Test louder  +1 dB" Style="{StaticResource FlatButtonStyle}" Margin="5,0,0,0" Click="Louder_Click"/>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <Button Content="Skip this frequency" Style="{StaticResource FlatButtonStyle}" Click="Skip_Click"/>
+                            <Button x:Name="PauseButton" Content="Pause tones" Style="{StaticResource FlatButtonStyle}" Margin="8,0,0,0" Click="Pause_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Border Grid.Column="1" Background="#0A121B" BorderBrush="#223A50" BorderThickness="1" CornerRadius="10" Padding="18">
+                        <StackPanel>
+                            <TextBlock Text="Fine-tune progress" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="ProgressText" Text="0 / 16" FontSize="24" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                            <ProgressBar x:Name="ProgressBar" Maximum="16" Height="8" Foreground="{StaticResource BlueBrush}" Background="#243448" Margin="0,8,0,0"/>
+                            <Border Height="1" Background="#26394C" Margin="0,18"/>
+                            <TextBlock Text="What this changes" Foreground="#78C9FF" FontWeight="SemiBold"/>
+                            <TextBlock Text="The saved value becomes a moderate-level correction delta in the active correction preset. Your hearing thresholds stay untouched." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,7,0,0"/>
+                            <TextBlock Text="No catch trials are used." Foreground="{StaticResource GreenBrush}" FontSize="11" Margin="0,12,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="3" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
+                <StackPanel Margin="18,14">
+                    <TextBlock Text="Why this is optional" FontWeight="SemiBold"/>
+                    <TextBlock Text="The main hearing test measures threshold sensitivity. Fine tuning checks how the correction behaves at a more normal listening level, where loudness growth can differ from threshold behaviour." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" Margin="0,6,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

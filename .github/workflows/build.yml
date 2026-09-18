@@ -1,0 +1,36 @@
+name: Build and package
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        shell: powershell
+        run: .\build.ps1
+
+      - name: Build offline installer
+        shell: powershell
+        run: .\build-installer.ps1
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: AudioTuneSetup-0.4.16-alpha
+          path: dist/AudioTuneSetup-0.4.16-alpha.exe
+          if-no-files-found: error

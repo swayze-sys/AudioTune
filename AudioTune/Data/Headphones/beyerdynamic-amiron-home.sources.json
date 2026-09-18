@@ -1,0 +1,20 @@
+{
+  "id": "beyerdynamic-amiron-home",
+  "manufacturer": "Beyerdynamic",
+  "model": "Amiron Home",
+  "referenceCorrectionEnabled": false,
+  "reason": "Traceable measurement sources exist, but no numeric source curve has been imported and cross-checked yet.",
+  "sources": [
+    {
+      "name": "SoundStage! Network measurement",
+      "url": "https://www.soundstagenetwork.com/index.php?Itemid=203&catid=263&id=1644%3Abeyerdynamic-amiron-home-headphones&option=com_content&view=article",
+      "fixture": "G.R.A.S. 43AG ear/cheek simulator",
+      "notes": "Flat/uncompensated measurement; useful independent cross-check."
+    },
+    {
+      "name": "oratory1990 measurement / EQ preset list",
+      "url": "https://www.reddit.com/r/oratory1990/wiki/index/list_of_presets/",
+      "notes": "Amiron Home is present in the measurement/preset collection. Numeric curve still needs traceable ingestion rather than manual transcription."
+    }
+  ]
+}

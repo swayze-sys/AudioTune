@@ -1,0 +1,55 @@
+<UserControl x:Class="AudioTune.Views.StereoCenteringView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="24" MaxWidth="1050" HorizontalAlignment="Left">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="Stereo Centering" FontSize="28" FontWeight="SemiBold"/>
+                <TextBlock Text="Final post-EQ balance adjustment for a stable phantom center" Style="{StaticResource MutedTextStyle}" Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,20,0,0" Padding="22">
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <TextBlock Text="Center the corrected stereo image" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="1" Text="AudioTune plays identical 300 Hz–4 kHz noise through the current correction in both channels. Move the slider toward the direction the sound needs to move until it sits exactly in the center. The adjustment only attenuates one side; it never adds gain." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" LineHeight="19" Margin="0,8,0,0"/>
+
+                    <Border Grid.Row="2" Background="#0A121B" BorderBrush="#223A50" BorderThickness="1" CornerRadius="10" Padding="18" Margin="0,20,0,0">
+                        <StackPanel>
+                            <Grid>
+                                <TextBlock Text="MOVE IMAGE" Foreground="#70869E" FontSize="10"/>
+                                <TextBlock x:Name="BalanceValueText" Text="Centered · 0.00 dB" HorizontalAlignment="Right" Foreground="{StaticResource CyanBrush}" FontWeight="SemiBold"/>
+                            </Grid>
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="90"/><ColumnDefinition Width="*"/><ColumnDefinition Width="90"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="← LEFT" VerticalAlignment="Center" Foreground="{StaticResource BlueBrush}" FontWeight="SemiBold"/>
+                                <Slider x:Name="BalanceSlider" Grid.Column="1" Minimum="-3" Maximum="3" TickFrequency="0.1" IsSnapToTickEnabled="True" ValueChanged="BalanceSlider_ValueChanged"/>
+                                <TextBlock Grid.Column="2" Text="RIGHT →" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="{StaticResource RedBrush}" FontWeight="SemiBold"/>
+                            </Grid>
+                            <TextBlock x:Name="ChannelTrimText" Text="Left 0.00 dB · Right 0.00 dB" HorizontalAlignment="Center" Foreground="{StaticResource MutedBrush}" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="3" Background="#0C253A" BorderBrush="#174D73" BorderThickness="1" CornerRadius="8" Padding="11" Margin="0,16,0,0">
+                        <TextBlock x:Name="StatusText" Text="Starting corrected centering signal..." Foreground="#9FD9FF" TextWrapping="Wrap"/>
+                    </Border>
+
+                    <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,18,0,0">
+                        <Button Content="Reset to 0 dB" Style="{StaticResource FlatButtonStyle}" Click="Reset_Click"/>
+                        <Button Content="Save centering" Style="{StaticResource PrimaryButtonStyle}" Margin="8,0,0,0" Click="Save_Click"/>
+                        <Button Content="Back to Results" Style="{StaticResource FlatButtonStyle}" Margin="8,0,0,0" Click="Back_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,20" Padding="18">
+                <StackPanel>
+                    <TextBlock Text="What this changes" FontSize="15" FontWeight="SemiBold"/>
+                    <TextBlock Text="Stereo Image Preservation already limits frequency-dependent L/R EQ differences. This test adds one small broadband post-EQ balance trim for the active correction preset. It does not modify the hearing thresholds or Fine Tuning measurements." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,7,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,12 @@
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.log
+publish/
+dist/
+.tools/
+Installer/Prerequisites/
+.tmp/
+*.zip
