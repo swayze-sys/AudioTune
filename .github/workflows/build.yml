@@ -13,10 +13,10 @@ jobs:
       contents: read
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install .NET 10 SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
 
@@ -29,8 +29,8 @@ jobs:
         run: .\build-installer.ps1
 
       - name: Upload installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: AudioTuneSetup-0.4.16-alpha
-          path: dist/AudioTuneSetup-0.4.16-alpha.exe
+          name: AudioTuneSetup
+          path: dist/AudioTuneSetup-*.exe
           if-no-files-found: error
