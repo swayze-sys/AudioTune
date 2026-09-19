@@ -80,6 +80,6 @@ public sealed class StereoCenteringSampleProvider : ISampleProvider
     private static BiQuadFilter[] CreateFilters(int sampleRate, IReadOnlyList<ParametricEqFilter> filters)
         => filters
             .Where(x => x.FrequencyHz < sampleRate * 0.47 && Math.Abs(x.GainDb) >= 0.01)
-            .Select(x => BiQuadFilter.PeakingEQ(sampleRate, (float)x.FrequencyHz, (float)x.Q, (float)Math.Clamp(x.GainDb, -6.0, 6.0)))
+            .Select(x => BiQuadFilter.PeakingEQ(sampleRate, (float)x.FrequencyHz, (float)x.Q, (float)Math.Clamp(x.GainDb, -CorrectionPreviewService.MaximumCombinedGainDb, CorrectionPreviewService.MaximumCombinedGainDb)))
             .ToArray();
 }

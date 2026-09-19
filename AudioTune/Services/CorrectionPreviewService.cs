@@ -4,8 +4,9 @@ namespace AudioTune.Services;
 
 public static class CorrectionPreviewService
 {
-    public const int AlgorithmVersion = 5;
+    public const int AlgorithmVersion = 6;
     public const double MaxGainDb = 6.0;
+    public const double MaximumCombinedGainDb = 12.0;
 
     public static IReadOnlyList<(double Frequency, double GainDb)> Create(HearingSession session, EarChannel ear)
     {
@@ -107,8 +108,13 @@ public static class CorrectionPreviewService
             modeledGain *= measurementTrust;
 
             double fineTune = includeFineTune ? InterpolateFineTune(preset, ear, m.FrequencyHz) : 0.0;
-            double maxScaledGain = MaxGainDb * Math.Max(1.0, strength);
-            double finalGain = Math.Clamp((modeledGain + fineTune) * strength, -maxScaledGain, maxScaledGain);
+            // Hearing-model and Fine Tune contributions share one final safety window.
+            // Fine Tune remains individually bounded to ±6 dB, while their combined
+            // correction may now use the complete ±12 dB DSP range at any intensity.
+            double finalGain = Math.Clamp(
+                (modeledGain + fineTune) * strength,
+                -MaximumCombinedGainDb,
+                MaximumCombinedGainDb);
             points.Add((m.FrequencyHz, finalGain));
         }
 
@@ -178,7 +184,7 @@ public static class CorrectionPreviewService
                 r = common - (limitedDiff / 2.0);
             }
 
-            double stereoMaxGain = MaxGainDb * 2.0;
+            double stereoMaxGain = MaximumCombinedGainDb;
             outLeft.Add((p.Frequency, Math.Clamp(l, -stereoMaxGain, stereoMaxGain)));
             outRight.Add((p.Frequency, Math.Clamp(r, -stereoMaxGain, stereoMaxGain)));
         }
@@ -207,7 +213,7 @@ public static class CorrectionPreviewService
     private sealed record StereoPoint(double Frequency, double Left, double Right, bool LeftCeiling, bool RightCeiling);
 
     public static string DescribeAlgorithm() =>
-        "v5 · ISO-shaped threshold baseline + ceiling-aware maximum correction + optional fine tuning + stereo-image preservation";
+        "v6 · ISO-shaped threshold baseline + ceiling-aware maximum correction + optional fine tuning + stereo-image preservation";
 
     private static double GetMeasurementTrust(HearingMeasurement m) => m.Confidence switch
     {

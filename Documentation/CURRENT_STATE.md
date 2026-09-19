@@ -1,4 +1,4 @@
-# Current State – v0.4.16-alpha
+# Current State – v0.4.17-alpha
 
 ## Functional areas present
 
@@ -14,14 +14,14 @@
 - Manual individual-frequency retest.
 - Saved Hearing Profiles with archive/backup/import/export.
 - Separate Correction Presets.
-- Correction model v5 using human threshold-shape prior.
+- Correction model v6 using human threshold-shape prior.
 - 0–200% correction intensity.
 - Optional Fine Tuning with master ON/OFF.
 - Stereo Image Preservation.
 - Stereo Centering test.
 - A/B music playback.
 - Adjustable preamp/headroom and optional positive-boost limiting.
-- Parametric EQ fitting with frequency-spacing-based Q.
+- Parametric EQ fitting with frequency-spacing-based Q and a smooth Q=1.5 14/16/18 kHz cluster.
 - Actual generated DSP/APO response visualization.
 - Equalizer APO detection/installation/configurator launching.
 - Per-device persistent APO DSP.
@@ -44,7 +44,7 @@ Headphone compensation is disabled.
 - CorrectionPreset schema: 2
 - Test protocol: 3
 - Correction model: 5
-- App version: 0.4.16-alpha
+- App version: 0.4.17-alpha
 
 ## Current DSP model summary
 
@@ -73,11 +73,11 @@ Raw thresholds
 
 ## Immediate verification needs
 
-1. Verify Profiles UI fixes from v0.4.16 interactively.
+1. Verify the v0.4.17 Profiles and Devices vector-icon pass interactively.
 2. Verify Fine Tune auto-apply changes the actual APO file without manual Apply.
 3. Fix/test A/B per-filter ±6 dB clamp mismatch for high correction intensity.
 4. Add automated tests before further DSP expansion.
 
 ## Packaging status
 
-The v0.4.16-alpha source now builds cleanly on Windows with 0 warnings and 0 errors. The setup build bootstraps its signed Inno Setup compiler when absent, embeds the official .NET 10 Desktop Runtime prerequisite with SHA-512 verification, and keeps private .NET runtime files out of the installed AudioTune program directory.
+The v0.4.17-alpha source now builds cleanly on Windows with 0 warnings and 0 errors. The setup build bootstraps its signed Inno Setup compiler when absent, embeds the official .NET 10 Desktop Runtime prerequisite with SHA-512 verification, and keeps private .NET runtime files out of the installed AudioTune program directory.

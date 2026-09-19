@@ -162,7 +162,7 @@ public sealed class EqualizerApoInstallerService
         {
             Timeout = TimeSpan.FromMinutes(10)
         };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("AudioTune/0.4.16-alpha (+https://sourceforge.net/projects/equalizerapo/)");
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("AudioTune/0.4.17-alpha (+https://sourceforge.net/projects/equalizerapo/)");
         return client;
     }
 

@@ -4,7 +4,7 @@ This is a prioritized continuation plan, not a promise that every item must be i
 
 ## P0 – Establish a trustworthy baseline
 
-1. Run v0.4.16-alpha interactively on Windows.
+1. Run v0.4.17-alpha interactively on Windows.
 2. Verify all pages open, especially Devices and Profiles.
 3. Verify user data under `%LOCALAPPDATA%\AudioTune` remains intact.
 4. Verify Fine Tune auto-apply end-to-end against actual Equalizer APO files.
@@ -25,13 +25,10 @@ Highest-value targets:
 
 This is the highest leverage engineering improvement for future Codex work.
 
-## P0/P1 – Fix A/B vs APO strong-gain mismatch
+## P1 – Verify A/B vs APO numerical equivalence
 
-Remove or reconcile the ±6 dB per-filter clamp in `CalibrationAbSampleProvider` so >100% intensity / strong ceiling boosts are represented identically in A/B and APO.
-
-Add response-equivalence tests.
-
-## P1 – Validate correction model v5
+The former ±6 dB NAudio clamp is now aligned to the ±12 dB fitted APO range. Add numerical response-equivalence tests for representative cascades.
+## P1 – Validate correction model v6
 
 Use real user listening feedback and synthetic cases to assess:
 

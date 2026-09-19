@@ -81,7 +81,7 @@ Before architecture work, write a short internal/review summary covering:
 
 - hearing-test state machine;
 - Hearing Profile vs Correction Preset;
-- correction model v5;
+- correction model v6;
 - Fine Tune ON/OFF behavior;
 - Stereo Image Preservation and Centering;
 - DSP filter fitting/headroom;
@@ -93,7 +93,7 @@ Before architecture work, write a short internal/review summary covering:
 
 Use this verbatim or nearly verbatim:
 
-> Open the AudioTune repository. Read AGENTS.md and all Markdown files under Documentation before modifying anything. Build the current v0.4.16-alpha baseline first and fix only baseline compile/runtime issues if needed. Then summarize your understanding of the hearing-test protocol, profile/preset separation, correction model v5, Fine Tune, stereo preservation/centering, DSP filter fitting, Equalizer APO persistence/auto-apply, and the UI design rules. Compare the documentation against the implementation and list any inconsistencies. Do not make architectural changes until that review is complete.
+> Open the AudioTune repository. Read AGENTS.md and all Markdown files under Documentation before modifying anything. Build the current v0.4.16-alpha baseline first and fix only baseline compile/runtime issues if needed. Then summarize your understanding of the hearing-test protocol, profile/preset separation, correction model v6, Fine Tune, stereo preservation/centering, DSP filter fitting, Equalizer APO persistence/auto-apply, and the UI design rules. Compare the documentation against the implementation and list any inconsistencies. Do not make architectural changes until that review is complete.
 
 ## Definition of a safe continuation
 

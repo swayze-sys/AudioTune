@@ -2,43 +2,142 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:AudioTune.Controls">
+    <UserControl.Resources>
+        <Style x:Key="DashboardSwitchStyle" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid Width="78" Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="Track" Width="46" Height="26" CornerRadius="13" Background="#26394B" BorderBrush="#3A5167" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Ellipse x:Name="Thumb" Width="20" Height="20" Fill="#B8C5D3" HorizontalAlignment="Left" Margin="2"/>
+                            </Border>
+                            <TextBlock x:Name="StateText" Grid.Column="1" Text="Off" Foreground="{TemplateBinding Foreground}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Track" Property="Background" Value="{StaticResource BlueBrush}"/>
+                                <Setter TargetName="Track" Property="BorderBrush" Value="#48B5FF"/>
+                                <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="Thumb" Property="Fill" Value="White"/>
+                                <Setter TargetName="StateText" Property="Text" Value="On"/>
+                                <Setter TargetName="StateText" Property="Foreground" Value="{StaticResource GreenBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Track" Property="BorderBrush" Value="#6CC7FF"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource CyanBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.42"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DashboardLinkButtonStyle" TargetType="Button" BasedOn="{StaticResource FlatButtonStyle}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource CyanBrush}"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+    </UserControl.Resources>
+
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="18">
             <Grid.RowDefinitions>
-                <RowDefinition Height="250" />
-                <RowDefinition Height="116" />
-                <RowDefinition Height="250" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="238"/>
+                <RowDefinition Height="128"/>
+                <RowDefinition Height="244"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Hero -->
+            <!-- Selected headphone and listening validation -->
             <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="286"/></Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="286"/>
+                </Grid.ColumnDefinitions>
+
                 <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,12,0">
-                    <Grid Margin="24,14">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="285"/><ColumnDefinition Width="*"/><ColumnDefinition Width="180"/></Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/Assets/Headphones/AmironHome.png" Stretch="Uniform" Margin="0,0,16,0" />
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="SELECTED HEADPHONE" Foreground="#7389A1" FontSize="11" />
-                            <TextBlock Text="Beyerdynamic Amiron Home" FontSize="28" FontWeight="SemiBold" Margin="0,6,0,0" />
-                            <Border Background="#0D5D99" CornerRadius="6" HorizontalAlignment="Left" Padding="9,3" Margin="0,8,0,0">
-                                <TextBlock Text="Selected headphone" Foreground="#7ED6FF" FontSize="11" />
+                    <Grid Margin="20,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="230"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="164"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0" Margin="0,0,10,0" ClipToBounds="False">
+                            <Ellipse Width="230" Height="178" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.92">
+                                <Ellipse.Fill>
+                                    <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+                                        <GradientStop Color="#90148CFF" Offset="0"/>
+                                        <GradientStop Color="#4A0E6FB0" Offset="0.5"/>
+                                        <GradientStop Color="#00101F2C" Offset="1"/>
+                                    </RadialGradientBrush>
+                                </Ellipse.Fill>
+                                <Ellipse.Effect>
+                                    <BlurEffect Radius="30"/>
+                                </Ellipse.Effect>
+                            </Ellipse>
+                            <Border Width="226" Height="214" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="/Assets/Headphones/AmironHome.png"
+                                                Viewbox="0.14,0.06,0.70,0.86"
+                                                ViewboxUnits="RelativeToBoundingBox"
+                                                Stretch="Uniform"/>
+                                </Border.Background>
                             </Border>
-                            <TextBlock Text="Open-back reference headphone. AudioTune currently measures the complete headphone + ear + hearing chain end-to-end. Separate headphone compensation is disabled for this development phase."
-                                       Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" MaxWidth="650" Margin="0,12,0,0" FontSize="13" LineHeight="19" />
-                            <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-                                <StackPanel Margin="0,0,30,0"><TextBlock Text="Open-back" FontWeight="SemiBold"/><TextBlock Text="Design" Style="{StaticResource MutedTextStyle}"/></StackPanel>
-                                <StackPanel Margin="0,0,30,0"><TextBlock Text="5 Hz – 40 kHz" FontWeight="SemiBold"/><TextBlock Text="Manufacturer range" Style="{StaticResource MutedTextStyle}"/></StackPanel>
-                                <StackPanel><TextBlock Text="250 Ω" FontWeight="SemiBold"/><TextBlock Text="Impedance" Style="{StaticResource MutedTextStyle}"/></StackPanel>
+                        </Grid>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="SELECTED HEADPHONE" Foreground="#7389A1" FontSize="10"/>
+                            <TextBlock Text="Beyerdynamic Amiron Home" FontSize="25" FontWeight="SemiBold" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                            <Border Background="#0D5D99" CornerRadius="6" HorizontalAlignment="Left" Padding="9,3" Margin="0,7,0,0">
+                                <TextBlock Text="End-to-end calibrated" Foreground="#8EDBFF" FontSize="10"/>
+                            </Border>
+                            <TextBlock Text="AudioTune measures the complete output, headphone, fit, ear and hearing chain. Separate headphone compensation remains disabled."
+                                       Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" MaxWidth="620" Margin="0,9,0,0" FontSize="12" LineHeight="17"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,13,0,0">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,24,0">
+                                    <controls:LineIcon Kind="Headphones" Width="18" Height="18" Stroke="#A9CFFF" Margin="0,0,8,0"/>
+                                    <StackPanel><TextBlock Text="Open-back" FontWeight="SemiBold" FontSize="11"/><TextBlock Text="Design" Foreground="{StaticResource MutedBrush}" FontSize="9"/></StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,24,0">
+                                    <controls:LineIcon Kind="BarChart" Width="18" Height="18" Stroke="#A9CFFF" Margin="0,0,8,0"/>
+                                    <StackPanel><TextBlock Text="5 Hz – 40 kHz" FontWeight="SemiBold" FontSize="11"/><TextBlock Text="Manufacturer range" Foreground="{StaticResource MutedBrush}" FontSize="9"/></StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <controls:LineIcon Kind="Waveform" Width="18" Height="18" Stroke="#A9CFFF" Margin="0,0,8,0"/>
+                                    <StackPanel><TextBlock Text="250 Ω" FontWeight="SemiBold" FontSize="11"/><TextBlock Text="Impedance" Foreground="{StaticResource MutedBrush}" FontSize="9"/></StackPanel>
+                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                            <Button Content="Change Headphone" Style="{StaticResource FlatButtonStyle}" />
-                            <Border Background="#0A121B" BorderBrush="#263C50" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,12,0,0">
+
+                        <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="14,0,0,0">
+                            <Button Style="{StaticResource FlatButtonStyle}" Click="ChangeHeadphone_Click" Padding="10,8">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <controls:LineIcon Kind="Refresh" Width="15" Height="15" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Change Headphone" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="11"/>
+                                </StackPanel>
+                            </Button>
+                            <Border Background="#0A121B" BorderBrush="#263C50" BorderThickness="1" CornerRadius="8" Padding="11" Margin="0,10,0,0">
                                 <StackPanel>
-                                    <TextBlock Text="Calibration mode" FontWeight="SemiBold" FontSize="12" />
-                                    <TextBlock Text="End-to-end" Foreground="{StaticResource GreenBrush}" FontSize="12" Margin="0,5,0,0" />
-                                    <TextBlock Text="Headphone compensation disabled" Foreground="{StaticResource AmberBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,3,0,0" />
+                                    <TextBlock Text="Calibration mode" FontWeight="SemiBold" FontSize="11"/>
+                                    <TextBlock Text="End-to-end · device-bound" Foreground="{StaticResource GreenBrush}" FontSize="10" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="30 Hz – 18 kHz · 30 points per ear" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="0,3,0,0" TextWrapping="Wrap"/>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -46,60 +145,154 @@
                 </Border>
 
                 <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
-                    <StackPanel Margin="18,15">
-                        <TextBlock Text="Quick Info" FontWeight="SemiBold" FontSize="14" />
-                        <Grid Margin="0,13,0,0">
-                            <Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,3"><Ellipse Width="30" Height="30" Fill="#12375C"/><StackPanel Margin="10,0"><TextBlock Text="Test Coverage" FontSize="11"/><TextBlock Text="30 Hz – 18 kHz" FontWeight="SemiBold"/></StackPanel></StackPanel>
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8"><Ellipse Width="30" Height="30" Fill="#12375C"/><StackPanel Margin="10,0"><TextBlock Text="Separate Calibration" FontSize="11"/><TextBlock Text="Left &amp; Right ears" FontWeight="SemiBold"/></StackPanel></StackPanel>
-                            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8"><Ellipse Width="30" Height="30" Fill="#12375C"/><StackPanel Margin="10,0"><TextBlock Text="Profiles" FontSize="11"/><TextBlock Text="End-to-end / device-bound" FontWeight="SemiBold"/></StackPanel></StackPanel>
-                            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,8"><Ellipse Width="30" Height="30" Fill="#12375C"/><StackPanel Margin="10,0"><TextBlock Text="Measurement points" FontSize="11"/><TextBlock Text="30 per ear" FontWeight="SemiBold"/></StackPanel></StackPanel>
-                        </Grid>
-                    </StackPanel>
+                    <Grid Margin="18,15">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <controls:LineIcon Kind="Headphones" Width="20" Height="20" Stroke="#A9CFFF" Margin="0,0,10,0"/>
+                            <TextBlock Text="Listening check" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Margin="0,15,0,8">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse x:Name="ListeningStateDot" Width="10" Height="10" Fill="{StaticResource GreenBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock x:Name="ListeningStateText" Text="Ready" Foreground="{StaticResource GreenBrush}" FontSize="17" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Compare calibrated and unprocessed audio at matched loudness." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="11" LineHeight="16" Margin="0,7,0,0"/>
+                        </StackPanel>
+                        <Button x:Name="OpenAbButton" Grid.Row="2" Style="{StaticResource PrimaryButtonStyle}" Click="OpenAbTest_Click" Padding="12,9">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <controls:LineIcon Kind="Play" Width="14" Height="14" Stroke="White" Margin="0,0,8,0"/>
+                                <TextBlock Text="Open A/B Test" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="StereoCenteringButton" Grid.Row="3" Style="{StaticResource FlatButtonStyle}" Click="StereoCentering_Click" Margin="0,8,0,0" Padding="11,8">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <controls:LineIcon Kind="Balance" Width="15" Height="15" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,8,0"/>
+                                <TextBlock Text="Stereo Centering" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="11"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
                 </Border>
             </Grid>
 
-            <!-- Active setup summary -->
+            <!-- Quick controls -->
             <Grid Grid.Row="1" Margin="0,12,0,0">
-                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
-                <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,6,0"><StackPanel Margin="15" VerticalAlignment="Center"><TextBlock Text="ACTIVE SETUP" Foreground="#70869E" FontSize="10"/><TextBlock x:Name="SetupDeviceText" Text="—" FontWeight="SemiBold" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/><TextBlock Text="End-to-end output path" Style="{StaticResource MutedTextStyle}" Margin="0,4,0,0"/></StackPanel></Border>
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="2,0,4,0"><StackPanel Margin="15" VerticalAlignment="Center"><TextBlock Text="ACTIVE PROFILE" Foreground="#70869E" FontSize="10"/><TextBlock x:Name="DashboardProfileText" Text="—" FontWeight="SemiBold" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/><TextBlock x:Name="DashboardProfileStateText" Text="No profile" Style="{StaticResource MutedTextStyle}" Margin="0,4,0,0"/></StackPanel></Border>
-                <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}" Margin="4,0,2,0"><StackPanel Margin="15" VerticalAlignment="Center"><TextBlock Text="SYSTEM DSP" Foreground="#70869E" FontSize="10"/><TextBlock x:Name="DashboardDspText" Text="OFF" FontWeight="SemiBold" Margin="0,5,0,0"/><TextBlock x:Name="DashboardDspDetailText" Text="Not applied" Style="{StaticResource MutedTextStyle}" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/></StackPanel></Border>
-                <Border Grid.Column="3" Style="{StaticResource CardBorderStyle}" Margin="6,0,0,0"><StackPanel Margin="15" VerticalAlignment="Center"><TextBlock Text="CALIBRATION QUALITY" Foreground="#70869E" FontSize="10"/><TextBlock x:Name="QualityText" Text="—" FontWeight="SemiBold" Margin="0,5,0,0"/><TextBlock x:Name="QualityDetailText" Text="No measurements" Style="{StaticResource MutedTextStyle}" Margin="0,4,0,0"/></StackPanel></Border>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.12*"/>
+                    <ColumnDefinition Width="1.12*"/>
+                    <ColumnDefinition Width="0.96*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,6,0">
+                    <Grid Margin="16,13">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="52"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <Border Width="40" Height="40" CornerRadius="8" Background="#12345A" VerticalAlignment="Top">
+                            <controls:LineIcon Kind="Waveform" Width="21" Height="21" Stroke="#71C8FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                            <TextBlock Text="Audio Processing" FontWeight="SemiBold" FontSize="14"/>
+                            <TextBlock x:Name="AudioProcessingStatusText" Text="Checking…" Foreground="{StaticResource MutedBrush}" FontWeight="SemiBold" FontSize="11" Margin="0,4,0,0"/>
+                            <TextBlock x:Name="AudioProcessingDescriptionText" Text="Personal correction for the selected output." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="10" LineHeight="14" Margin="0,4,0,0"/>
+                            <Button Style="{StaticResource DashboardLinkButtonStyle}" Click="ManageDsp_Click" Margin="0,7,0,0"><StackPanel Orientation="Horizontal"><TextBlock Text="Manage DSP" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><controls:LineIcon Kind="ChevronDown" Width="10" Height="10" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="6,0,0,0" RenderTransformOrigin="0.5,0.5"><controls:LineIcon.RenderTransform><RotateTransform Angle="-90"/></controls:LineIcon.RenderTransform></controls:LineIcon></StackPanel></Button>
+                        </StackPanel>
+                        <CheckBox x:Name="AudioProcessingToggle" Grid.Column="2" Style="{StaticResource DashboardSwitchStyle}" VerticalAlignment="Top"
+                                  ToolTip="Enable correction or switch to a level-matched bypass. Your profile remains saved."
+                                  Checked="AudioProcessingToggle_Changed" Unchecked="AudioProcessingToggle_Changed"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="6,0">
+                    <Grid Margin="16,13">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="52"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <Border Width="40" Height="40" CornerRadius="8" Background="#12345A" VerticalAlignment="Top">
+                            <controls:LineIcon Kind="Sliders" Width="21" Height="21" Stroke="#71C8FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                            <TextBlock Text="Fine Tune" FontWeight="SemiBold" FontSize="14"/>
+                            <TextBlock x:Name="FineTuneStatusText" Text="No active preset" Foreground="{StaticResource MutedBrush}" FontWeight="SemiBold" FontSize="11" Margin="0,4,0,0"/>
+                            <TextBlock Text="Preference adjustments are layered onto your hearing profile." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="10" LineHeight="14" Margin="0,4,0,0"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
+                                <Button Style="{StaticResource DashboardLinkButtonStyle}" Click="EditFineTune_Click"><StackPanel Orientation="Horizontal"><TextBlock Text="Edit Fine Tune" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><controls:LineIcon Kind="ChevronDown" Width="10" Height="10" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="6,0,0,0" RenderTransformOrigin="0.5,0.5"><controls:LineIcon.RenderTransform><RotateTransform Angle="-90"/></controls:LineIcon.RenderTransform></controls:LineIcon></StackPanel></Button>
+                                <TextBlock Text="Measurements stay saved" Foreground="#6F8298" FontSize="9" Margin="14,1,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <CheckBox x:Name="FineTuneToggle" Grid.Column="2" Style="{StaticResource DashboardSwitchStyle}" VerticalAlignment="Top"
+                                  ToolTip="Include or bypass saved Fine Tune measurements without deleting them."
+                                  Checked="FineTuneToggle_Changed" Unchecked="FineTuneToggle_Changed"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}" Margin="6,0,0,0">
+                    <Grid Margin="16,13">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="52"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border Width="40" Height="40" CornerRadius="8" Background="#3B2C13" VerticalAlignment="Top">
+                            <controls:LineIcon Kind="Alert" Width="21" Height="21" Stroke="{StaticResource AmberBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Calibration Review" FontWeight="SemiBold" FontSize="14"/>
+                            <TextBlock x:Name="CalibrationReviewStatusText" Text="No measurements" Foreground="{StaticResource AmberBrush}" FontWeight="SemiBold" FontSize="11" Margin="0,4,0,0"/>
+                            <TextBlock x:Name="CalibrationReviewDescriptionText" Text="Complete a hearing profile to review confidence." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="10" LineHeight="14" Margin="0,4,0,0"/>
+                            <Button x:Name="ReviewResultsButton" Style="{StaticResource FlatButtonStyle}" Click="ReviewResults_Click" Margin="0,8,0,0" Padding="10,6" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <controls:LineIcon Kind="Measurement" Width="14" Height="14" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,7,0"/>
+                                    <TextBlock Text="Review Results" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="10"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
             </Grid>
 
-            <!-- Chart + activity -->
+            <!-- Active correction and activity -->
             <Grid Grid.Row="2" Margin="0,12,0,0">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,8,0">
-                    <Grid Margin="16,12">
-                        <Grid.RowDefinitions><RowDefinition Height="38"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.15*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,7,0">
+                    <Grid Margin="16,11">
+                        <Grid.RowDefinitions><RowDefinition Height="39"/><RowDefinition Height="*"/></Grid.RowDefinitions>
                         <Grid>
                             <StackPanel>
-                                <TextBlock Text="Active Profile — Personal Correction Preview" FontWeight="SemiBold" />
+                                <TextBlock Text="Active Correction" FontWeight="SemiBold" FontSize="13"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                                     <Ellipse Width="7" Height="7" Fill="{StaticResource BlueBrush}" VerticalAlignment="Center"/>
                                     <TextBlock Text="Left" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="5,0,12,0"/>
                                     <Ellipse Width="7" Height="7" Fill="{StaticResource RedBrush}" VerticalAlignment="Center"/>
                                     <TextBlock Text="Right" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="5,0,12,0"/>
-                                    <CheckBox x:Name="ShowFineTuneCheck" Content="Preview with Fine Tune (display only)" FontSize="9" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" Checked="ShowFineTuneChanged" Unchecked="ShowFineTuneChanged"/>
+                                    <Line X1="0" X2="14" Y1="3" Y2="3" Stroke="#9BB0C5" StrokeThickness="1" StrokeDashArray="3,2" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="FineTuneLegendText" Text="Fine Tune (off)" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="5,0,0,0"/>
                                 </StackPanel>
                             </StackPanel>
-                            <TextBlock x:Name="PreviewValueText" Text="Hover or click a point" Foreground="#6F8298" FontSize="9" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="CorrectionMetaText" Text="No active correction" Foreground="#9DB4CB" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         </Grid>
                         <Grid Grid.Row="1">
-                            <controls:FrequencyChart x:Name="PreviewChart" MinimumY="-12" MaximumY="12" YUnit="dB" ShowZeroLine="True" />
-                            <TextBlock x:Name="PreviewEmptyState" Text="Complete or select a hearing profile to show its correction preview." Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" Visibility="Collapsed"/>
+                            <controls:FrequencyChart x:Name="PreviewChart" MinimumY="-12" MaximumY="12" YUnit="dB" ShowZeroLine="True"/>
+                            <TextBlock x:Name="PreviewEmptyState" Text="Complete or select a hearing profile to show its correction preview." Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" Visibility="Collapsed"/>
+                            <TextBlock x:Name="PreviewValueText" Text="Hover or click a point" Foreground="#6F8298" FontSize="9" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,4,0"/>
                         </Grid>
                     </Grid>
                 </Border>
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="4,0,0,0">
-                    <StackPanel Margin="16,12">
-                        <TextBlock Text="Recent Activity" FontWeight="SemiBold" />
-                        <ItemsControl x:Name="RecentActivity" Margin="0,10,0,0">
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="5,0,0,0">
+                    <StackPanel Margin="16,11">
+                        <Grid>
+                            <TextBlock Text="Recent Activity" FontWeight="SemiBold" FontSize="13"/>
+                            <TextBlock Text="Live" Foreground="{StaticResource CyanBrush}" FontSize="9" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <ItemsControl x:Name="RecentActivity" Margin="0,8,0,0">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Margin="0,5"><Grid.ColumnDefinitions><ColumnDefinition Width="14"/><ColumnDefinition Width="*"/><ColumnDefinition Width="65"/></Grid.ColumnDefinitions><Ellipse Width="7" Height="7" Fill="{StaticResource CyanBrush}" HorizontalAlignment="Left" VerticalAlignment="Center"/><TextBlock Grid.Column="1" Text="{Binding Message}" FontSize="11" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="2" Text="{Binding Time, StringFormat={}{0:HH:mm:ss}}" Foreground="{StaticResource MutedBrush}" FontSize="10" HorizontalAlignment="Right"/></Grid>
+                                    <Grid Margin="0,4">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="14"/><ColumnDefinition Width="*"/><ColumnDefinition Width="55"/></Grid.ColumnDefinitions>
+                                        <Ellipse Width="7" Height="7" Fill="{StaticResource CyanBrush}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Message}" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Time, StringFormat={}{0:HH:mm:ss}}" Foreground="{StaticResource MutedBrush}" FontSize="9" HorizontalAlignment="Right"/>
+                                    </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -107,21 +300,26 @@
                 </Border>
             </Grid>
 
-            <!-- Debug panel -->
-            <Expander x:Name="DebugExpander" Grid.Row="3" Margin="0,12,0,4" IsExpanded="True" Foreground="{StaticResource TextBrush}">
+            <!-- Debug remains optional and compact -->
+            <Expander x:Name="DebugExpander" Grid.Row="3" Margin="0,12,0,4" IsExpanded="False" Foreground="{StaticResource TextBrush}">
                 <Expander.Header>
-                    <StackPanel Orientation="Horizontal"><TextBlock Text="›_  Debug &amp; System Status" FontFamily="Consolas" FontWeight="SemiBold"/><Ellipse Width="7" Height="7" Fill="{StaticResource GreenBrush}" Margin="12,0,6,0" VerticalAlignment="Center"/><TextBlock Text="Audio engine ready" Foreground="{StaticResource GreenBrush}" FontSize="11" VerticalAlignment="Center"/></StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <controls:LineIcon Kind="Terminal" Width="16" Height="16" Stroke="#AFC0D2" Margin="0,0,9,0"/>
+                        <TextBlock Text="Debug &amp; System Status" FontWeight="SemiBold" FontSize="11"/>
+                        <Ellipse Width="7" Height="7" Fill="{StaticResource GreenBrush}" Margin="12,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Audio engine running" Foreground="{StaticResource GreenBrush}" FontSize="10" VerticalAlignment="Center"/>
+                    </StackPanel>
                 </Expander.Header>
-                <Border Style="{StaticResource CardBorderStyle}" Margin="0,8,0,0" Height="150">
+                <Border Style="{StaticResource CardBorderStyle}" Margin="0,8,0,0" MinHeight="130">
                     <Grid Margin="14">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                        <TextBox x:Name="DebugTextBox" Background="Transparent" BorderThickness="0" Foreground="#AFC0D2" FontFamily="Consolas" FontSize="10" IsReadOnly="True" VerticalScrollBarVisibility="Auto" />
+                        <TextBox x:Name="DebugTextBox" Background="Transparent" BorderThickness="0" Foreground="#AFC0D2" FontFamily="Consolas" FontSize="10" IsReadOnly="True" VerticalScrollBarVisibility="Auto"/>
                         <StackPanel Grid.Column="1" Margin="20,0,0,0">
-                            <TextBlock Text="Audio Engine" FontWeight="SemiBold" />
+                            <TextBlock Text="Audio Engine" FontWeight="SemiBold"/>
                             <Grid Margin="0,8,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Sample Rate" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="48,000 Hz" FontSize="11"/></Grid>
                             <Grid Margin="0,6,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Test format" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="32-bit float / stereo" FontSize="11"/></Grid>
                             <Grid Margin="0,6,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Output" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="WASAPI shared" FontSize="11"/></Grid>
-                            <Grid Margin="0,6,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Build" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="0.4.16-alpha" FontSize="11"/></Grid>
+                            <Grid Margin="0,6,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Build" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="0.4.17-alpha" FontSize="11"/></Grid>
                         </StackPanel>
                     </Grid>
                 </Border>

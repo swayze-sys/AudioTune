@@ -22,7 +22,7 @@ if (Test-Path $Output) {
 }
 New-Item -ItemType Directory -Path $Output -Force | Out-Null
 
-Write-Host 'Publishing AudioTune v0.4.16-alpha for Windows x64...' -ForegroundColor Cyan
+Write-Host 'Publishing AudioTune v0.4.17-alpha for Windows x64...' -ForegroundColor Cyan
 & dotnet publish '.\AudioTune\AudioTune.csproj' `
     -c Release `
     -r win-x64 `

@@ -176,7 +176,7 @@ public static class DspFilterService
         return FitParametricFilters(targetGains, 48000);
     }
 
-    private static IReadOnlyList<ParametricEqFilter> FitParametricFilters(double[] targetGains, int sampleRate)
+    internal static IReadOnlyList<ParametricEqFilter> FitParametricFilters(double[] targetGains, int sampleRate)
     {
         var gains = new double[Bands.Length];
         var qValues = Enumerable.Range(0, Bands.Length).Select(GetBandQ).ToArray();
@@ -211,11 +211,18 @@ public static class DspFilterService
             .ToList();
     }
 
-    private static double GetBandQ(int index)
+    internal static double GetBandQ(int index)
     {
+        // The 14/16/18 kHz centres are so tightly packed that spacing-derived Q values around 8
+        // create audible/visible peaks and valleys between otherwise similar adjacent targets.
+        // Broaden only this final treble cluster. Keep 12.5 kHz spacing-derived so a genuine
+        // transition into the top octave is not flattened into the rest of the response.
+        if (Bands[index] >= 14000.0)
+            return 1.50;
+
         // Use the logarithmic spacing of neighbouring centres as the effective bandwidth.
-        // Wide octave-spaced bands therefore use about Q=1.4, while the tightly packed
-        // 12.5/14/16/18 kHz bands become much narrower and no longer stack huge boosts.
+        // Wide octave-spaced bands therefore use about Q=1.4. The 12.5 kHz transition remains
+        // narrower, while the final treble cluster above is deliberately smoothed.
         double bandwidthOctaves;
         if (index <= 0)
         {
@@ -286,7 +293,7 @@ public static class DspFilterService
         return peak;
     }
 
-    private static double PeakingMagnitudeDb(ParametricEqFilter filter, double frequency, int sampleRate)
+    internal static double PeakingMagnitudeDb(ParametricEqFilter filter, double frequency, int sampleRate)
     {
         // RBJ Audio EQ Cookbook peaking-EQ response. This is the same filter family used by
         // NAudio BiQuadFilter.PeakingEQ and Equalizer APO's PK filters.

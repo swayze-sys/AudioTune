@@ -1,6 +1,6 @@
 {
   "model": "AudioTune human sensitivity baseline v1",
-  "correctionAlgorithmVersion": 3,
+  "correctionAlgorithmVersion": 6,
   "reference": "ISO 226:2023 normal equal-loudness-level contours",
   "officialUrl": "https://www.iso.org/standard/83117.html",
   "usage": "Relative threshold-shape prior only; absolute SPL values are not treated as calibrated hearing levels.",

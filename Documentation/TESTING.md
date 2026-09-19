@@ -41,7 +41,7 @@ Offline installer build:
 
 Expected installer:
 
-`dist\AudioTuneSetup-0.4.16-alpha.exe`
+`dist\AudioTuneSetup-0.4.17-alpha.exe`
 
 `build-installer.ps1` downloads the official .NET 10 Desktop Runtime prerequisite and verifies its published SHA-512 hash. If Inno Setup 6 is not available, the script downloads the official signed compiler installer, validates the Pyrsys B.V. Authenticode signature, and installs it only in the repository-local `.tools` cache.
 
@@ -112,7 +112,7 @@ Create a unit-test project and cover at minimum:
 
 1. ISO-shape interpolation anchors.
 2. Global-offset invariance: adding a constant dB offset to all detected thresholds should not materially change residual correction shape.
-3. 100% vs 200% intensity scaling.
+3. 100% vs 200% intensity scaling and the fixed ±12 dB combined hearing-model + Fine Tune bound.
 4. Fine Tune ON/OFF preserves stored points but changes target curve.
 5. `NotDetectedAtCeiling` produces max positive target for requested intensity.
 6. confidence weighting reduces low-confidence modeled gain.
@@ -126,6 +126,7 @@ For representative target curves:
 
 - fitted composite response at band centers should match target within a defined tolerance;
 - 12.5/14/16/18 kHz boosts must not create the old ~18 dB stacking artifact;
+- representative 14–18 kHz plateaus must remain within 1.25 dB inter-band ripple while retaining the 12.5 kHz transition;
 - negative-only curve must produce required positive headroom = 0 dB;
 - composite peak calculation must reflect signed sum, not sum of absolute gains;
 - positive-boost limiter should reduce positive gains only;
@@ -138,14 +139,16 @@ Generate one `DspFilterSet` and compare:
 - mathematical `DspFilterService.PeakingMagnitudeDb` cascade;
 - NAudio `BiQuadFilter` cascade used by `CalibrationAbSampleProvider`.
 
-Test at multiple frequencies and with filter gains >6 dB. This should expose/fix the current ±6 dB A/B clamp discrepancy.
+Test at multiple frequencies and with filter gains >6 dB. Guard the shared ±12 dB per-filter range and detect any future A/B/APO response divergence.
 
 ## Fine Tune regression
 
 Verify:
 
 - test uses 1 kHz reference;
-- frequencies: 63/125/250/500/2k/4k/8k/12.5k per ear;
+- frequencies: the same complete 30-point 30 Hz to 18 kHz set as the main hearing test, for 60 total L/R points;
+- saved left/right points can be selected individually for review;
+- starting a point review retains the previous value until Equal is accepted, and skipping the review leaves it unchanged;
 - +/-1 dB controls;
 - range ±6 dB;
 - Accept stores point;
@@ -223,6 +226,15 @@ Check:
 - no technical CLR type names in preset selectors;
 - Active Profile badge is green when selected profile is active;
 - Quick Actions have icons;
+- Profiles contains no Unicode/font glyphs for profile type, preset statistics or Quick Actions;
+- every Devices Signal Chain node and connector uses the shared vector-rendered LineIcon family;
 - no cards clip at common desktop resolutions;
 - Output Device text is legible;
-- long device/profile names truncate gracefully rather than expanding layout uncontrollably.
+- long device/profile names truncate gracefully rather than expanding layout uncontrollably;
+- sidebar icons render from vector geometry and remain sharp at common DPI scales;
+- the Dashboard headphone source has no visible rectangular image edge and its radial glow remains inside the hero composition;
+- card, top-bar and sidebar contours remain distinct without clipping content;
+- Dashboard Audio Processing OFF creates/retains level-matched bypass rather than deleting the profile;
+- Dashboard Audio Processing ON applies the active profile/preset to the selected DSP target;
+- Dashboard Fine Tune OFF retains all saved Fine Tune points;
+- Dashboard Fine Tune changes respect Auto-apply and never re-enable an explicit persistent bypass.

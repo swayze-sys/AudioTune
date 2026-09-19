@@ -1,6 +1,7 @@
 <UserControl x:Class="AudioTune.Views.DevicesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:AudioTune.Controls">
     <UserControl.Resources>
         <Style x:Key="InfoButtonStyle" TargetType="Button" BasedOn="{StaticResource FlatButtonStyle}">
             <Setter Property="Width" Value="25"/>
@@ -11,7 +12,14 @@
             <Setter Property="Foreground" Value="#78C9FF"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="#3B668C"/>
-            <Setter Property="Content" Value="ⓘ"/>
+            <Setter Property="Content" Value="Info"/>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <controls:LineIcon Kind="Info" Width="13" Height="13" Stroke="#78C9FF" StrokeThickness="1.8"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style x:Key="StatusChipStyle" TargetType="Border">
             <Setter Property="Background" Value="#102235"/>
@@ -27,7 +35,31 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="9"/>
             <Setter Property="Padding" Value="12,10"/>
-            <Setter Property="MinHeight" Value="64"/>
+            <Setter Property="MinHeight" Value="72"/>
+        </Style>
+        <Style x:Key="SignalNodeIconBadgeStyle" TargetType="Border">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Background" Value="#123B68"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+        </Style>
+        <Style x:Key="SignalNodeIconStyle" TargetType="controls:LineIcon">
+            <Setter Property="Width" Value="17"/>
+            <Setter Property="Height" Value="17"/>
+            <Setter Property="Stroke" Value="#82C9FF"/>
+            <Setter Property="StrokeThickness" Value="1.8"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="SignalArrowIconStyle" TargetType="controls:LineIcon">
+            <Setter Property="Width" Value="17"/>
+            <Setter Property="Height" Value="17"/>
+            <Setter Property="Stroke" Value="{StaticResource CyanBrush}"/>
+            <Setter Property="StrokeThickness" Value="1.7"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </UserControl.Resources>
 
@@ -91,17 +123,17 @@
                             <ColumnDefinition Width="1*"/><ColumnDefinition Width="34"/>
                             <ColumnDefinition Width="1.15*"/>
                         </Grid.ColumnDefinitions>
-                        <Border Style="{StaticResource SignalNodeStyle}"><StackPanel><TextBlock Text="ACTIVE PROFILE" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainProfileValue" Text="—" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/></StackPanel></Border>
-                        <TextBlock Grid.Column="1" Text="→" Foreground="{StaticResource CyanBrush}" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Border Grid.Column="2" Style="{StaticResource SignalNodeStyle}"><StackPanel><TextBlock Text="CORRECTION PRESET" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainPresetValue" Text="—" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/></StackPanel></Border>
-                        <TextBlock Grid.Column="3" Text="→" Foreground="{StaticResource CyanBrush}" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Border Grid.Column="4" Style="{StaticResource SignalNodeStyle}"><StackPanel><TextBlock Text="FINE TUNE" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainFineTuneValue" Text="—" FontWeight="SemiBold" Margin="0,4,0,0"/></StackPanel></Border>
-                        <TextBlock Grid.Column="5" Text="→" Foreground="{StaticResource CyanBrush}" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Border Grid.Column="6" Style="{StaticResource SignalNodeStyle}"><StackPanel><TextBlock Text="STEREO CENTERING" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainCenterValue" Text="—" FontWeight="SemiBold" Margin="0,4,0,0"/></StackPanel></Border>
-                        <TextBlock Grid.Column="7" Text="→" Foreground="{StaticResource CyanBrush}" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Border Grid.Column="8" Style="{StaticResource SignalNodeStyle}"><StackPanel><TextBlock Text="EQUALIZER APO" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainApoValue" Text="—" FontWeight="SemiBold" Margin="0,4,0,0"/></StackPanel></Border>
-                        <TextBlock Grid.Column="9" Text="→" Foreground="{StaticResource CyanBrush}" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Border Grid.Column="10" Style="{StaticResource SignalNodeStyle}"><StackPanel><TextBlock Text="TARGET DEVICE" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainTargetValue" Text="—" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/></StackPanel></Border>
+                        <Border Style="{StaticResource SignalNodeStyle}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Style="{StaticResource SignalNodeIconBadgeStyle}"><controls:LineIcon Kind="Measurement" Style="{StaticResource SignalNodeIconStyle}"/></Border><StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="ACTIVE PROFILE" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainProfileValue" Text="—" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/></StackPanel></Grid></Border>
+                        <controls:LineIcon Grid.Column="1" Kind="ArrowRight" Style="{StaticResource SignalArrowIconStyle}"/>
+                        <Border Grid.Column="2" Style="{StaticResource SignalNodeStyle}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Style="{StaticResource SignalNodeIconBadgeStyle}"><controls:LineIcon Kind="Waveform" Style="{StaticResource SignalNodeIconStyle}"/></Border><StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="CORRECTION PRESET" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainPresetValue" Text="—" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/></StackPanel></Grid></Border>
+                        <controls:LineIcon Grid.Column="3" Kind="ArrowRight" Style="{StaticResource SignalArrowIconStyle}"/>
+                        <Border Grid.Column="4" Style="{StaticResource SignalNodeStyle}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Style="{StaticResource SignalNodeIconBadgeStyle}"><controls:LineIcon Kind="Sliders" Style="{StaticResource SignalNodeIconStyle}"/></Border><StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="FINE TUNE" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainFineTuneValue" Text="—" FontWeight="SemiBold" Margin="0,4,0,0"/></StackPanel></Grid></Border>
+                        <controls:LineIcon Grid.Column="5" Kind="ArrowRight" Style="{StaticResource SignalArrowIconStyle}"/>
+                        <Border Grid.Column="6" Style="{StaticResource SignalNodeStyle}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Style="{StaticResource SignalNodeIconBadgeStyle}"><controls:LineIcon Kind="Balance" Style="{StaticResource SignalNodeIconStyle}"/></Border><StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="STEREO CENTERING" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainCenterValue" Text="—" FontWeight="SemiBold" Margin="0,4,0,0"/></StackPanel></Grid></Border>
+                        <controls:LineIcon Grid.Column="7" Kind="ArrowRight" Style="{StaticResource SignalArrowIconStyle}"/>
+                        <Border Grid.Column="8" Style="{StaticResource SignalNodeStyle}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Style="{StaticResource SignalNodeIconBadgeStyle}"><controls:LineIcon Kind="Processor" Style="{StaticResource SignalNodeIconStyle}"/></Border><StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="EQUALIZER APO" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainApoValue" Text="—" FontWeight="SemiBold" Margin="0,4,0,0"/></StackPanel></Grid></Border>
+                        <controls:LineIcon Grid.Column="9" Kind="ArrowRight" Style="{StaticResource SignalArrowIconStyle}"/>
+                        <Border Grid.Column="10" Style="{StaticResource SignalNodeStyle}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Style="{StaticResource SignalNodeIconBadgeStyle}"><controls:LineIcon Kind="Speaker" Style="{StaticResource SignalNodeIconStyle}"/></Border><StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="TARGET DEVICE" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainTargetValue" Text="—" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/></StackPanel></Grid></Border>
                     </Grid>
                 </StackPanel>
             </Border>
@@ -117,16 +149,16 @@
                         </StackPanel>
                         <UniformGrid Columns="4" Margin="0,16,0,0">
                             <Button x:Name="ApplyDspButton" Style="{StaticResource PrimaryButtonStyle}" Margin="0,0,6,0" Height="86" Click="ApplyDsp_Click">
-                                <StackPanel><TextBlock Text="▶" FontSize="21" HorizontalAlignment="Center"/><TextBlock Text="Apply / Update DSP" HorizontalAlignment="Center" Margin="0,8,0,0"/></StackPanel>
+                                <StackPanel><controls:LineIcon Kind="Play" Width="21" Height="21" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center"/><TextBlock Text="Apply / Update DSP" HorizontalAlignment="Center" Margin="0,8,0,0"/></StackPanel>
                             </Button>
                             <Button x:Name="DisableDspButton" Style="{StaticResource FlatButtonStyle}" Margin="6,0" Height="86" Click="DisableDsp_Click">
-                                <StackPanel><TextBlock Text="Ⅱ" FontSize="21" HorizontalAlignment="Center"/><TextBlock Text="Bypass DSP" HorizontalAlignment="Center" Margin="0,8,0,0"/></StackPanel>
+                                <StackPanel><controls:LineIcon Kind="Pause" Width="21" Height="21" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center"/><TextBlock Text="Bypass DSP" HorizontalAlignment="Center" Margin="0,8,0,0"/></StackPanel>
                             </Button>
                             <Button x:Name="DisablePersistentDspButton" Style="{StaticResource FlatButtonStyle}" Margin="6,0" Height="86" Click="DisablePersistentDsp_Click">
-                                <StackPanel><TextBlock Text="■" FontSize="18" HorizontalAlignment="Center"/><TextBlock Text="Disable DSP" HorizontalAlignment="Center" Margin="0,9,0,0"/></StackPanel>
+                                <StackPanel><controls:LineIcon Kind="Stop" Width="19" Height="19" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center"/><TextBlock Text="Disable DSP" HorizontalAlignment="Center" Margin="0,10,0,0"/></StackPanel>
                             </Button>
                             <Button x:Name="ConfigureApoButton" Style="{StaticResource FlatButtonStyle}" Margin="6,0,0,0" Height="86" Click="ConfigureApo_Click">
-                                <StackPanel><TextBlock Text="↗" FontSize="22" HorizontalAlignment="Center"/><TextBlock Text="Open APO Configurator" TextAlignment="Center" HorizontalAlignment="Center" Margin="0,7,0,0"/></StackPanel>
+                                <StackPanel><controls:LineIcon Kind="ExternalLink" Width="21" Height="21" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center"/><TextBlock Text="Open APO Configurator" TextAlignment="Center" HorizontalAlignment="Center" Margin="0,7,0,0"/></StackPanel>
                             </Button>
                         </UniformGrid>
                         <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
@@ -167,7 +199,7 @@
                 <Expander x:Name="PlaybackDevicesExpander" IsExpanded="False" Background="Transparent" Foreground="{StaticResource TextBrush}">
                     <Expander.Header>
                         <StackPanel Orientation="Horizontal" Margin="8,4">
-                            <TextBlock Text="▣" Foreground="#AFC4D9" FontSize="16" VerticalAlignment="Center"/>
+                            <controls:LineIcon Kind="Speaker" Width="17" Height="17" Stroke="#AFC4D9" VerticalAlignment="Center"/>
                             <TextBlock Text="Detected Playback Devices" FontSize="15" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center"/>
                             <TextBlock x:Name="DetectedDeviceCountText" Text="" Foreground="{StaticResource MutedBrush}" Margin="12,1,0,0" VerticalAlignment="Center"/>
                             <Button Style="{StaticResource InfoButtonStyle}" Click="PlaybackDevicesInfo_Click"/>

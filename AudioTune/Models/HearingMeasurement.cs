@@ -44,9 +44,9 @@ public sealed class HearingMeasurement
 public sealed class HearingSession
 {
     public int SchemaVersion { get; set; } = 3;
-    public string AppVersion { get; set; } = "0.4.16-alpha";
+    public string AppVersion { get; set; } = "0.4.17-alpha";
     public int TestProtocolVersion { get; set; } = 3;
-    public int CorrectionAlgorithmVersionAtMeasurement { get; set; } = 4;
+    public int CorrectionAlgorithmVersionAtMeasurement { get; set; } = 6;
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public DateTime StartedAt { get; set; } = DateTime.Now;

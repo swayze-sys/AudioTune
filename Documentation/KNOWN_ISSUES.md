@@ -2,7 +2,7 @@
 
 ## Baseline verification status
 
-### v0.4.16-alpha interactive UI smoke test still pending
+### v0.4.17-alpha interactive UI smoke test still pending
 
 The handoff source now builds successfully on Windows with 0 warnings and 0 errors. A full interactive pass through every page and the real Equalizer APO auto-apply flow is still pending.
 
@@ -12,20 +12,13 @@ The handoff source now builds successfully on Windows with 0 warnings and 0 erro
 
 ## DSP / audio issues
 
-### A/B path can diverge from APO above strong filter gains
+### A/B vs APO numerical equivalence still needs automated coverage
 
-`DspFilterService` may fit PEQ filters up to ±12 dB, especially with correction intensity >100%.
+The former ±6 dB per-filter clamp in the NAudio A/B and Stereo Centering paths has been raised to the same ±12 dB range used by fitted APO filters.
 
-`CalibrationAbSampleProvider.CreateFilters()` currently clamps each NAudio `BiQuadFilter.PeakingEQ` gain to **±6 dB**.
+The two implementations still need a numerical response-equivalence test across representative cascades and sample rates.
 
-This violates the intended invariant that A/B and APO use the same filter set for strong corrections.
-
-**Impact:** At high intensity or ceiling-driven boosts, music A/B may underrepresent the actual APO correction.
-
-**Recommended fix:** remove/raise this clamp consistently and add a numerical response-equivalence test between NAudio path and APO filter model.
-
-**Priority:** P0/P1.
-
+**Priority:** P1.
 ### A/B provider hard-clamps final samples
 
 `CalibrationAbSampleProvider` clamps output samples to [-1, +1]. This prevents float overflow but represents hard clipping if the wet signal exceeds full scale.
@@ -42,7 +35,7 @@ Normalize or deliberately document the intended range.
 
 Fine Tune/intensity/centering auto-apply had multiple iterations where UI state changed but `AudioTune.txt` did not.
 
-Current v0.4.16 service path directly calls `SystemDspService.Apply()` when Auto-apply is enabled.
+Current v0.4.17 service path directly calls `SystemDspService.Apply()` when Auto-apply is enabled.
 
 Still verify:
 
@@ -62,19 +55,7 @@ There is no transactional multi-file rollback around all managed APO file writes
 
 ### Experimental psychoacoustic model
 
-The current v5 constants (`tanh` maxima/knees, trust weights, stereo-difference limits) are empirical product parameters, not clinically validated fitting rules.
-
-### ISO metadata JSON is stale
-
-`Data/Psychoacoustics/iso226.sources.json` currently says `correctionAlgorithmVersion: 3`, while the active correction model is v5.
-
-Update metadata when next touching this file.
-
-### HearingSession default algorithm metadata is stale until completion
-
-`HearingSession.CorrectionAlgorithmVersionAtMeasurement` defaults to 4 in the model, while current algorithm is 5. `HearingTestEngine.FinishSession()` overwrites it with the current version when a session completes.
-
-An incomplete newly created session can therefore temporarily report stale metadata.
+The current v6 constants (`tanh` maxima/knees, trust weights, stereo-difference limits) are empirical product parameters, not clinically validated fitting rules.
 
 ### Fine Tune is also scaled by global intensity
 

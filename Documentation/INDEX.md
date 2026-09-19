@@ -1,6 +1,6 @@
 # AudioTune Documentation Index
 
-This documentation set is the project handoff for AudioTune v0.4.16-alpha.
+This documentation set covers the current AudioTune v0.4.17-alpha release and its v0.4.16-alpha handoff baseline.
 
 ## Start here
 
@@ -14,7 +14,7 @@ This documentation set is the project handoff for AudioTune v0.4.16-alpha.
 ## Domain logic
 
 - [`HEARING_TEST.md`](HEARING_TEST.md) – hearing-test protocol, adaptive search, verification and retesting.
-- [`DSP_MODEL.md`](DSP_MODEL.md) – current correction model v5, Fine Tune, stereo preservation, PEQ fitting and headroom.
+- [`DSP_MODEL.md`](DSP_MODEL.md) – current correction model v6, Fine Tune, stereo preservation, PEQ fitting and headroom.
 - [`PROFILE_MODEL.md`](PROFILE_MODEL.md) – hearing profiles, correction presets, persistence, migrations and data locations.
 - [`EQUALIZER_APO.md`](EQUALIZER_APO.md) – installation, per-device persistent DSP, config files, status and auto-apply.
 

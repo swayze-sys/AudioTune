@@ -1,18 +1,48 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioTune", "AudioTune\AudioTune.csproj", "{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioTune.Tests", "AudioTune.Tests\AudioTune.Tests.csproj", "{7858EA5B-5186-458B-8F9A-D3C04789FBCD}"
+EndProject
 Global
-    GlobalSection(SolutionConfigurationPlatforms) = preSolution
-        Debug|Any CPU = Debug|Any CPU
-        Release|Any CPU = Release|Any CPU
-    EndGlobalSection
-    GlobalSection(ProjectConfigurationPlatforms) = postSolution
-        {7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-        {7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-        {7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-        {7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Release|Any CPU.Build.0 = Release|Any CPU
-    EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Debug|x64.Build.0 = Debug|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Debug|x86.Build.0 = Debug|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Release|x64.ActiveCfg = Release|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Release|x64.Build.0 = Release|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Release|x86.ActiveCfg = Release|Any CPU
+		{7D41B8D4-56A5-4CB5-B63E-BEF4529D9F90}.Release|x86.Build.0 = Release|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Debug|x64.Build.0 = Debug|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Debug|x86.Build.0 = Debug|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Release|x64.ActiveCfg = Release|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Release|x64.Build.0 = Release|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Release|x86.ActiveCfg = Release|Any CPU
+		{7858EA5B-5186-458B-8F9A-D3C04789FBCD}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 EndGlobal

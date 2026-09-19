@@ -136,7 +136,7 @@ public partial class MainWindow : Window
 
     private void DspStatusButton_Click(object sender, RoutedEventArgs e) => OpenDevicesPage();
 
-    private void OpenDevicesPage()
+    public void OpenDevicesPage()
     {
         try
         {

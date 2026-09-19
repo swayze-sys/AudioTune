@@ -1,12 +1,18 @@
 #define MyAppName "AudioTune"
-#define MyAppVersion "0.4.16-alpha"
+#define MyAppVersion "0.4.17-alpha"
 #define MyAppPublisher "AudioTune"
 #define MyAppExeName "AudioTune.exe"
 #define DotNetRuntimeVersion "10.0.12"
 #define DotNetRuntimeExe "windowsdesktop-runtime-10.0.12-win-x64.exe"
+#ifndef MyAppId
+  #define MyAppId "65A9181A-0C39-4D8D-83C0-210682BC7D8B"
+#endif
+#ifndef MyOutputBaseFilename
+  #define MyOutputBaseFilename "AudioTuneSetup-0.4.17-alpha"
+#endif
 
 [Setup]
-AppId={{65A9181A-0C39-4D8D-83C0-210682BC7D8B}
+AppId={{{#MyAppId}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
@@ -17,7 +23,7 @@ DisableProgramGroupPage=yes
 PrivilegesRequired=admin
 PrivilegesRequiredOverridesAllowed=dialog commandline
 OutputDir=..\dist
-OutputBaseFilename=AudioTuneSetup-0.4.16-alpha
+OutputBaseFilename={#MyOutputBaseFilename}
 SetupIconFile=..\AudioTune\Assets\App\AudioTune.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma2

@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:controls="clr-namespace:AudioTune.Controls"
         Title="AudioTune" Width="1500" Height="900" MinWidth="1180" MinHeight="720"
         WindowStyle="None" ResizeMode="CanResize" Background="{StaticResource BgBrush}"
         Icon="Assets/App/AudioTune.ico"
@@ -22,7 +23,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Top bar -->
-            <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#0B141F" BorderBrush="#1A2B3B" BorderThickness="0,0,0,1" CornerRadius="14,14,0,0">
+            <Border Grid.Row="0" Grid.ColumnSpan="2" Background="{StaticResource TopBarSurfaceBrush}" BorderBrush="#2A465F" BorderThickness="0,0,0,1" CornerRadius="14,14,0,0">
                 <Grid Margin="22,0,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="300" />
@@ -59,8 +60,18 @@
                     <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="0,0,18,0">
                         <TextBlock Text="Active Profile" Foreground="#6F8298" FontSize="11" Margin="2,0,0,4" />
                         <ComboBox x:Name="ActiveProfileCombo" Style="{StaticResource DarkComboStyle}"
-                                  DisplayMemberPath="Name" SelectionChanged="ActiveProfileCombo_SelectionChanged"
-                                  ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}" />
+                                  SelectionChanged="ActiveProfileCombo_SelectionChanged"
+                                  ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"
+                                               Foreground="#F4F8FF"
+                                               FontSize="12"
+                                               TextTrimming="CharacterEllipsis"
+                                               MaxWidth="215" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </StackPanel>
 
                     <Button x:Name="DspStatusButton" Grid.Column="3" Style="{StaticResource FlatButtonStyle}" Margin="0,15,12,15" Padding="10,5" Click="DspStatusButton_Click">
@@ -72,54 +83,54 @@
                             <TextBlock Text="Development Build" Foreground="#BCD9FF" FontSize="11" FontWeight="SemiBold" />
                         </Border>
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="v0.4.16-alpha" Foreground="#6F8298" FontSize="10" HorizontalAlignment="Center" />
+                            <TextBlock Text="v0.4.17-alpha" Foreground="#6F8298" FontSize="10" HorizontalAlignment="Center" />
                             <TextBlock x:Name="DebugStateText" Text="Debug enabled" Foreground="{StaticResource GreenBrush}" FontSize="10" HorizontalAlignment="Center" />
                         </StackPanel>
                     </StackPanel>
 
                     <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <Button Style="{StaticResource FlatButtonStyle}" Width="40" Height="34" Padding="0" Margin="2" Click="Minimize_Click" Content="—" />
-                        <Button Style="{StaticResource FlatButtonStyle}" Width="40" Height="34" Padding="0" Margin="2" Click="Maximize_Click" Content="□" />
-                        <Button Style="{StaticResource FlatButtonStyle}" Width="40" Height="34" Padding="0" Margin="2" Click="Close_Click" Content="✕" />
+                        <Button Style="{StaticResource FlatButtonStyle}" Width="40" Height="34" Padding="0" Margin="2" Click="Minimize_Click"><controls:LineIcon Kind="Minimize" Width="16" Height="16" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></Button>
+                        <Button Style="{StaticResource FlatButtonStyle}" Width="40" Height="34" Padding="0" Margin="2" Click="Maximize_Click"><controls:LineIcon Kind="Maximize" Width="15" Height="15" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></Button>
+                        <Button Style="{StaticResource FlatButtonStyle}" Width="40" Height="34" Padding="0" Margin="2" Click="Close_Click"><controls:LineIcon Kind="Close" Width="16" Height="16" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></Button>
                     </StackPanel>
                 </Grid>
             </Border>
 
             <!-- Sidebar -->
-            <Border Grid.Row="1" Grid.Column="0" Background="#09121C" BorderBrush="#172737" BorderThickness="0,0,1,0">
+            <Border Grid.Row="1" Grid.Column="0" Background="{StaticResource SidebarSurfaceBrush}" BorderBrush="#29445B" BorderThickness="0,0,1,0">
                 <Grid>
                     <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                     <StackPanel Margin="0,14,0,0">
                         <Button x:Name="DashboardNav" Style="{StaticResource NavButtonStyle}" Tag="Selected" Click="DashboardNav_Click">
-                            <StackPanel Orientation="Horizontal"><TextBlock Text="⌂" FontSize="22" Width="38"/><TextBlock Text="Dashboard" FontSize="14" VerticalAlignment="Center" FontWeight="SemiBold"/></StackPanel>
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Home" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Dashboard" FontSize="14" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                         <Button x:Name="HearingNav" Style="{StaticResource NavButtonStyle}" Click="HearingNav_Click">
-                            <StackPanel Orientation="Horizontal"><TextBlock Text="◉" FontSize="20" Width="38"/><TextBlock Text="Hearing Test" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Headphones" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Hearing Test" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                         <Button x:Name="ResultsNav" Style="{StaticResource NavButtonStyle}" Click="ResultsNav_Click">
-                            <StackPanel Orientation="Horizontal"><TextBlock Text="▥" FontSize="20" Width="38"/><TextBlock Text="Results" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="BarChart" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Results" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                         <Button x:Name="FineTuneNav" Style="{StaticResource NavButtonStyle}" Click="FineTuneNav_Click">
-                            <StackPanel Orientation="Horizontal"><TextBlock Text="≋" FontSize="20" Width="38"/><TextBlock Text="Fine Tuning" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Sliders" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Fine Tuning" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                         <Button x:Name="ListeningNav" Style="{StaticResource NavButtonStyle}" Click="ListeningNav_Click">
-                            <StackPanel Orientation="Horizontal"><TextBlock Text="A↔B" FontFamily="Segoe UI" FontSize="13" FontWeight="Bold" Width="38"/><TextBlock Text="Listening Test" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Compare" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Listening Test" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                         <Button x:Name="ProfilesNav" Style="{StaticResource NavButtonStyle}" Click="ProfilesNav_Click">
-                            <StackPanel Orientation="Horizontal"><TextBlock Text="♙" FontSize="20" Width="38"/><TextBlock Text="Profiles" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="User" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Profiles" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                         <Button x:Name="DevicesNav" Style="{StaticResource NavButtonStyle}" Click="DevicesNav_Click">
-                            <StackPanel Orientation="Horizontal"><TextBlock Text="⚙" FontSize="18" Width="38"/><TextBlock Text="Devices" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Speaker" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Devices" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                         <Button x:Name="DebugNav" Style="{StaticResource NavButtonStyle}" Click="DebugNav_Click">
-                            <StackPanel Orientation="Horizontal"><TextBlock Text="›_" FontFamily="Consolas" FontSize="18" Width="38"/><TextBlock Text="Debug" FontSize="14" VerticalAlignment="Center"/></StackPanel>
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Terminal" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Debug" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Margin="10,0,10,14">
                         <Border Height="1" Background="#203142" Margin="8,0,8,12" />
                         <Button x:Name="SettingsNav" Style="{StaticResource NavButtonStyle}" Margin="0,2" Click="SettingsNav_Click">
-                            <StackPanel Orientation="Horizontal"><TextBlock Text="⚙" FontSize="18" Width="38"/><TextBlock Text="Settings" FontSize="13" VerticalAlignment="Center"/></StackPanel>
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Gear" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Settings" FontSize="13" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                         <TextBlock Text="AudioTune" Foreground="#9FB0C4" Margin="16,16,0,0" FontSize="12" />
                         <TextBlock Text="Open sound. Personal hearing." Foreground="#617388" Margin="16,2,0,0" FontSize="10" />

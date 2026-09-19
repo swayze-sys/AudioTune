@@ -68,7 +68,7 @@ This file records decisions that are easy to reverse accidentally if only the cu
 
 ## ADR-008 – Use a frequency-dependent human prior, not a flat median
 
-**Decision:** Correction model v5 aligns dBFS thresholds to an ISO-226-shaped relative human threshold prior.
+**Decision:** Correction model v6 aligns dBFS thresholds to an ISO-226-shaped relative human threshold prior.
 
 **Reason:** The original flat median model falsely treated normal low-frequency hearing sensitivity as a deficit.
 

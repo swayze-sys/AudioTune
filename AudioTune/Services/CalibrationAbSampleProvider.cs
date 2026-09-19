@@ -96,7 +96,7 @@ public sealed class CalibrationAbSampleProvider : ISampleProvider
                 sampleRate,
                 (float)x.FrequencyHz,
                 (float)x.Q,
-                (float)Math.Clamp(x.GainDb, -6.0, 6.0)))
+                (float)Math.Clamp(x.GainDb, -CorrectionPreviewService.MaximumCombinedGainDb, CorrectionPreviewService.MaximumCombinedGainDb)))
             .ToArray();
     }
 }

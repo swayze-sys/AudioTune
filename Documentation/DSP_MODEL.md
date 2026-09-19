@@ -2,7 +2,7 @@
 
 ## Status
 
-Current correction model: **v5** (`CorrectionPreviewService.AlgorithmVersion = 5`).
+Current correction model: **v6** (`CorrectionPreviewService.AlgorithmVersion = 6`).
 
 This model is experimental. It is designed to produce a useful personal listening correction from relative threshold measurements, not a clinical prescription.
 
@@ -154,16 +154,21 @@ finalGain = (modeledGain + fineTune) * strength
 
 Clamp behavior:
 
-- at strength <=100%, target curve is bounded to ±6 dB;
-- above 100%, bound expands up to ±12 dB at 200%.
-
+- modeled hearing correction and Fine Tune are added first and then scaled by intensity;
+- their combined final target is bounded to a fixed ±12 dB at every intensity;
+- Fine Tune remains individually adjustable only within ±6 dB;
+- NotDetectedAtCeiling still requests MaxGainDb * strength (+6 dB at 100%, +12 dB at 200%).
 ## Fine Tuning
 
 Fine Tune is optional moderate-level loudness matching.
 
-Test frequencies per ear:
+Test frequencies per ear are the same complete 30-point set used by the main hearing test:
 
-`63, 125, 250, 500, 2000, 4000, 8000, 12500 Hz`
+`30, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 14000, 16000, 18000 Hz`
+
+A complete Fine Tune pass therefore contains 60 points: 30 frequencies for each ear.
+
+Saved points remain individually selectable. A point review loads the existing offset and keeps it active until the replacement is explicitly accepted. Skipping a point review leaves the saved value unchanged.
 
 Reference: 1 kHz.
 
@@ -175,7 +180,7 @@ Current Fine Tune parameters:
 - reference and test alternate automatically;
 - test is left/right separately.
 
-Fine Tune offsets are interpolated logarithmically **only within the measured Fine Tune frequency range**. They are not extrapolated below 63 Hz or above 12.5 kHz.
+Fine Tune offsets are interpolated logarithmically between saved points across the full 30 Hz to 18 kHz measurement range. They are not extrapolated outside the saved Fine Tune range.
 
 ### Fine Tune master switch
 
@@ -254,7 +259,8 @@ Older versions copied each target point directly into an overlapping PEQ filter,
 
 Current implementation performs iterative residual fitting:
 
-- Q derived from logarithmic spacing between bands;
+- Q derived from logarithmic spacing between bands up to and including 12.5 kHz;
+- fixed broad Q = 1.5 at 14/16/18 kHz to prevent narrow high-treble peaks and valleys;
 - Q clamped 0.70–10;
 - 8 Gauss-Seidel-like passes;
 - damping 0.70;
@@ -269,7 +275,7 @@ Q is the filter's quality factor / effective bandwidth.
 - lower Q = wider filter;
 - higher Q = narrower filter.
 
-Tightly packed 12.5/14/16/18 kHz centers therefore get higher Q than octave-spaced low/mid bands, reducing unintended stacking.
+The 12.5 kHz transition retains its spacing-derived Q. The final 14/16/18 kHz cluster deliberately uses Q = 1.5 so similar adjacent targets form a homogeneous high-treble shelf instead of narrow alternating peaks and valleys. This exception does not change the target curve or the Q calculation below 14 kHz.
 
 ## Composite peak / headroom
 
@@ -305,7 +311,7 @@ The A/B music path is intended to use the same `DspFilterSet` as Equalizer APO.
 
 Both dry and corrected paths use the same preamp/headroom so a simple level jump does not bias the comparison. Switching uses a short crossfade.
 
-**Known implementation caveat:** `CalibrationAbSampleProvider` currently clamps each NAudio peaking filter gain to ±6 dB when constructing `BiQuadFilter`s, while fitted APO filters may be as large as ±12 dB at >100% intensity. This can make A/B diverge from APO for strong corrections. See `KNOWN_ISSUES.md`.
+The NAudio A/B and Stereo Centering paths now accept the same ±12 dB per-filter range as the fitted APO path. Numerical response-equivalence coverage across both implementations remains desirable.
 
 The provider also clamps final float samples to [-1, +1].
 

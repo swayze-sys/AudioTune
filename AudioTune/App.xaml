@@ -1,6 +1,7 @@
 <Application x:Class="AudioTune.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:AudioTune.Controls"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <Color x:Key="BgColor">#070C12</Color>
@@ -29,16 +30,37 @@
         <SolidColorBrush x:Key="RedBrush" Color="{StaticResource RedColor}" />
         <SolidColorBrush x:Key="AmberBrush" Color="{StaticResource AmberColor}" />
 
+        <LinearGradientBrush x:Key="TopBarSurfaceBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#0F1D2A" Offset="0"/>
+            <GradientStop Color="#09131E" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="SidebarSurfaceBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#0A1622" Offset="0"/>
+            <GradientStop Color="#08111A" Offset="1"/>
+        </LinearGradientBrush>
+
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         </Style>
 
         <Style x:Key="CardBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource CardBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#132230" Offset="0"/>
+                        <GradientStop Color="#0D1823" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="#2D4A63" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#02070C" BlurRadius="12" ShadowDepth="2" Opacity="0.55"/>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
@@ -97,12 +119,15 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter />
-                        </Border>
+                        <Grid>
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter />
+                            </Border>
+                            <Border x:Name="ActiveRail" Width="3" Height="28" CornerRadius="0,2,2,0" Background="{StaticResource CyanBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed"/>
+                        </Grid>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="#11253B" /></Trigger>
-                            <Trigger Property="Tag" Value="Selected"><Setter TargetName="Bd" Property="Background" Value="#143A68" /><Setter Property="Foreground" Value="White" /></Trigger>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="#11283F" /><Setter TargetName="Bd" Property="BorderBrush" Value="#284B68" /></Trigger>
+                            <Trigger Property="Tag" Value="Selected"><Setter TargetName="Bd" Property="Background" Value="#173F70" /><Setter TargetName="Bd" Property="BorderBrush" Value="#2C6594" /><Setter TargetName="ActiveRail" Property="Visibility" Value="Visible" /><Setter Property="Foreground" Value="White" /></Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -156,7 +181,7 @@
                                                                   ContentStringFormat="{Binding SelectionBoxItemStringFormat, RelativeSource={RelativeSource AncestorType=ComboBox}}"
                                                                   TextElement.Foreground="#F4F8FF" />
                                                 <Border Grid.Column="1" BorderBrush="#274055" BorderThickness="1,0,0,0">
-                                                    <TextBlock Text="⌄" Foreground="#AFC4D9" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-3,0,0"/>
+                                                    <controls:LineIcon Kind="ChevronDown" Width="14" Height="14" Stroke="#AFC4D9" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                             </Grid>
                                         </Border>

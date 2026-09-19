@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="24">
-            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
             <StackPanel>
                 <TextBlock Text="Optional Fine Tuning" FontSize="28" FontWeight="SemiBold"/>
-                <TextBlock Text="Refine the threshold-derived correction at a moderate listening level. This does not change your raw hearing measurements." Style="{StaticResource MutedTextStyle}" Margin="0,5,0,0"/>
+                <TextBlock Text="Refine the threshold-derived correction at all 30 hearing-test frequencies per ear. This does not change your raw hearing measurements." Style="{StaticResource MutedTextStyle}" Margin="0,5,0,0"/>
             </StackPanel>
 
             <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,20,0,0" Padding="20,16">
@@ -66,8 +66,8 @@
                     <Border Grid.Column="1" Background="#0A121B" BorderBrush="#223A50" BorderThickness="1" CornerRadius="10" Padding="18">
                         <StackPanel>
                             <TextBlock Text="Fine-tune progress" FontWeight="SemiBold"/>
-                            <TextBlock x:Name="ProgressText" Text="0 / 16" FontSize="24" FontWeight="SemiBold" Margin="0,8,0,0"/>
-                            <ProgressBar x:Name="ProgressBar" Maximum="16" Height="8" Foreground="{StaticResource BlueBrush}" Background="#243448" Margin="0,8,0,0"/>
+                            <TextBlock x:Name="ProgressText" Text="0 / 60" FontSize="24" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                            <ProgressBar x:Name="ProgressBar" Maximum="60" Height="8" Foreground="{StaticResource BlueBrush}" Background="#243448" Margin="0,8,0,0"/>
                             <Border Height="1" Background="#26394C" Margin="0,18"/>
                             <TextBlock Text="What this changes" Foreground="#78C9FF" FontWeight="SemiBold"/>
                             <TextBlock Text="The saved value becomes a moderate-level correction delta in the active correction preset. Your hearing thresholds stay untouched." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,7,0,0"/>
@@ -78,6 +78,30 @@
             </Border>
 
             <Border Grid.Row="3" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
+                <Grid Margin="18,14">
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Fine-tune points" FontWeight="SemiBold"/>
+                            <TextBlock Text="Select a saved point to evaluate only that frequency again. The previous value remains active until you save its replacement." Foreground="{StaticResource MutedBrush}" FontSize="10" Margin="0,4,18,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button x:Name="FineTuneLeftEarButton" Content="L  Left ear" Style="{StaticResource PrimaryButtonStyle}" Padding="14,6" Margin="0,0,5,0" Click="FineTuneLeftEar_Click"/>
+                            <Button x:Name="FineTuneRightEarButton" Content="R  Right ear" Style="{StaticResource FlatButtonStyle}" Padding="14,6" Margin="5,0,0,0" Click="FineTuneRightEar_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" Margin="0,12,0,0">
+                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                        <TextBlock x:Name="PointProgressSummary" Text="Left ear · 0 / 30 saved" Foreground="{StaticResource MutedBrush}" FontSize="10" HorizontalAlignment="Right"/>
+                        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" Margin="0,5,0,0">
+                            <WrapPanel x:Name="FrequencyProgressPanel" VerticalAlignment="Center"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="4" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
                 <StackPanel Margin="18,14">
                     <TextBlock Text="Why this is optional" FontWeight="SemiBold"/>
                     <TextBlock Text="The main hearing test measures threshold sensitivity. Fine tuning checks how the correction behaves at a more normal listening level, where loudness growth can differ from threshold behaviour." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" Margin="0,6,0,0"/>

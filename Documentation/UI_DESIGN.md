@@ -17,6 +17,8 @@ Core visual language:
 - rounded corners;
 - generous but disciplined spacing;
 - no large white standard WPF controls inside the dark theme.
+- use the shared vector-rendered LineIcon family for navigation and action icons; do not use Unicode glyphs as icons.
+- separate surfaces with subtle navy gradients, defined blue-gray contours and restrained shadows rather than nearly identical flat fills.
 
 ## Semantic colors
 
@@ -87,6 +89,8 @@ Key sections:
 - Current DSP Summary
 - Detected Playback Devices collapsed/minimized
 
+The Signal Chain uses semantic vector icons for profile, correction preset, Fine Tune, stereo centering, Equalizer APO processing and target device. Its connecting arrows are vector-rendered as well; do not replace these with Unicode glyphs or font-dependent symbols.
+
 Avoid the old large warning/explanation block.
 
 ### Profiles-v0415.png
@@ -105,7 +109,7 @@ Key sections:
 v0.4.16 additionally fixes:
 
 - correction preset display name instead of CLR type name;
-- icons for preset stats and Quick Actions;
+- shared vector-rendered LineIcon symbols for profile type, selected profile, preset stats and every Quick Action;
 - green Active Profile badge instead of a disabled gray button.
 
 ## Top bar
@@ -132,7 +136,16 @@ Do not remove:
 - headphone information;
 - active-profile correction graph.
 
-Desired direction is concise setup/status cards rather than tutorial text.
+The middle quick-control row provides direct, non-destructive controls:
+
+- Audio Processing switches the selected persistent target between active correction and level-matched bypass; it does not delete the profile.
+- Fine Tune includes/bypasses stored Fine Tune measurements and must retain all points while OFF.
+- Calibration Review links to measurement confidence/results instead of repeating static profile facts.
+- Listening check owns A/B and Stereo Centering actions without duplicating DSP/Fine Tune status.
+
+Desired direction is concise actionable controls rather than repeated setup/status cards or tutorial text.
+
+The selected-headphone image should use its transparent source without a visible rectangular matte or frame. A restrained radial blue/cyan glow may sit behind the product image, but must not reduce text contrast or clip against the card edge.
 
 ## Hearing Test
 

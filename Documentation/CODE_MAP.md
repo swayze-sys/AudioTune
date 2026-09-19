@@ -37,7 +37,7 @@ A quick guide for locating behavior.
 ## Correction / psychoacoustics
 
 - `Services/HumanSensitivityModel.cs` – relative ISO-shaped threshold reference/trust.
-- `Services/CorrectionPreviewService.cs` – correction model v5, Fine Tune integration, intensity, stereo preservation.
+- `Services/CorrectionPreviewService.cs` – correction model v6, Fine Tune integration, intensity, stereo preservation.
 - `Data/Psychoacoustics/iso226.sources.json` – source metadata.
 
 ## Fine Tune / centering

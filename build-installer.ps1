@@ -102,5 +102,5 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host ''
 Write-Host 'Installer completed:' -ForegroundColor Green
-Write-Host (Join-Path $OutputDir 'AudioTuneSetup-0.4.16-alpha.exe') -ForegroundColor Green
+Write-Host (Join-Path $OutputDir 'AudioTuneSetup-0.4.17-alpha.exe') -ForegroundColor Green
 Write-Host ".NET Windows Desktop Runtime $DotNetRuntimeVersion is embedded and installs only when required." -ForegroundColor Green

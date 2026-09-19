@@ -20,7 +20,7 @@ AudioTune use:
 - standardized data used through 12.5 kHz;
 - no age-dependent ISO 7029 prior in current model.
 
-Note: the JSON metadata's `correctionAlgorithmVersion` value is stale relative to current model v5 and should be updated.
+The JSON metadata `correctionAlgorithmVersion` is synchronized with current correction model v6.
 
 ## Beyerdynamic Amiron Home
 

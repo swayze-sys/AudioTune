@@ -12,7 +12,7 @@ AudioTune is a local-first Windows application for personal, device-bound headph
 
 - 30 Hz–18 kHz adaptive hearing test for each ear with autosave and point retesting
 - separate, non-destructive Hearing Profiles and Correction Presets
-- correction model v5 with Fine Tune, stereo-image preservation, and centering
+- correction model v6 with Fine Tune, stereo-image preservation, and centering
 - one fitted parametric-EQ definition for preview and Equalizer APO
 - persistent, per-device Windows DSP with level-matched bypass
 - fully local profile storage under `%LOCALAPPDATA%\AudioTune`
@@ -20,13 +20,20 @@ AudioTune is a local-first Windows application for personal, device-bound headph
 
 ## Install
 
-Download `AudioTuneSetup-0.4.16-alpha.exe` from the repository release and run it on 64-bit Windows. The setup contains the application and the verified Microsoft .NET 10 Desktop Runtime prerequisite. Equalizer APO is optional and is offered from the Devices page when system-wide DSP is requested.
+Download `AudioTuneSetup-0.4.17-alpha.exe` from the repository release and run it on 64-bit Windows. The setup contains the application and the verified Microsoft .NET 10 Desktop Runtime prerequisite. Equalizer APO is optional and is offered from the Devices page when system-wide DSP is requested.
 
 AudioTune does not silently change Windows master volume. Persistent DSP must be explicitly configured for the intended playback endpoint.
 
 ## Development status
 
-Current baseline: **v0.4.16-alpha (2026-09-18)**. The source builds cleanly on Windows with .NET SDK 10.0.401 (0 warnings, 0 errors). Before changing code, read [`AGENTS.md`](AGENTS.md) and [`Documentation/INDEX.md`](Documentation/INDEX.md).
+Current release: **v0.4.17-alpha (2026-09-19)**. The source builds cleanly on Windows with .NET SDK 10.0.401 (0 warnings, 0 errors). Before changing code, read [`AGENTS.md`](AGENTS.md) and [`Documentation/INDEX.md`](Documentation/INDEX.md).
+
+## v0.4.17-alpha
+
+- Smoothed the fitted DSP only in the final 14/16/18 kHz filter cluster: Q = 1.5 prevents narrow visible/audible peaks and valleys while preserving the 12.5 kHz transition and every lower-band Q rule.
+- Added deterministic high-treble ripple tests alongside the existing correction-model tests.
+- Replaced all remaining Profiles glyphs with DPI-sharp WPF vectors for profile information, preset metrics, import/new-test actions and Quick Actions.
+- Added semantic vector nodes and connectors to the Devices signal chain, plus matching vector action controls.
 
 
 ## v0.4.16-alpha
@@ -107,7 +114,7 @@ Current baseline: **v0.4.16-alpha (2026-09-18)**. The source builds cleanly on W
 
 AudioTune is a Windows C#/WPF prototype for end-to-end personal headphone hearing calibration. It measures left/right hearing thresholds from 30 Hz to 18 kHz, stores the raw measurements permanently, derives a personal correction preset, lets the result be verified with music, and can apply the same DSP persistently to a selected Windows playback endpoint through Equalizer APO.
 
-### Correction model v5
+### Correction model v6
 
 The previous prototype compared every raw threshold against a flat median and scaled the difference. v0.4 replaces that provisional model:
 
@@ -145,7 +152,7 @@ One long hearing test can therefore have multiple correction presets without dup
 
 The new Fine Tuning page performs a shorter moderate-level loudness comparison after the threshold test. It alternates a 1 kHz reference with selected target frequencies for each ear. The user adjusts the test frequency quieter/louder until the pair sounds approximately equally loud, then stores that offset in the active correction preset.
 
-This step is optional. Skipping it leaves correction model v5 to make a conservative estimate from the threshold profile. Fine Tune can be included or excluded in the correction preview; the graph always remains a single left/right final-curve view rather than drawing separate delta lines.
+This step is optional. Skipping it leaves correction model v6 to make a conservative estimate from the threshold profile. Fine Tune can be included or excluded in the correction preview; the graph always remains a single left/right final-curve view rather than drawing separate delta lines.
 
 ### One DSP definition for music A/B and Windows
 

@@ -2,6 +2,13 @@
 
 This history focuses on architecture/product decisions, not every minor UI patch.
 
+## v0.4.17 – DSP high-treble smoothing / vector icon pass
+
+- The 14/16/18 kHz PEQ cluster uses Q = 1.5, retaining the 12.5 kHz transition while preventing narrow high-treble ripple.
+- Deterministic DSP tests cover inter-band ripple and target retention across the final treble cluster.
+- Profiles now uses the shared WPF vector LineIcon family for profile/preset information and all actions.
+- Devices signal-chain stages, connections and primary actions use semantic WPF vector icons.
+
 ## v0.1.x – Working WPF prototype
 
 - AudioTune name and dark WPF UI established.

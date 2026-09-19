@@ -13,14 +13,14 @@ AudioTune ist eine lokale Windows-Anwendung zur persönlichen, gerätegebundenen
 - adaptiver Hörtest von 30 Hz bis 18 kHz für jedes Ohr
 - automatische Zwischenspeicherung, Verifikation auffälliger Punkte und Einzelpunkt-Wiederholung
 - klare Trennung zwischen unveränderten Hörprofilen und einstellbaren Korrektur-Presets
-- Korrekturmodell v5 mit optionalem Fine Tune, Stereo Image Preservation und Stereo Centering
+- Korrekturmodell v6 mit optionalem Fine Tune, Stereo Image Preservation und Stereo Centering
 - identisches parametrisches Filtermodell für A/B-Wiedergabe und Equalizer APO
 - dauerhafter, gerätebezogener Windows-DSP mit pegelgleichem Bypass
 - ausschließlich lokale Profildaten unter `%LOCALAPPDATA%\AudioTune`
 
 ## Installation
 
-Lade `AudioTuneSetup-0.4.16-alpha.exe` aus dem GitHub-Release herunter und starte es unter 64-Bit-Windows. Das Offline-Setup enthält die erforderliche Microsoft .NET 10 Desktop Runtime und installiert sie nur, wenn noch keine kompatible Version vorhanden ist.
+Lade `AudioTuneSetup-0.4.17-alpha.exe` aus dem GitHub-Release herunter und starte es unter 64-Bit-Windows. Das Offline-Setup enthält die erforderliche Microsoft .NET 10 Desktop Runtime und installiert sie nur, wenn noch keine kompatible Version vorhanden ist.
 
 Equalizer APO ist nur für die optionale systemweite Korrektur erforderlich. AudioTune bietet die geprüfte Installation auf der Seite **Devices** an; das gewünschte Wiedergabegerät muss anschließend bewusst ausgewählt werden.
 
@@ -41,7 +41,7 @@ Das vollständige Offline-Setup wird mit folgendem Befehl erzeugt:
 .\build-installer.ps1
 ```
 
-Das Ergebnis liegt unter `dist\AudioTuneSetup-0.4.16-alpha.exe`. Das Build-Skript lädt die signierte Inno-Setup-Buildkomponente bei Bedarf in einen lokalen, nicht versionierten Werkzeugordner und prüft die eingebettete .NET-Runtime mit dem offiziellen SHA-512-Hash.
+Das Ergebnis liegt unter `dist\AudioTuneSetup-0.4.17-alpha.exe`. Das Build-Skript lädt die signierte Inno-Setup-Buildkomponente bei Bedarf in einen lokalen, nicht versionierten Werkzeugordner und prüft die eingebettete .NET-Runtime mit dem offiziellen SHA-512-Hash.
 
 ## Datenschutz und Messsicherheit
 
