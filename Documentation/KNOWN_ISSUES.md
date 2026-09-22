@@ -2,11 +2,11 @@
 
 ## Baseline verification status
 
-### v0.4.17-alpha interactive UI smoke test still pending
+### v0.4.18 interactive UI and endpoint listening checks still pending
 
-The handoff source now builds successfully on Windows with 0 warnings and 0 errors. A full interactive pass through every page and the real Equalizer APO auto-apply flow is still pending.
+The current source builds successfully on Windows with 0 warnings and 0 errors. A full interactive pass through every page and the real Equalizer APO auto-apply flow is still pending.
 
-**Priority:** P0. Complete the interactive regression matrix before calling the alpha fully validated.
+**Priority:** P0. Complete the interactive regression matrix before calling the release fully validated.
 
 ---
 
@@ -35,12 +35,13 @@ Normalize or deliberately document the intended range.
 
 Fine Tune/intensity/centering auto-apply had multiple iterations where UI state changed but `AudioTune.txt` did not.
 
-Current v0.4.17 service path directly calls `SystemDspService.Apply()` when Auto-apply is enabled.
+Current service path directly calls `SystemDspService.Apply()` when Auto-apply is enabled.
 
 Still verify:
 
 - `# Fine Tune state` changes ON/OFF immediately;
 - generated filter lines actually change when Fine Tune changes;
+- generated comments show hearing, Fine Tune, target, real summed DSP and final output values at each fitted band;
 - top bar returns to ACTIVE rather than remaining UPDATE;
 - explicit bypass remains bypassed;
 - wrong/different profile is not silently overwritten.
@@ -55,7 +56,7 @@ There is no transactional multi-file rollback around all managed APO file writes
 
 ### Experimental psychoacoustic model
 
-The current v6 constants (`tanh` maxima/knees, trust weights, stereo-difference limits) are empirical product parameters, not clinically validated fitting rules.
+The current v7 constants (`tanh` maxima/knees, trust weights, stereo-difference limits) are empirical product parameters, not clinically validated fitting rules.
 
 ### Fine Tune is also scaled by global intensity
 
@@ -91,9 +92,15 @@ Any physical DAC/headphone-amp gain knob or hardware gain mode must remain consi
 
 ## UI / maintainability issues
 
-### No automated test project yet
+### Native host needs installed-endpoint listening validation
 
-There is currently no dedicated unit/integration test project. This is the biggest engineering-process gap given the amount of DSP/profile logic.
+The native host has deterministic ABI, bypass and sample-equivalence tests, and the generated Equalizer APO line is covered by managed tests. A real installed-endpoint listening pass is still required because it depends on Windows endpoint registration, the audio service and third-party application output.
+
+Stereo endpoints are the validated target. Equalizer APO can instantiate the two-channel effect repeatedly for wider layouts, but channel-pair behavior on 5.1/7.1 devices has not yet been interactively validated.
+
+### Enhancement peak/headroom is dynamic
+
+The static PEQ headroom figure does not attempt to predict every time-varying peak produced by Clarity, Ambience, Surround, Dynamic Boost or Bass. The host deliberately preserves the original DfxDsp output instead of adding a second AudioTune limiter. Use automatic PEQ preamp/headroom and validate demanding material; a future true-peak meter could make this risk more visible.
 
 ### WPF code-behind is becoming large
 

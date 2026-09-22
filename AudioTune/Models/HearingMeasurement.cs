@@ -44,7 +44,7 @@ public sealed class HearingMeasurement
 public sealed class HearingSession
 {
     public int SchemaVersion { get; set; } = 3;
-    public string AppVersion { get; set; } = "0.4.17-alpha";
+    public string AppVersion { get; set; } = "0.4.18";
     public int TestProtocolVersion { get; set; } = 3;
     public int CorrectionAlgorithmVersionAtMeasurement { get; set; } = 6;
     public Guid Id { get; set; } = Guid.NewGuid();
@@ -77,11 +77,13 @@ public sealed class FineTuneAdjustment
 
 public sealed class CorrectionPreset
 {
-    public int SchemaVersion { get; set; } = 2;
+    public int SchemaVersion { get; set; } = 3;
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid HearingProfileId { get; set; }
     public string Name { get; set; } = "Personal correction";
     public double StrengthPercent { get; set; } = 100.0;
+    // The raw Hearing Profile remains untouched when its modeled correction stage is bypassed.
+    public bool HearingProfileEnabled { get; set; } = true;
     // Fine-tune data is retained even when disabled so it can be toggled on/off instantly.
     public bool FineTuneEnabled { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -91,6 +93,7 @@ public sealed class CorrectionPreset
     // Final post-EQ stereo-centering trim. Positive moves the perceived image to the right
     // by attenuating the left channel; negative moves it left by attenuating the right.
     // No channel is boosted by this control.
+    public bool StereoCenteringEnabled { get; set; } = true;
     public double StereoCenterBalanceDb { get; set; } = 0.0;
     public DateTime? StereoCenteringUpdatedAt { get; set; }
 

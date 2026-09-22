@@ -19,6 +19,9 @@ if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+& .\build-native-fxsound.ps1 -Configuration Debug
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
 Write-Host 'Restoring AudioTune...' -ForegroundColor Cyan
 dotnet restore .\AudioTune.sln
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

@@ -49,7 +49,7 @@ if (-not $ISCC) {
         '/NORESTART',
         '/CURRENTUSER',
         "/DIR=`"$InnoDir`""
-    ) -Wait -PassThru
+    ) -Wait -PassThru -WindowStyle Hidden
     if ($InnoInstall.ExitCode -ne 0 -or -not (Test-Path -LiteralPath (Join-Path $InnoDir 'ISCC.exe'))) {
         Write-Host "Inno Setup installation failed with exit code $($InnoInstall.ExitCode)." -ForegroundColor Red
         exit 2
@@ -102,5 +102,5 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host ''
 Write-Host 'Installer completed:' -ForegroundColor Green
-Write-Host (Join-Path $OutputDir 'AudioTuneSetup-0.4.17-alpha.exe') -ForegroundColor Green
+Write-Host (Join-Path $OutputDir 'AudioTuneSetup-0.4.18.exe') -ForegroundColor Green
 Write-Host ".NET Windows Desktop Runtime $DotNetRuntimeVersion is embedded and installs only when required." -ForegroundColor Green

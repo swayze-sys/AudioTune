@@ -15,10 +15,10 @@
             <!-- Hero / calibration state -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="310"/></Grid.ColumnDefinitions>
-                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,12,0">
+                <controls:AccentBorder Style="{StaticResource CardBorderStyle}" Margin="0,0,12,0">
                     <Grid Margin="22,18">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="150"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                        <Image Source="/Assets/Headphones/AmironHome.png" Stretch="Uniform" Margin="0,0,20,0"/>
+                        <Image Source="/Assets/Headphones/AmironHomeCutout.png" Stretch="Uniform" Margin="0,0,20,0"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="CALIBRATION LISTENING TEST" Foreground="#7389A1" FontSize="11"/>
                             <TextBlock Text="Original vs. Calibrated" FontSize="27" FontWeight="SemiBold" Margin="0,5,0,0"/>
@@ -34,9 +34,9 @@
                             </StackPanel>
                         </StackPanel>
                     </Grid>
-                </Border>
+                </controls:AccentBorder>
 
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                <controls:AccentBorder Grid.Column="1" Style="{StaticResource CardBorderStyle}">
                     <StackPanel Margin="18,15">
                         <TextBlock Text="A/B test principles" FontWeight="SemiBold" FontSize="14"/>
                         <Grid Margin="0,13,0,0">
@@ -55,14 +55,14 @@
                             </StackPanel>
                         </Grid>
                     </StackPanel>
-                </Border>
+                </controls:AccentBorder>
             </Grid>
 
             <!-- Player and A/B switch -->
             <Grid Grid.Row="1" Margin="0,12,0,0">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="1.15*"/><ColumnDefinition Width="0.85*"/></Grid.ColumnDefinitions>
 
-                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,8,0">
+                <controls:AccentBorder Style="{StaticResource CardBorderStyle}" Margin="0,0,8,0">
                     <Grid Margin="20,17">
                         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
                         <Grid>
@@ -103,9 +103,9 @@
                                        Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="11" LineHeight="17" Margin="0,5,0,0"/>
                         </StackPanel>
                     </Grid>
-                </Border>
+                </controls:AccentBorder>
 
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="4,0,0,0">
+                <controls:AccentBorder Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="4,0,0,0">
                     <Grid Margin="20,17">
                         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                         <StackPanel>
@@ -131,28 +131,28 @@
                             </Grid>
                         </Border>
                     </Grid>
-                </Border>
+                </controls:AccentBorder>
             </Grid>
 
             <!-- Correction preview -->
             <Grid Grid.Row="2" Margin="0,12,0,0">
                 <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
-                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,8,0">
+                <controls:AccentBorder Style="{StaticResource CardBorderStyle}" Margin="0,0,8,0">
                     <Grid Margin="16,12"><Grid.RowDefinitions><RowDefinition Height="32"/><RowDefinition/></Grid.RowDefinitions>
                         <Grid><StackPanel Orientation="Horizontal"><TextBlock Text="Left ear correction preview" FontWeight="SemiBold"/><TextBlock Text="  B also uses saved Fine Tune" Foreground="{StaticResource AmberBrush}" FontSize="10" VerticalAlignment="Center"/><CheckBox x:Name="ShowFineTuneCheck" Content="Preview with Fine Tune (display only)" FontSize="9" Foreground="{StaticResource MutedBrush}" Margin="12,0,0,0" VerticalAlignment="Center" Checked="ShowFineTuneChanged" Unchecked="ShowFineTuneChanged"/></StackPanel><TextBlock x:Name="LeftCorrectionValueText" Text="Hover or click a point" Foreground="#6F8298" FontSize="9" HorizontalAlignment="Right" VerticalAlignment="Center"/></Grid>
                         <controls:FrequencyChart x:Name="LeftCorrectionChart" Grid.Row="1" MinimumY="-12" MaximumY="12" YUnit="dB" ShowZeroLine="True"/>
                     </Grid>
-                </Border>
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="4,0,0,0">
+                </controls:AccentBorder>
+                <controls:AccentBorder Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="4,0,0,0">
                     <Grid Margin="16,12"><Grid.RowDefinitions><RowDefinition Height="32"/><RowDefinition/></Grid.RowDefinitions>
                         <Grid><StackPanel Orientation="Horizontal"><TextBlock Text="Right ear correction preview" FontWeight="SemiBold"/><TextBlock Text="  B also uses saved Fine Tune" Foreground="{StaticResource AmberBrush}" FontSize="10" VerticalAlignment="Center"/></StackPanel><TextBlock x:Name="RightCorrectionValueText" Text="Hover or click a point" Foreground="#6F8298" FontSize="9" HorizontalAlignment="Right" VerticalAlignment="Center"/></Grid>
                         <controls:FrequencyChart x:Name="RightCorrectionChart" Grid.Row="1" MinimumY="-12" MaximumY="12" YUnit="dB" ShowZeroLine="True"/>
                     </Grid>
-                </Border>
+                </controls:AccentBorder>
             </Grid>
 
             <!-- Debug/status -->
-            <Border x:Name="DebugPanel" Grid.Row="3" Style="{StaticResource CardBorderStyle}" Margin="0,12,0,4" Padding="16,12">
+            <controls:AccentBorder x:Name="DebugPanel" Grid.Row="3" Style="{StaticResource CardBorderStyle}" Margin="0,12,0,4" Padding="16,12">
                 <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                     <StackPanel><TextBlock Text="A/B Debug" FontFamily="Consolas" FontWeight="SemiBold"/><TextBlock Text="Live playback pipeline" Style="{StaticResource MutedTextStyle}" Margin="0,4,0,0"/></StackPanel>
@@ -160,7 +160,7 @@
                     <StackPanel Grid.Column="2"><TextBlock Text="Selected output" Style="{StaticResource MutedTextStyle}"/><TextBlock x:Name="DebugOutputText" Text="—" FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/></StackPanel>
                     <StackPanel Grid.Column="3"><TextBlock Text="DSP state" Style="{StaticResource MutedTextStyle}"/><TextBlock x:Name="DebugDspText" Text="Bypass" FontSize="11" Margin="0,3,0,0"/></StackPanel>
                 </Grid>
-            </Border>
+            </controls:AccentBorder>
         </Grid>
     </ScrollViewer>
 </UserControl>

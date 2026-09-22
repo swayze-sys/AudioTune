@@ -10,3 +10,9 @@ dist/
 Installer/Prerequisites/
 .tmp/
 *.zip
+Native/bin/
+Native/obj/
+ThirdParty/FxSound/lib/
+ThirdParty/FxSound/dsp/DfxDsp/
+ThirdParty/FxSound/audiopassthru/audiopassthru/
+.vendor-cache/

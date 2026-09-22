@@ -1,6 +1,7 @@
 <UserControl x:Class="AudioTune.Views.FineTuneView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:AudioTune.Controls">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="24">
             <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
@@ -9,7 +10,7 @@
                 <TextBlock Text="Refine the threshold-derived correction at all 30 hearing-test frequencies per ear. This does not change your raw hearing measurements." Style="{StaticResource MutedTextStyle}" Margin="0,5,0,0"/>
             </StackPanel>
 
-            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,20,0,0" Padding="20,16">
+            <controls:AccentBorder Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,20,0,0" Padding="20,16">
                 <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                     <StackPanel VerticalAlignment="Center">
@@ -42,9 +43,9 @@
                         </CheckBox.Template>
                     </CheckBox>
                 </Grid>
-            </Border>
+            </controls:AccentBorder>
 
-            <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
+            <controls:AccentBorder Grid.Row="2" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
                 <Grid Margin="24">
                     <Grid.ColumnDefinitions><ColumnDefinition Width="1.3*"/><ColumnDefinition Width="0.7*"/></Grid.ColumnDefinitions>
                     <StackPanel>
@@ -75,9 +76,9 @@
                         </StackPanel>
                     </Border>
                 </Grid>
-            </Border>
+            </controls:AccentBorder>
 
-            <Border Grid.Row="3" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
+            <controls:AccentBorder Grid.Row="3" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
                 <Grid Margin="18,14">
                     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                     <Grid>
@@ -99,14 +100,14 @@
                         </ScrollViewer>
                     </Grid>
                 </Grid>
-            </Border>
+            </controls:AccentBorder>
 
-            <Border Grid.Row="4" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
+            <controls:AccentBorder Grid.Row="4" Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
                 <StackPanel Margin="18,14">
                     <TextBlock Text="Why this is optional" FontWeight="SemiBold"/>
                     <TextBlock Text="The main hearing test measures threshold sensitivity. Fine tuning checks how the correction behaves at a more normal listening level, where loudness growth can differ from threshold behaviour." TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" Margin="0,6,0,0"/>
                 </StackPanel>
-            </Border>
+            </controls:AccentBorder>
         </Grid>
     </ScrollViewer>
 </UserControl>

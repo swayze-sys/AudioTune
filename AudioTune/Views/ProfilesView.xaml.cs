@@ -228,19 +228,27 @@ public partial class ProfilesView : UserControl
             return;
         }
 
-        PresetIntensityValue.Text = $"{p.StrengthPercent:0}%";
+        PresetIntensityValue.Text = p.HearingProfileEnabled
+            ? $"{p.StrengthPercent:0}%"
+            : $"OFF · {p.StrengthPercent:0}% saved";
+        PresetIntensityValue.Foreground = (Brush)FindResource(p.HearingProfileEnabled ? "TextBrush" : "MutedBrush");
         PresetFineTuneValue.Text = p.FineTuneEnabled ? $"ON · {p.FineTuneAdjustments.Count} pts" : $"OFF · {p.FineTuneAdjustments.Count} saved";
         PresetFineTuneValue.Foreground = (Brush)FindResource(p.FineTuneEnabled ? "GreenBrush" : "MutedBrush");
-        PresetCenterValue.Text = $"{p.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB";
+        PresetCenterValue.Text = p.StereoCenteringEnabled
+            ? $"{p.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB"
+            : $"OFF · {p.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB saved";
+        PresetCenterValue.Foreground = (Brush)FindResource(p.StereoCenteringEnabled ? "TextBrush" : "MutedBrush");
         PresetAlgorithmValue.Text = $"v{CorrectionPreviewService.AlgorithmVersion}";
     }
 
     private void ClearPresetStats()
     {
         PresetIntensityValue.Text = "—";
+        PresetIntensityValue.Foreground = (Brush)FindResource("TextBrush");
         PresetFineTuneValue.Text = "—";
         PresetFineTuneValue.Foreground = (Brush)FindResource("TextBrush");
         PresetCenterValue.Text = "—";
+        PresetCenterValue.Foreground = (Brush)FindResource("TextBrush");
         PresetAlgorithmValue.Text = "—";
     }
 

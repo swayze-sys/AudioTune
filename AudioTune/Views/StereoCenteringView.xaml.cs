@@ -74,6 +74,7 @@ public partial class StereoCenteringView : UserControl
     {
         if (_session is null || _preset is null) return;
         _preset.StereoCenterBalanceDb = BalanceSlider.Value;
+        _preset.StereoCenteringEnabled = true;
         _preset.StereoCenteringUpdatedAt = DateTime.Now;
         AppServices.CorrectionPresets.Save(_preset);
         var autoApply = AppServices.SystemDsp.TryAutoApplyPreset(_session, _preset);

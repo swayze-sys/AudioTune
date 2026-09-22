@@ -71,7 +71,7 @@
             </StackPanel>
 
             <!-- DSP target -->
-            <Border Style="{StaticResource CardBorderStyle}" Margin="0,18,0,0">
+            <controls:AccentBorder Style="{StaticResource CardBorderStyle}" Margin="0,18,0,0">
                 <Grid Margin="20">
                     <Grid.ColumnDefinitions><ColumnDefinition Width="2.1*"/><ColumnDefinition Width="1"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
                     <StackPanel Margin="0,0,24,0">
@@ -105,10 +105,10 @@
                         <Button Content="Refresh status" Style="{StaticResource FlatButtonStyle}" HorizontalAlignment="Left" Padding="11,6" Margin="0,12,0,0" Click="RefreshDsp_Click"/>
                     </StackPanel>
                 </Grid>
-            </Border>
+            </controls:AccentBorder>
 
             <!-- Signal chain -->
-            <Border Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
+            <controls:AccentBorder Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
                 <StackPanel Margin="20">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Signal Chain" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -136,12 +136,12 @@
                         <Border Grid.Column="10" Style="{StaticResource SignalNodeStyle}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Style="{StaticResource SignalNodeIconBadgeStyle}"><controls:LineIcon Kind="Speaker" Style="{StaticResource SignalNodeIconStyle}"/></Border><StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="TARGET DEVICE" Foreground="#70869E" FontSize="9"/><TextBlock x:Name="ChainTargetValue" Text="—" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/></StackPanel></Grid></Border>
                     </Grid>
                 </StackPanel>
-            </Border>
+            </controls:AccentBorder>
 
             <!-- Actions + summary -->
             <Grid Margin="0,14,0,0">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="1.35*"/><ColumnDefinition Width="14"/><ColumnDefinition Width="0.9*"/></Grid.ColumnDefinitions>
-                <Border Style="{StaticResource CardBorderStyle}">
+                <controls:AccentBorder Style="{StaticResource CardBorderStyle}">
                     <StackPanel Margin="20">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="DSP Actions" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -166,9 +166,9 @@
                             <TextBlock x:Name="CompactDspStatusText" Text="" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="12,0,0,0" TextTrimming="CharacterEllipsis"/>
                         </StackPanel>
                     </StackPanel>
-                </Border>
+                </controls:AccentBorder>
 
-                <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}">
+                <controls:AccentBorder Grid.Column="2" Style="{StaticResource CardBorderStyle}">
                     <StackPanel Margin="20">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Current DSP Summary" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -191,11 +191,11 @@
                         </Grid>
                         <Slider x:Name="CorrectionStrengthSlider" Minimum="0" Maximum="200" Value="100" TickFrequency="10" IsSnapToTickEnabled="True" Margin="0,8,0,0" ValueChanged="CorrectionStrengthSlider_ValueChanged"/>
                     </StackPanel>
-                </Border>
+                </controls:AccentBorder>
             </Grid>
 
             <!-- Optional/diagnostic playback list, now functional -->
-            <Border Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
+            <controls:AccentBorder Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
                 <Expander x:Name="PlaybackDevicesExpander" IsExpanded="False" Background="Transparent" Foreground="{StaticResource TextBrush}">
                     <Expander.Header>
                         <StackPanel Orientation="Horizontal" Margin="8,4">
@@ -222,7 +222,7 @@
                         </ListBox>
                     </StackPanel>
                 </Expander>
-            </Border>
+            </controls:AccentBorder>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

@@ -15,7 +15,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        _navButtons = [DashboardNav, HearingNav, ResultsNav, FineTuneNav, ListeningNav, ProfilesNav, DevicesNav, DebugNav, SettingsNav];
+        _navButtons = [DashboardNav, HearingNav, ResultsNav, FineTuneNav, EnhancementsNav, ListeningNav, ProfilesNav, DevicesNav, DebugNav, SettingsNav];
         Loaded += MainWindow_Loaded;
         AppServices.Settings.SettingsChanged += Settings_SettingsChanged;
         AppServices.Profiles.ProfilesChanged += Profiles_ProfilesChanged;
@@ -66,6 +66,7 @@ public partial class MainWindow : Window
     }
     private void ResultsNav_Click(object sender, RoutedEventArgs e) => Navigate(new ResultsView(), ResultsNav);
     private void FineTuneNav_Click(object sender, RoutedEventArgs e) => Navigate(new FineTuneView(), FineTuneNav);
+    private void EnhancementsNav_Click(object sender, RoutedEventArgs e) => Navigate(new EnhancementsView(), EnhancementsNav);
     private void ListeningNav_Click(object sender, RoutedEventArgs e) => Navigate(new ListeningTestView(), ListeningNav);
     private void ProfilesNav_Click(object sender, RoutedEventArgs e) => Navigate(new ProfilesView(), ProfilesNav);
     private void DevicesNav_Click(object sender, RoutedEventArgs e) => OpenDevicesPage();
@@ -74,6 +75,7 @@ public partial class MainWindow : Window
 
     public void OpenListeningTest() => Navigate(new ListeningTestView(), ListeningNav);
     public void OpenFineTune() => Navigate(new FineTuneView(), FineTuneNav);
+    public void OpenEnhancements() => Navigate(new EnhancementsView(), EnhancementsNav);
     public void OpenStereoCentering() => Navigate(new StereoCenteringView(), ResultsNav);
     public void OpenResults() => Navigate(new ResultsView(), ResultsNav);
 

@@ -106,6 +106,8 @@ This file records decisions that are easy to reverse accidentally if only the cu
 
 **Decision:** `NotDetectedAtCeiling` is not ignored; it receives maximum positive correction allowed by current intensity.
 
+**Fine Tune:** The ceiling contribution remains part of the normal combined formula. Saved Fine Tune is added before strength and the shared ±12 dB clamp; it must not be skipped merely because the hearing-test point is a ceiling result.
+
 **Reason:** User explicitly rejected dropping these frequencies. The measurement means hearing threshold lies beyond the current test range.
 
 ---
@@ -215,3 +217,13 @@ This file records decisions that are easy to reverse accidentally if only the cu
 **Decision:** Devices and Profiles should avoid walls of text. Use status chips, summaries and info buttons.
 
 **Reason:** Earlier screens became cluttered as functionality grew.
+
+---
+
+## ADR-026 – Dashboard exposes the complete processing chain
+
+**Decision:** Audio Processing is the master bypass, while Hearing Profile, Fine Tune, Stereo Centering and FxSound Enhancements are independently switchable stages.
+
+**Persistence:** Stage switches retain raw measurements and saved tuning values. Existing presets migrate with Hearing Profile and Stereo Centering enabled.
+
+**UI:** Calibration Review shares the chain header with the master switch. Listening check contains only the A/B action.

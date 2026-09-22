@@ -1,6 +1,6 @@
 # AudioTune Documentation Index
 
-This documentation set covers the current AudioTune v0.4.17-alpha release and its v0.4.16-alpha handoff baseline.
+This documentation set covers the current AudioTune v0.4.18 release and its v0.4.16-alpha handoff baseline.
 
 ## Start here
 
@@ -17,6 +17,7 @@ This documentation set covers the current AudioTune v0.4.17-alpha release and it
 - [`DSP_MODEL.md`](DSP_MODEL.md) – current correction model v6, Fine Tune, stereo preservation, PEQ fitting and headroom.
 - [`PROFILE_MODEL.md`](PROFILE_MODEL.md) – hearing profiles, correction presets, persistence, migrations and data locations.
 - [`EQUALIZER_APO.md`](EQUALIZER_APO.md) – installation, per-device persistent DSP, config files, status and auto-apply.
+- [FXSOUND_MODULE.md](FXSOUND_MODULE.md) – isolated original FxSound engine, effect mapping, null comparison and integration boundary.
 
 ## Product / development
 

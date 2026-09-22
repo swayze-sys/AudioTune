@@ -62,7 +62,9 @@ public static class DspFilterService
 
         double finalRequired = CalculateCompositePeakDb(left, right, 48000);
         double potentialClipping = Math.Max(0.0, finalRequired - availableHeadroom);
-        var (leftTrimDb, rightTrimDb) = GetStereoCenterTrims(preset.StereoCenterBalanceDb);
+        var (leftTrimDb, rightTrimDb) = preset.StereoCenteringEnabled
+            ? GetStereoCenterTrims(preset.StereoCenterBalanceDb)
+            : (0.0, 0.0);
 
         return new DspFilterSet(left, right, finalRequired, appliedPreampDb, positiveScale, potentialClipping, leftTrimDb, rightTrimDb);
     }
@@ -106,8 +108,8 @@ public static class DspFilterService
     {
         var set = BuildFilterSet(session, preset);
         var settings = AppServices.Settings.Current;
-        var text = $"alg={CorrectionPreviewService.AlgorithmVersion};profile={session.Id:D};preset={preset.Id:D};strength={preset.StrengthPercent:0.###};fineTuneEnabled={preset.FineTuneEnabled};" +
-                   $"autoPreamp={settings.UseAutomaticPreamp};manualPreamp={settings.ManualPreampDb:0.###};limitBoosts={settings.LimitPositiveBoostsToPreamp};appliedPreamp={set.AppliedPreampDb:0.###};scale={set.PositiveGainScale:0.######};stereoPreserve={settings.StereoPreservationEnabled};maxLR={settings.MaxInterauralCorrectionDifferenceDb:0.###};center={preset.StereoCenterBalanceDb:0.###};leftTrim={set.LeftTrimDb:0.###};rightTrim={set.RightTrimDb:0.###};" +
+        var text = $"alg={CorrectionPreviewService.AlgorithmVersion};profile={session.Id:D};preset={preset.Id:D};strength={preset.StrengthPercent:0.###};hearingProfileEnabled={preset.HearingProfileEnabled};fineTuneEnabled={preset.FineTuneEnabled};" +
+                   $"autoPreamp={settings.UseAutomaticPreamp};manualPreamp={settings.ManualPreampDb:0.###};limitBoosts={settings.LimitPositiveBoostsToPreamp};appliedPreamp={set.AppliedPreampDb:0.###};scale={set.PositiveGainScale:0.######};stereoPreserve={settings.StereoPreservationEnabled};maxLR={settings.MaxInterauralCorrectionDifferenceDb:0.###};centeringEnabled={preset.StereoCenteringEnabled};center={preset.StereoCenterBalanceDb:0.###};leftTrim={set.LeftTrimDb:0.###};rightTrim={set.RightTrimDb:0.###};" +
                    string.Join(";", set.Left.Select(x => $"L:{x.FrequencyHz:0.##}:{x.GainDb:0.000}:{x.Q:0.###}")) + ";" +
                    string.Join(";", set.Right.Select(x => $"R:{x.FrequencyHz:0.##}:{x.GainDb:0.000}:{x.Q:0.###}"));
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text))).ToLowerInvariant()[..16];
@@ -183,10 +185,10 @@ public static class DspFilterService
 
         // Gauss-Seidel style residual fitting at the band centres.  With spacing-aware Q values
         // this converges quickly and, unlike the old direct mapping, explicitly compensates for
-        // the overlap between neighbouring filters.  Eight passes are sufficient for sub-0.1 dB
-        // error on normal AudioTune curves while keeping the implementation deterministic.
+        // the overlap between neighbouring filters. Sixteen passes also keep ceiling + Fine Tune
+        // targets near the +/-12 dB boundary accurate while remaining fully deterministic.
         const double damping = 0.70;
-        const int passes = 8;
+        const int passes = 16;
         for (int pass = 0; pass < passes; pass++)
         {
             for (int i = 0; i < Bands.Length; i++)

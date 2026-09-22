@@ -2,6 +2,13 @@
 
 This history focuses on architecture/product decisions, not every minor UI patch.
 
+## v0.4.18 – FxSound integration and dashboard processing chain
+
+- The original, pinned FxSound DfxDsp engine powers the five Sound Enhancements controls.
+- A native VST2 host connects this separate enhancement stage to the selected Equalizer APO output without a virtual sound card.
+- The dashboard exposes the processing stages individually beneath the master switch.
+- Sound Enhancements gained larger PNG symbols and a wave illustration; edge lighting was unified across cards.
+- The installer packages a versioned host and the verified .NET Desktop Runtime prerequisite, without private runtime files in the app folder.
 ## v0.4.17 – DSP high-treble smoothing / vector icon pass
 
 - The 14/16/18 kHz PEQ cluster uses Q = 1.5, retaining the 12.5 kHz transition while preventing narrow high-treble ripple.

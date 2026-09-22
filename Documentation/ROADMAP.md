@@ -4,7 +4,7 @@ This is a prioritized continuation plan, not a promise that every item must be i
 
 ## P0 – Establish a trustworthy baseline
 
-1. Run v0.4.17-alpha interactively on Windows.
+1. Run v0.4.18 interactively on the target Windows playback endpoint.
 2. Verify all pages open, especially Devices and Profiles.
 3. Verify user data under `%LOCALAPPDATA%\AudioTune` remains intact.
 4. Verify Fine Tune auto-apply end-to-end against actual Equalizer APO files.

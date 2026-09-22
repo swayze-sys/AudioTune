@@ -8,10 +8,10 @@
     <AssemblyName>AudioTune</AssemblyName>
     <RootNamespace>AudioTune</RootNamespace>
     <ApplicationIcon>Assets\App\AudioTune.ico</ApplicationIcon>
-    <Version>0.4.17-alpha</Version>
-    <AssemblyVersion>0.4.17.0</AssemblyVersion>
-    <FileVersion>0.4.17.0</FileVersion>
-    <InformationalVersion>0.4.17-alpha</InformationalVersion>
+    <Version>0.4.18</Version>
+    <AssemblyVersion>0.4.18.0</AssemblyVersion>
+    <FileVersion>0.4.18.0</FileVersion>
+    <InformationalVersion>0.4.18</InformationalVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NAudio" Version="3.1.0" />
@@ -21,10 +21,25 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Headphones\AmironHome.png" />
+    <Resource Include="Assets\Headphones\AmironHomeCutout.png" />
+    <Resource Include="Assets\Headphones\AmironHomeOcclusionMask.png" />
     <Resource Include="Assets\App\AudioTune.ico" />
     <Resource Include="Assets\App\AudioTune.png" />
+    <Resource Include="Assets\Enhancements\*.png" />
     <None Update="Assets\DesignReferences\*.png" CopyToOutputDirectory="Never" />
     <None Update="Data\Headphones\*.json" CopyToOutputDirectory="PreserveNewest" />
     <None Update="Data\Psychoacoustics\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\LICENSE" Link="LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\THIRD_PARTY_NOTICES.md" Link="THIRD_PARTY_NOTICES.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\Native\bin\$(Configuration)-x64\AudioTune.FxSound.Native.dll"
+          Link="AudioTune.FxSound.Native.dll"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest"
+          Condition="Exists('..\Native\bin\$(Configuration)-x64\AudioTune.FxSound.Native.dll')" />
+    <None Include="..\Native\bin\$(Configuration)-x64\AudioTune.FxSound.Apo.dll"
+          Link="AudioTune.FxSound.Apo.dll"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest"
+          Condition="Exists('..\Native\bin\$(Configuration)-x64\AudioTune.FxSound.Apo.dll')" />
   </ItemGroup>
 </Project>

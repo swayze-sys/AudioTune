@@ -136,16 +136,37 @@ Do not remove:
 - headphone information;
 - active-profile correction graph.
 
-The middle quick-control row provides direct, non-destructive controls:
+The middle Processing Chain provides direct, non-destructive controls:
 
-- Audio Processing switches the selected persistent target between active correction and level-matched bypass; it does not delete the profile.
-- Fine Tune includes/bypasses stored Fine Tune measurements and must retain all points while OFF.
-- Calibration Review links to measurement confidence/results instead of repeating static profile facts.
-- Listening check owns A/B and Stereo Centering actions without duplicating DSP/Fine Tune status.
+- Audio Processing is the master switch between active processing and level-matched bypass; it does not delete the profile or stage settings.
+- Hearing Profile, Fine Tune, Stereo Centering and FxSound Enhancements are visible in signal-flow order and can be switched independently.
+- Turning a stage OFF retains its measurements or saved parameter values.
+- Calibration Review is a compact header-level notice aligned with the master switch so the chain remains shallow.
+- Listening check owns only the level-matched A/B action; Stereo Centering is controlled and opened from the chain.
 
 Desired direction is concise actionable controls rather than repeated setup/status cards or tutorial text.
 
 The selected-headphone image should use its transparent source without a visible rectangular matte or frame. A restrained radial blue/cyan glow may sit behind the product image, but must not reduce text contrast or clip against the card edge.
+
+## Sound Enhancements
+
+The FXSound page follows `Enhancements-Redesign-Mockup-v1.png`: an engine
+switch above five equal-height 0–10 controls, with a separate routing/status
+column and compact engine attribution. Clarity, Ambience, Surround, Dynamic
+Boost and Bass use distinct transparent PNG assets, not the earlier thin
+vector symbols. The sound-field illustration is also a PNG.
+The status column must reflect the actual native engine
+and Equalizer APO host state; it must not imply that local and system-wide
+processing run twice.
+
+All primary cards use the shared AccentBorder: a softly fading corner tint and
+rounded edge highlight that merge into the card surface without separate bars.
+The common blue card now uses the same luminous outline and zero-offset glow as
+the Enhancements cards; green, purple and amber variants match their status
+colors. Keep sufficient outer spacing so shadows do not obscure card content.
+The Enhancements header uses a wide transparent layered-wave PNG instead of
+two simple path lines; its status card retains a subtle background-wave motif.
+The five effect PNGs are displayed large enough to reveal their drawn details.
 
 ## Hearing Test
 

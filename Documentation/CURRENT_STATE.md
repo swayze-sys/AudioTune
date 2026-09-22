@@ -1,4 +1,4 @@
-# Current State – v0.4.17-alpha
+# Current State – v0.4.18
 
 ## Functional areas present
 
@@ -14,7 +14,7 @@
 - Manual individual-frequency retest.
 - Saved Hearing Profiles with archive/backup/import/export.
 - Separate Correction Presets.
-- Correction model v6 using human threshold-shape prior.
+- Correction model v7 using human threshold-shape prior.
 - 0–200% correction intensity.
 - Optional Fine Tuning with master ON/OFF.
 - Stereo Image Preservation.
@@ -28,6 +28,8 @@
 - Level-matched persistent bypass.
 - Auto-apply for Fine Tune/intensity/centering changes.
 - Debug/log UI.
+- Original FxSound DfxDsp enhancement controls with a native Equalizer APO system host.
+- Automatic prevention of duplicate FxSound processing in the internal A/B player.
 - Framework-dependent single-file publish with explicit bundled-runtime rejection.
 - Offline Inno Setup package containing the verified .NET 10 Desktop Runtime prerequisite.
 - App/taskbar icon.
@@ -43,8 +45,8 @@ Headphone compensation is disabled.
 - HearingSession schema: 3
 - CorrectionPreset schema: 2
 - Test protocol: 3
-- Correction model: 5
-- App version: 0.4.17-alpha
+- Correction model: 7
+- App version: 0.4.18
 
 ## Current DSP model summary
 
@@ -73,11 +75,11 @@ Raw thresholds
 
 ## Immediate verification needs
 
-1. Verify the v0.4.17 Profiles and Devices vector-icon pass interactively.
+1. Verify the v0.4.18 dashboard, Enhancements, Profiles and Devices visuals interactively.
 2. Verify Fine Tune auto-apply changes the actual APO file without manual Apply.
 3. Fix/test A/B per-filter ±6 dB clamp mismatch for high correction intensity.
 4. Add automated tests before further DSP expansion.
 
 ## Packaging status
 
-The v0.4.17-alpha source now builds cleanly on Windows with 0 warnings and 0 errors. The setup build bootstraps its signed Inno Setup compiler when absent, embeds the official .NET 10 Desktop Runtime prerequisite with SHA-512 verification, and keeps private .NET runtime files out of the installed AudioTune program directory.
+The v0.4.18 source now builds cleanly on Windows with 0 warnings and 0 errors. The setup build bootstraps its signed Inno Setup compiler when absent, embeds the official .NET 10 Desktop Runtime prerequisite with SHA-512 verification, and keeps private .NET runtime files out of the installed AudioTune program directory.

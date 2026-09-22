@@ -52,10 +52,173 @@ public sealed class CorrectionPreviewServiceTests
     }
 
     [Fact]
-    public void AlgorithmVersionTracksExpandedCombinedRange()
+    public void CeilingMeasurementAndFineTuneCombineToTwelveDb()
     {
-        Assert.Equal(6, CorrectionPreviewService.AlgorithmVersion);
+        var (session, preset) = CreateCeilingFineTuneScenario();
+
+        foreach (var ear in new[] { EarChannel.Left, EarChannel.Right })
+        {
+            var curve = CorrectionPreviewService.CreateBeforeStereoPreservation(
+                session,
+                preset,
+                ear,
+                includeFineTune: true);
+
+            var eighteenKhz = Assert.Single(curve, point => Math.Abs(point.Frequency - 18000.0) < 0.01);
+            Assert.Equal(12.0, eighteenKhz.GainDb, precision: 6);
+        }
+
+        var filterSet = DspFilterService.BuildFilterSet(session, preset);
+        foreach (var filters in new[] { filterSet.Left, filterSet.Right })
+        {
+            double realResponseAtEighteenKhz = filters.Sum(filter =>
+                DspFilterService.PeakingMagnitudeDb(filter, 18000.0, 48000));
+            Assert.InRange(Math.Abs(realResponseAtEighteenKhz - 12.0), 0.0, 0.6);
+        }
+    }
+
+    [Fact]
+    public void ApoConfigurationExplainsTargetAndRealBandResponse()
+    {
+        var (session, preset) = CreateCeilingFineTuneScenario();
+        var service = new SystemDspService();
+
+        string configuration = service.BuildConfiguration(
+            session,
+            preset,
+            "{11111111-2222-3333-4444-555555555555}",
+            "Synthetic output",
+            enabled: true);
+
+        Assert.Contains("# DSP response explanation (all values are dB):", configuration);
+        Assert.Contains("# RealDSP  = summed response of every PK filter", configuration);
+        Assert.Contains("# Channel L band response:", configuration);
+        Assert.Contains("# Channel R band response:", configuration);
+        Assert.Matches(@"(?m)^#\s+18000\s+\|\s+\+6\.00\s+\|\s+\+6\.00\s+\|\s+\+12\.00\s+\|", configuration);
+    }
+
+    [Fact]
+    public void ApoConfigurationLoadsNativeFxSoundHostAfterPeq()
+    {
+        var (session, preset) = CreateCeilingFineTuneScenario();
+        var service = new SystemDspService();
+        var effects = new FxSoundEffectSettings(4, 0, 2, 0, 0);
+
+        string configuration = service.BuildConfiguration(
+            session,
+            preset,
+            "{11111111-2222-3333-4444-555555555555}",
+            "Synthetic output",
+            enabled: true,
+            fxSoundEnabled: true,
+            fxSoundEffects: effects,
+            fxSoundHostPath: @"C:\ProgramData\AudioTune\Native\AudioTune.FxSound.Apo.0.4.18.dll");
+
+        Assert.Contains("# FxSound native host: ON", configuration);
+        Assert.Contains("Power 1 Clarity 0.400 Ambience 0.000 Surround 0.200 Dynamic 0.000 Bass 0.000", configuration);
+        Assert.True(configuration.LastIndexOf("VSTPlugin:", StringComparison.Ordinal) >
+                    configuration.LastIndexOf("Channel: ALL", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void HearingProfileBypassKeepsFineTuneAndRawMeasurements()
+    {
+        var session = CreateSession(leftResidualAtTwoKhz: 80.0);
+        var preset = CreatePreset(session, fineTuneDb: 2.0, strengthPercent: 100.0);
+        double rawThreshold = session.Measurements.Single(m =>
+            m.Ear == EarChannel.Left && Math.Abs(m.FrequencyHz - 2000.0) < 0.01).ThresholdDbFs;
+
+        preset.HearingProfileEnabled = false;
+        var curve = CorrectionPreviewService.CreateBeforeStereoPreservation(
+            session,
+            preset,
+            EarChannel.Left,
+            includeFineTune: preset.FineTuneEnabled);
+
+        var point = Assert.Single(curve, p => Math.Abs(p.Frequency - 2000.0) < 0.01);
+        Assert.Equal(2.0, point.GainDb, precision: 6);
+        Assert.Equal(rawThreshold, session.Measurements.Single(m =>
+            m.Ear == EarChannel.Left && Math.Abs(m.FrequencyHz - 2000.0) < 0.01).ThresholdDbFs);
+        Assert.Single(preset.FineTuneAdjustments);
+    }
+
+    [Fact]
+    public void StereoCenteringBypassPreservesSavedBalanceWithoutApplyingTrim()
+    {
+        var session = CreateSession(leftResidualAtTwoKhz: 0.0);
+        var preset = CreatePreset(session, fineTuneDb: 0.0, strengthPercent: 100.0);
+        preset.StereoCenterBalanceDb = 2.0;
+        preset.StereoCenteringEnabled = false;
+
+        var bypassed = DspFilterService.BuildFilterSet(session, preset);
+        Assert.Equal(0.0, bypassed.LeftTrimDb, precision: 6);
+        Assert.Equal(0.0, bypassed.RightTrimDb, precision: 6);
+        Assert.Equal(2.0, preset.StereoCenterBalanceDb, precision: 6);
+
+        preset.StereoCenteringEnabled = true;
+        var enabled = DspFilterService.BuildFilterSet(session, preset);
+        Assert.Equal(-2.0, enabled.LeftTrimDb, precision: 6);
+        Assert.Equal(0.0, enabled.RightTrimDb, precision: 6);
+    }
+
+    [Fact]
+    public void ApoConfigurationDocumentsIndependentStageStates()
+    {
+        var (session, preset) = CreateCeilingFineTuneScenario();
+        preset.HearingProfileEnabled = false;
+        preset.FineTuneEnabled = true;
+        preset.StereoCenteringEnabled = false;
+        preset.StereoCenterBalanceDb = 1.25;
+
+        string configuration = new SystemDspService().BuildConfiguration(
+            session,
+            preset,
+            "{11111111-2222-3333-4444-555555555555}",
+            "Synthetic output",
+            enabled: true,
+            fxSoundEnabled: false);
+
+        Assert.Contains("# Hearing Profile stage: OFF", configuration);
+        Assert.Contains("# Fine Tune state: ON", configuration);
+        Assert.Contains("# Stereo Centering state: OFF", configuration);
+        Assert.Contains("# Saved Stereo Centering balance: 1.25 dB", configuration);
+    }
+
+    [Fact]
+    public void AlgorithmVersionTracksCeilingFineTuneCombination()
+    {
+        Assert.Equal(7, CorrectionPreviewService.AlgorithmVersion);
         Assert.Equal(12.0, CorrectionPreviewService.MaximumCombinedGainDb);
+    }
+
+    private static (HearingSession Session, CorrectionPreset Preset) CreateCeilingFineTuneScenario()
+    {
+        var session = CreateSession(0.0);
+        foreach (var ear in new[] { EarChannel.Left, EarChannel.Right })
+        {
+            session.Measurements.Add(new HearingMeasurement
+            {
+                FrequencyHz = 18000.0,
+                Ear = ear,
+                ThresholdDbFs = -3.0,
+                InitialThresholdDbFs = -3.0,
+                Status = HearingMeasurementStatus.NotDetectedAtCeiling,
+                Confidence = MeasurementConfidence.High
+            });
+        }
+
+        var preset = CreatePreset(session, fineTuneDb: 0.0, strengthPercent: 100.0);
+        foreach (var ear in new[] { EarChannel.Left, EarChannel.Right })
+        {
+            preset.FineTuneAdjustments.Add(new FineTuneAdjustment
+            {
+                FrequencyHz = 18000.0,
+                Ear = ear,
+                AdjustmentDb = 6.0
+            });
+        }
+
+        return (session, preset);
     }
 
     private static HearingSession CreateSession(double leftResidualAtTwoKhz)

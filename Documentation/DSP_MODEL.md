@@ -2,7 +2,7 @@
 
 ## Status
 
-Current correction model: **v6** (`CorrectionPreviewService.AlgorithmVersion = 6`).
+Current correction model: **v7** (`CorrectionPreviewService.AlgorithmVersion = 7`).
 
 This model is experimental. It is designed to produce a useful personal listening correction from relative threshold measurements, not a clinical prescription.
 
@@ -118,19 +118,22 @@ This is empirical/experimental, not a clinical fitting formula.
 
 This is an explicit product decision.
 
-A `NotDetectedAtCeiling` point is interpreted as “threshold is beyond the measurable test range,” not “no data.” It therefore receives:
+A `NotDetectedAtCeiling` point is interpreted as “threshold is beyond the measurable test range,” not “no data.” Its hearing-model contribution is therefore:
 
 ```text
-MaxGainDb * strength
+hearingModel = MaxGainDb
+finalGain = clamp((hearingModel + fineTune) * strength, -12 dB, +12 dB)
 ```
 
-where `MaxGainDb = 6 dB` and strength is 0.0–2.0.
+where `MaxGainDb = 6 dB` and strength is 0.0–2.0. Fine Tune is not skipped for a ceiling result; it shares the same final ±12 dB window as every other hearing-model contribution.
 
 Examples:
 
 - intensity 50% -> +3 dB
 - 100% -> +6 dB
 - 200% -> +12 dB
+
+With a saved +6 dB Fine Tune point, a ceiling result at 100% therefore requests +12 dB. Correction model v7 fixed a v6 early-return bug that incorrectly omitted Fine Tune for `NotDetectedAtCeiling` points.
 
 Do not filter these points out unless the policy is explicitly revisited.
 
@@ -157,7 +160,8 @@ Clamp behavior:
 - modeled hearing correction and Fine Tune are added first and then scaled by intensity;
 - their combined final target is bounded to a fixed ±12 dB at every intensity;
 - Fine Tune remains individually adjustable only within ±6 dB;
-- NotDetectedAtCeiling still requests MaxGainDb * strength (+6 dB at 100%, +12 dB at 200%).
+- NotDetectedAtCeiling uses `MaxGainDb` as its hearing-model contribution and still combines it with Fine Tune before strength and the shared ±12 dB clamp.
+
 ## Fine Tuning
 
 Fine Tune is optional moderate-level loudness matching.
@@ -262,7 +266,7 @@ Current implementation performs iterative residual fitting:
 - Q derived from logarithmic spacing between bands up to and including 12.5 kHz;
 - fixed broad Q = 1.5 at 14/16/18 kHz to prevent narrow high-treble peaks and valleys;
 - Q clamped 0.70–10;
-- 8 Gauss-Seidel-like passes;
+- 16 Gauss-Seidel-like passes;
 - damping 0.70;
 - each filter gain clamped ±12 dB.
 

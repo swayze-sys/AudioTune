@@ -45,6 +45,14 @@ public sealed class CorrectionPresetRepository
                         preset.FineTuneEnabled = true;
                         preset.SchemaVersion = 2;
                     }
+                    // Schema v3 makes Hearing Profile and Stereo Centering independently
+                    // bypassable. Older presets used both stages unconditionally.
+                    if (preset.SchemaVersion < 3)
+                    {
+                        preset.HearingProfileEnabled = true;
+                        preset.StereoCenteringEnabled = true;
+                        preset.SchemaVersion = 3;
+                    }
                     _presets[preset.Id] = preset;
                 }
             }
@@ -83,7 +91,9 @@ public sealed class CorrectionPresetRepository
             HearingProfileId = session.Id,
             Name = string.IsNullOrWhiteSpace(name) ? "Personal correction" : name.Trim(),
             StrengthPercent = source?.StrengthPercent ?? 100.0,
+            HearingProfileEnabled = source?.HearingProfileEnabled ?? true,
             FineTuneEnabled = source?.FineTuneEnabled ?? true,
+            StereoCenteringEnabled = source?.StereoCenteringEnabled ?? true,
             StereoCenterBalanceDb = source?.StereoCenterBalanceDb ?? 0.0,
             StereoCenteringUpdatedAt = source?.StereoCenteringUpdatedAt,
             FineTuneAdjustments = source?.FineTuneAdjustments.Select(x => new FineTuneAdjustment

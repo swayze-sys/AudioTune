@@ -10,6 +10,7 @@ public sealed class MusicPreviewService : IAsyncDisposable
     private WasapiPlayer? _player;
     private AudioFileReader? _reader;
     private CalibrationAbSampleProvider? _abProvider;
+    private FxSoundSampleProvider? _fxSoundProvider;
     private MMDevice? _device;
     private readonly object _sync = new();
 
@@ -36,6 +37,7 @@ public sealed class MusicPreviewService : IAsyncDisposable
         AudioFileReader? reader = null;
         MMDevice? device = null;
         WasapiPlayer? player = null;
+        FxSoundSampleProvider? fxSoundProvider = null;
         try
         {
             reader = new AudioFileReader(filePath);
@@ -67,8 +69,15 @@ public sealed class MusicPreviewService : IAsyncDisposable
             if (device is not null) builder = builder.WithDevice(device);
             if (AppServices.Settings.Current.RawWasapiMode) builder = builder.WithRawMode();
 
+            ISampleProvider playbackProvider = provider;
+            bool systemWideFxSound = AppServices.SystemDsp.IsFxSoundHostActiveForDevice(device?.ID);
+            if (!systemWideFxSound)
+            {
+                fxSoundProvider = new FxSoundSampleProvider(provider, AppServices.FxSoundEnhancements);
+                playbackProvider = fxSoundProvider;
+            }
             player = builder.Build();
-            player.Init(provider);
+            player.Init(playbackProvider);
             player.Volume = TonePlaybackService.ReferenceSessionVolumeScalar;
             player.IsMuted = false;
             player.PlaybackStopped += Player_PlaybackStopped;
@@ -77,6 +86,7 @@ public sealed class MusicPreviewService : IAsyncDisposable
             {
                 _reader = reader;
                 _abProvider = provider;
+                _fxSoundProvider = fxSoundProvider;
                 _device = device;
                 _player = player;
                 FilePath = filePath;
@@ -84,6 +94,8 @@ public sealed class MusicPreviewService : IAsyncDisposable
 
             AppServices.Log.Log($"A/B music loaded: {Path.GetFileName(filePath)}", LogLevel.Success);
             AppServices.Log.Log($"A/B common headroom: {provider.HeadroomDb:0.0} dB", LogLevel.Info);
+            if (systemWideFxSound)
+                AppServices.Log.Log("A/B player uses the system-wide FxSound host; local enhancement processing is bypassed to prevent double processing.", LogLevel.Info);
             StateChanged?.Invoke();
         }
         catch
@@ -93,6 +105,7 @@ public sealed class MusicPreviewService : IAsyncDisposable
                 try { player.PlaybackStopped -= Player_PlaybackStopped; } catch { }
                 try { await player.DisposeAsync(); } catch { }
             }
+            fxSoundProvider?.Dispose();
             reader?.Dispose();
             device?.Dispose();
             throw;
@@ -188,15 +201,18 @@ public sealed class MusicPreviewService : IAsyncDisposable
         WasapiPlayer? player;
         AudioFileReader? reader;
         MMDevice? device;
+        FxSoundSampleProvider? fxSoundProvider;
 
         lock (_sync)
         {
             player = _player;
             reader = _reader;
             device = _device;
+            fxSoundProvider = _fxSoundProvider;
             _player = null;
             _reader = null;
             _abProvider = null;
+            _fxSoundProvider = null;
             _device = null;
             FilePath = null;
         }
@@ -207,6 +223,7 @@ public sealed class MusicPreviewService : IAsyncDisposable
             try { player.Stop(); } catch { }
             try { await player.DisposeAsync(); } catch { }
         }
+        fxSoundProvider?.Dispose();
         reader?.Dispose();
         device?.Dispose();
     }

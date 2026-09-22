@@ -83,7 +83,7 @@
                             <TextBlock Text="Development Build" Foreground="#BCD9FF" FontSize="11" FontWeight="SemiBold" />
                         </Border>
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="v0.4.17-alpha" Foreground="#6F8298" FontSize="10" HorizontalAlignment="Center" />
+                            <TextBlock Text="v0.4.18" Foreground="#6F8298" FontSize="10" HorizontalAlignment="Center" />
                             <TextBlock x:Name="DebugStateText" Text="Debug enabled" Foreground="{StaticResource GreenBrush}" FontSize="10" HorizontalAlignment="Center" />
                         </StackPanel>
                     </StackPanel>
@@ -112,6 +112,9 @@
                         </Button>
                         <Button x:Name="FineTuneNav" Style="{StaticResource NavButtonStyle}" Click="FineTuneNav_Click">
                             <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Sliders" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Fine Tuning" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
+                        </Button>
+                        <Button x:Name="EnhancementsNav" Style="{StaticResource NavButtonStyle}" Click="EnhancementsNav_Click">
+                            <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Processor" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Enhancements" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>
                         </Button>
                         <Button x:Name="ListeningNav" Style="{StaticResource NavButtonStyle}" Click="ListeningNav_Click">
                             <StackPanel Orientation="Horizontal"><controls:LineIcon Kind="Compare" Width="21" Height="21" Margin="0,0,17,0" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><TextBlock Text="Listening Test" FontSize="14" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/></StackPanel>

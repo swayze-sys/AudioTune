@@ -51,7 +51,7 @@
             </StackPanel>
 
             <!-- Compact profile summary -->
-            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,18,0,0" Padding="18">
+            <controls:AccentBorder Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,18,0,0" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1.25*"/>
@@ -61,7 +61,7 @@
 
                     <Grid Margin="0,0,20,0">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="150"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                        <Image Source="/Assets/Headphones/AmironHome.png" Stretch="Uniform" Margin="0,0,18,0"/>
+                        <Image Source="/Assets/Headphones/AmironHomeCutout.png" Stretch="Uniform" Margin="0,0,18,0"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="CURRENT HEADPHONE" Foreground="#70869E" FontSize="10"/>
                             <TextBlock Text="Beyerdynamic Amiron Home" FontSize="22" FontWeight="SemiBold" Margin="0,5,0,0"/>
@@ -95,7 +95,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
-            </Border>
+            </controls:AccentBorder>
 
             <!-- Main profile workspace -->
             <Grid Grid.Row="2" Margin="0,14,0,0">
@@ -105,7 +105,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Saved hearing profiles -->
-                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,7,0" MinHeight="600" Padding="16">
+                <controls:AccentBorder Style="{StaticResource CardBorderStyle}" Margin="0,0,7,0" MinHeight="600" Padding="16">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -179,7 +179,7 @@
                             </Grid>
                         </Expander>
                     </Grid>
-                </Border>
+                </controls:AccentBorder>
 
                 <!-- Selected profile details -->
                 <Grid Grid.Column="1" Margin="7,0,0,0">
@@ -189,7 +189,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Border Style="{StaticResource CardBorderStyle}" Padding="16">
+                    <controls:AccentBorder Style="{StaticResource CardBorderStyle}" Padding="16">
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="220"/></Grid.ColumnDefinitions>
                             <StackPanel>
@@ -222,9 +222,9 @@
                                 <Grid Grid.Row="3" Margin="0,7,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Last saved" Style="{StaticResource ProfileStatLabelStyle}"/><TextBlock x:Name="SelectedProfileSaved" Grid.Column="1" Text="—" Style="{StaticResource ProfileStatValueStyle}" HorizontalAlignment="Right"/></Grid>
                             </Grid>
                         </Grid>
-                    </Border>
+                    </controls:AccentBorder>
 
-                    <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,12,0,0" Padding="16">
+                    <controls:AccentBorder Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,12,0,0" Padding="16">
                         <StackPanel>
                             <Grid>
                                 <TextBlock Text="Correction Presets" FontSize="18" FontWeight="SemiBold"/>
@@ -274,12 +274,12 @@
                                 </Grid>
                             </Grid>
                         </StackPanel>
-                    </Border>
+                    </controls:AccentBorder>
 
                     <Grid Grid.Row="2" Margin="0,12,0,0">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="1.35*"/><ColumnDefinition Width="0.75*"/></Grid.ColumnDefinitions>
 
-                        <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,6,0" Padding="16">
+                        <controls:AccentBorder Style="{StaticResource CardBorderStyle}" Margin="0,0,6,0" Padding="16">
                             <StackPanel>
                                 <TextBlock Text="Quick Actions" FontSize="18" FontWeight="SemiBold"/>
                                 <UniformGrid Columns="3" Rows="3" Margin="-4,9,-4,-4">
@@ -294,9 +294,9 @@
                                     <Button x:Name="RestoreButton" Style="{StaticResource ProfileQuickButtonStyle}" Click="Restore_Click"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="34"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><controls:LineIcon Kind="Restore" Style="{StaticResource QuickActionIconStyle}"/><TextBlock Grid.Column="1" Text="Restore backup" Style="{StaticResource QuickActionTextStyle}"/></Grid></Button>
                                 </UniformGrid>
                             </StackPanel>
-                        </Border>
+                        </controls:AccentBorder>
 
-                        <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="6,0,0,0" Padding="16">
+                        <controls:AccentBorder Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="6,0,0,0" Padding="16">
                             <StackPanel>
                                 <TextBlock Text="Measurement Summary" FontSize="18" FontWeight="SemiBold"/>
                                 <Grid Margin="0,13,0,0">
@@ -310,7 +310,7 @@
                                     <TextBlock Grid.Row="5" Text="Audio API" Style="{StaticResource ProfileStatLabelStyle}" Margin="0,8,0,0"/><TextBlock x:Name="SummaryAudioApi" Grid.Row="5" Grid.Column="1" Text="—" Style="{StaticResource ProfileStatValueStyle}" Margin="0,8,0,0"/>
                                 </Grid>
                             </StackPanel>
-                        </Border>
+                        </controls:AccentBorder>
                     </Grid>
                 </Grid>
             </Grid>

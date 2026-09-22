@@ -14,6 +14,7 @@ public static class AppServices
     public static EqualizerApoInstallerService EqualizerApoInstaller { get; } = new();
     public static HearingTestEngine HearingTest { get; } = new();
     public static FineTuneEngine FineTune { get; } = new();
+    public static FxSoundEnhancementService FxSoundEnhancements { get; } = new();
 
     public static void Initialize()
     {

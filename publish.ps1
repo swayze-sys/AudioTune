@@ -22,7 +22,20 @@ if (Test-Path $Output) {
 }
 New-Item -ItemType Directory -Path $Output -Force | Out-Null
 
-Write-Host 'Publishing AudioTune v0.4.17-alpha for Windows x64...' -ForegroundColor Cyan
+& .\build-native-fxsound.ps1 -Configuration Release
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+Write-Host 'Restoring Windows x64 publish dependencies...' -ForegroundColor Cyan
+& dotnet restore '.\AudioTune\AudioTune.csproj' -r win-x64
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+# WPF resource changes can otherwise be missed by the RID-specific incremental
+# markup build and produce a single-file executable that crashes at startup.
+Write-Host 'Cleaning previous Windows x64 Release build state...' -ForegroundColor Cyan
+& dotnet clean '.\AudioTune\AudioTune.csproj' -c Release -r win-x64
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+Write-Host 'Publishing AudioTune v0.4.18 for Windows x64...' -ForegroundColor Cyan
 & dotnet publish '.\AudioTune\AudioTune.csproj' `
     -c Release `
     -r win-x64 `
@@ -65,6 +78,10 @@ if ($RuntimeHits) {
 
 $RequiredFiles = @(
     (Join-Path $Output 'AudioTune.exe'),
+    (Join-Path $Output 'AudioTune.FxSound.Native.dll'),
+    (Join-Path $Output 'AudioTune.FxSound.Apo.dll'),
+    (Join-Path $Output 'LICENSE.txt'),
+    (Join-Path $Output 'THIRD_PARTY_NOTICES.md'),
     (Join-Path $Output 'Data\Headphones\beyerdynamic-amiron-home.sources.json'),
     (Join-Path $Output 'Data\Psychoacoustics\iso226.sources.json')
 )

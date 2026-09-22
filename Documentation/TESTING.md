@@ -41,7 +41,7 @@ Offline installer build:
 
 Expected installer:
 
-`dist\AudioTuneSetup-0.4.17-alpha.exe`
+`dist\AudioTuneSetup-0.4.18.exe`
 
 `build-installer.ps1` downloads the official .NET 10 Desktop Runtime prerequisite and verifies its published SHA-512 hash. If Inno Setup 6 is not available, the script downloads the official signed compiler installer, validates the Pyrsys B.V. Authenticode signature, and installs it only in the repository-local `.tools` cache.
 
@@ -115,16 +115,18 @@ Create a unit-test project and cover at minimum:
 3. 100% vs 200% intensity scaling and the fixed ±12 dB combined hearing-model + Fine Tune bound.
 4. Fine Tune ON/OFF preserves stored points but changes target curve.
 5. `NotDetectedAtCeiling` produces max positive target for requested intensity.
-6. confidence weighting reduces low-confidence modeled gain.
-7. stereo preservation limits midrange L/R difference while preserving common mean.
-8. ceiling-side stereo-preservation exception.
-9. centering trim never boosts a channel.
+6. `NotDetectedAtCeiling` plus +6 dB Fine Tune produces +12 dB at 100% rather than skipping Fine Tune.
+7. confidence weighting reduces low-confidence modeled gain.
+8. stereo preservation limits midrange L/R difference while preserving common mean.
+9. ceiling-side stereo-preservation exception.
+10. centering trim never boosts a channel.
 
 ## PEQ fitting tests to add
 
 For representative target curves:
 
 - fitted composite response at band centers should match target within a defined tolerance;
+- a +12 dB ceiling + Fine Tune target at 18 kHz must fit within 0.6 dB for both channels, including an asymmetric/sparse Fine Tune transition;
 - 12.5/14/16/18 kHz boosts must not create the old ~18 dB stacking artifact;
 - representative 14–18 kHz plateaus must remain within 1.25 dB inter-band ripple while retaining the 12.5 kHz transition;
 - negative-only curve must produce required positive headroom = 0 dB;
@@ -238,3 +240,24 @@ Check:
 - Dashboard Audio Processing ON applies the active profile/preset to the selected DSP target;
 - Dashboard Fine Tune OFF retains all saved Fine Tune points;
 - Dashboard Fine Tune changes respect Auto-apply and never re-enable an explicit persistent bypass.
+- Dashboard Hearing Profile OFF removes only the modeled hearing contribution and preserves raw measurements.
+- Dashboard Stereo Centering OFF applies zero channel trim while preserving the saved balance.
+- Dashboard FxSound OFF preserves all five saved effect values.
+- Calibration Review remains in the Processing Chain header and does not create a second card row.
+- Listening check contains no duplicate Stereo Centering action.
+
+## Native FxSound / Equalizer APO host regression
+
+The native build must run both executables:
+
+- `AudioTune.FxSound.Compare`: adapter vs direct DfxDsp, zero sample difference for neutral, all five isolated effects, and combined settings.
+- `AudioTune.FxSound.Apo.Test`: exported `VSTPluginMain`, 2-in/2-out layout, named parameter contract, sample-transparent Power=0, and sample-exact combined output against direct DfxDsp.
+
+Managed tests verify normalized parameter serialization and that `VSTPlugin:` is emitted after `Channel: ALL`. Also verify manually on a configured endpoint:
+
+1. Enable Enhancements and Apply/Update DSP.
+2. Confirm the device file contains `# FxSound native host: ON`, its signature, and the versioned ProgramData DLL path.
+3. Play audio from another application and confirm each control changes the system output.
+4. Open AudioTune Listening Test and confirm the log reports local processing bypassed because the system host is active.
+5. Select level-matched bypass and confirm the VST line is absent.
+6. Uninstall and confirm the managed include is removed from Equalizer APO without deleting `%LOCALAPPDATA%\AudioTune` profiles.

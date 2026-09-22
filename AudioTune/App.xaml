@@ -53,16 +53,67 @@
                     </LinearGradientBrush>
                 </Setter.Value>
             </Setter>
-            <Setter Property="BorderBrush" Value="#2D4A63" />
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#69BCED" Offset="0"/>
+                        <GradientStop Color="#286897" Offset="0.23"/>
+                        <GradientStop Color="#367BAE" Offset="0.72"/>
+                        <GradientStop Color="#5BACDD" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="12" />
             <Setter Property="Effect">
                 <Setter.Value>
-                    <DropShadowEffect Color="#02070C" BlurRadius="12" ShadowDepth="2" Opacity="0.55"/>
+                    <DropShadowEffect Color="#087BD5" BlurRadius="32" ShadowDepth="0" Opacity="0.95"/>
                 </Setter.Value>
             </Setter>
         </Style>
 
+        <!-- The gradient outline adds structure; the zero-offset shadow is the edge glow. -->
+        <Style x:Key="LuminousCardStyle" TargetType="Border" BasedOn="{StaticResource CardBorderStyle}">
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#69BCED" Offset="0"/>
+                        <GradientStop Color="#286897" Offset="0.23"/>
+                        <GradientStop Color="#367BAE" Offset="0.72"/>
+                        <GradientStop Color="#5BACDD" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#087BD5" BlurRadius="32" ShadowDepth="0" Opacity="0.95"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="GreenLuminousCardStyle" TargetType="Border" BasedOn="{StaticResource LuminousCardStyle}">
+            <Setter Property="BorderBrush" Value="#2F9D82"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#0CA785" BlurRadius="32" ShadowDepth="0" Opacity="0.94"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="PurpleLuminousCardStyle" TargetType="Border" BasedOn="{StaticResource LuminousCardStyle}">
+            <Setter Property="BorderBrush" Value="#6956A8"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#6742C5" BlurRadius="30" ShadowDepth="0" Opacity="0.92"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="AmberLuminousCardStyle" TargetType="Border" BasedOn="{StaticResource LuminousCardStyle}">
+            <Setter Property="BorderBrush" Value="#90653D"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#B57028" BlurRadius="30" ShadowDepth="0" Opacity="0.90"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />

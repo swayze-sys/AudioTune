@@ -365,14 +365,22 @@ public partial class DevicesView : UserControl
         AutoApplyCheck.IsChecked = autoApply;
         _refreshingAutoApply = false;
         AutoApplyStatusText.Text = autoApply
-            ? "Fine Tune and intensity changes update an already-active persistent DSP automatically."
+            ? "Processing-chain and intensity changes update an already-active persistent DSP automatically."
             : "Changes are saved, but the persistent DSP is updated only when you press Apply / Update DSP.";
 
-        ChainProfileValue.Text = active?.Name ?? "No profile";
+        ChainProfileValue.Text = active is null
+            ? "No profile"
+            : preset?.HearingProfileEnabled == false ? $"{active.Name} · OFF" : active.Name;
+        ChainProfileValue.Foreground = preset?.HearingProfileEnabled == false ? muted : text;
         ChainPresetValue.Text = preset?.Name ?? "No preset";
         ChainFineTuneValue.Text = preset is null ? "—" : preset.FineTuneEnabled ? "ON" : "OFF";
         ChainFineTuneValue.Foreground = preset?.FineTuneEnabled == true ? green : muted;
-        ChainCenterValue.Text = preset is null ? "—" : $"{preset.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB";
+        ChainCenterValue.Text = preset is null
+            ? "—"
+            : preset.StereoCenteringEnabled
+                ? $"{preset.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB"
+                : $"OFF · {preset.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB saved";
+        ChainCenterValue.Foreground = preset?.StereoCenteringEnabled == true ? text : muted;
         ChainApoValue.Text = status.AudioTuneApplied ? "Processing" : status.LevelMatchedBypass ? "Bypass" : status.ApoInstalledOnSelectedDevice == true ? "Ready" : "Not ready";
         ChainApoValue.Foreground = status.AudioTuneApplied ? green : status.LevelMatchedBypass ? cyan : status.ApoInstalledOnSelectedDevice == true ? text : amber;
         ChainTargetValue.Text = device?.Name ?? "Not selected";
@@ -381,7 +389,12 @@ public partial class DevicesView : UserControl
         SummaryIntensityValue.Text = preset is null ? "—" : $"{preset.StrengthPercent:0}%";
         SummaryFineTuneValue.Text = preset is null ? "—" : preset.FineTuneEnabled ? "ON" : "OFF";
         SummaryFineTuneValue.Foreground = preset?.FineTuneEnabled == true ? green : text;
-        SummaryCenterValue.Text = preset is null ? "—" : $"{preset.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB";
+        SummaryCenterValue.Text = preset is null
+            ? "—"
+            : preset.StereoCenteringEnabled
+                ? $"{preset.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB"
+                : $"OFF · {preset.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB saved";
+        SummaryCenterValue.Foreground = preset?.StereoCenteringEnabled == false ? muted : text;
 
         if (active?.CompletedAt is not null && preset is not null)
         {

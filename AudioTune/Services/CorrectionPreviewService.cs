@@ -4,7 +4,7 @@ namespace AudioTune.Services;
 
 public static class CorrectionPreviewService
 {
-    public const int AlgorithmVersion = 6;
+    public const int AlgorithmVersion = 7;
     public const double MaxGainDb = 6.0;
     public const double MaximumCombinedGainDb = 12.0;
 
@@ -44,7 +44,28 @@ public static class CorrectionPreviewService
         HearingSession session, CorrectionPreset preset, EarChannel ear, bool includeFineTune = true)
         => CreateUnprotected(session, preset, ear, includeFineTune);
 
+    internal sealed record CorrectionPointComponents(
+        double Frequency,
+        double HearingModelDb,
+        double FineTuneDb,
+        double StrengthMultiplier,
+        double CombinedBeforeStereoDb,
+        bool IsCeiling);
+
+    internal static IReadOnlyList<CorrectionPointComponents> CreateComponentsBeforeStereoPreservation(
+        HearingSession session, CorrectionPreset preset, EarChannel ear, bool includeFineTune = true)
+        => CreateUnprotectedComponents(session, preset, ear, includeFineTune);
+
     private static IReadOnlyList<(double Frequency, double GainDb)> CreateUnprotected(
+        HearingSession session,
+        CorrectionPreset preset,
+        EarChannel ear,
+        bool includeFineTune)
+        => CreateUnprotectedComponents(session, preset, ear, includeFineTune)
+            .Select(x => (x.Frequency, x.CombinedBeforeStereoDb))
+            .ToList();
+
+    private static IReadOnlyList<CorrectionPointComponents> CreateUnprotectedComponents(
         HearingSession session,
         CorrectionPreset preset,
         EarChannel ear,
@@ -76,46 +97,63 @@ public static class CorrectionPreviewService
             .GroupBy(m => m.FrequencyHz)
             .ToDictionary(g => g.Key, g => g.OrderByDescending(x => x.Timestamp).First());
 
-        var points = new List<(double Frequency, double GainDb)>();
+        var points = new List<CorrectionPointComponents>();
         foreach (var m in own)
         {
-            if (m.Status == HearingMeasurementStatus.NotDetectedAtCeiling)
+            double hearingModel;
+            if (!preset.HearingProfileEnabled)
             {
-                points.Add((m.FrequencyHz, MaxGainDb * strength));
-                continue;
+                // Bypass only the modeled hearing contribution. Raw measurements and the
+                // independently switchable Fine Tune stage remain available and unchanged.
+                hearingModel = 0.0;
             }
-
-            double expected = globalOffset + HumanSensitivityModel.GetRelativeThresholdDb(m.FrequencyHz);
-            double ownResidual = m.ThresholdDbFs - expected;
-
-            double commonResidual = ownResidual;
-            double interauralResidual = 0.0;
-            if (otherByFrequency.TryGetValue(m.FrequencyHz, out var other))
+            else if (m.Status == HearingMeasurementStatus.NotDetectedAtCeiling)
             {
-                double otherResidual = other.ThresholdDbFs - expected;
-                commonResidual = (ownResidual + otherResidual) / 2.0;
-                interauralResidual = (ownResidual - otherResidual) / 2.0;
+                // A ceiling result requests the maximum hearing-model contribution, but it does
+                // not bypass Fine Tune. Both contributions intentionally share the same final
+                // +/-12 dB window, just like they do for an ordinary detected measurement.
+                hearingModel = MaxGainDb;
             }
+            else
+            {
+                double expected = globalOffset + HumanSensitivityModel.GetRelativeThresholdDb(m.FrequencyHz);
+                double ownResidual = m.ThresholdDbFs - expected;
 
-            double commonGain = SaturatingGain(commonResidual, maxGain: 4.5, kneeDb: 10.0);
-            double interauralGain = SaturatingGain(interauralResidual, maxGain: 3.5, kneeDb: 7.0);
+                double commonResidual = ownResidual;
+                double interauralResidual = 0.0;
+                if (otherByFrequency.TryGetValue(m.FrequencyHz, out var other))
+                {
+                    double otherResidual = other.ThresholdDbFs - expected;
+                    commonResidual = (ownResidual + otherResidual) / 2.0;
+                    interauralResidual = (ownResidual - otherResidual) / 2.0;
+                }
 
-            double populationTrust = HumanSensitivityModel.GetPopulationTrust(m.FrequencyHz);
-            double measurementTrust = GetMeasurementTrust(m);
-            double interauralTrust = 0.60 + (0.40 * populationTrust);
+                double commonGain = SaturatingGain(commonResidual, maxGain: 4.5, kneeDb: 10.0);
+                double interauralGain = SaturatingGain(interauralResidual, maxGain: 3.5, kneeDb: 7.0);
 
-            double modeledGain = (commonGain * populationTrust) + (interauralGain * interauralTrust);
-            modeledGain *= measurementTrust;
+                double populationTrust = HumanSensitivityModel.GetPopulationTrust(m.FrequencyHz);
+                double measurementTrust = GetMeasurementTrust(m);
+                double interauralTrust = 0.60 + (0.40 * populationTrust);
+
+                hearingModel = (commonGain * populationTrust) + (interauralGain * interauralTrust);
+                hearingModel *= measurementTrust;
+            }
 
             double fineTune = includeFineTune ? InterpolateFineTune(preset, ear, m.FrequencyHz) : 0.0;
             // Hearing-model and Fine Tune contributions share one final safety window.
             // Fine Tune remains individually bounded to ±6 dB, while their combined
             // correction may now use the complete ±12 dB DSP range at any intensity.
             double finalGain = Math.Clamp(
-                (modeledGain + fineTune) * strength,
+                (hearingModel + fineTune) * strength,
                 -MaximumCombinedGainDb,
                 MaximumCombinedGainDb);
-            points.Add((m.FrequencyHz, finalGain));
+            points.Add(new CorrectionPointComponents(
+                m.FrequencyHz,
+                hearingModel,
+                fineTune,
+                strength,
+                finalGain,
+                m.Status == HearingMeasurementStatus.NotDetectedAtCeiling));
         }
 
         return points;
@@ -213,7 +251,7 @@ public static class CorrectionPreviewService
     private sealed record StereoPoint(double Frequency, double Left, double Right, bool LeftCeiling, bool RightCeiling);
 
     public static string DescribeAlgorithm() =>
-        "v6 · ISO-shaped threshold baseline + ceiling-aware maximum correction + optional fine tuning + stereo-image preservation";
+        "v7 · ISO-shaped threshold baseline + ceiling-aware correction combined with optional fine tuning + stereo-image preservation";
 
     private static double GetMeasurementTrust(HearingMeasurement m) => m.Confidence switch
     {

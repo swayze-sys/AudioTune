@@ -2,7 +2,7 @@
 
 AudioTune is a local-first Windows application for personal, device-bound headphone calibration. It measures left/right hearing thresholds, preserves the raw measurement history, derives an adjustable correction, supports level-matched music A/B testing, and can apply persistent per-device DSP through Equalizer APO.
 
-> **Alpha software:** AudioTune is not a medical audiometer. Its measurements are relative digital levels in dBFS and must not be interpreted as dB HL, a diagnosis, or a clinical hearing-loss assessment.
+> **Experimental software:** AudioTune is not a medical audiometer. Its measurements are relative digital levels in dBFS and must not be interpreted as dB HL, a diagnosis, or a clinical hearing-loss assessment.
 
 ![AudioTune dashboard](AudioTune/Assets/DesignReferences/DashboardReference.png)
 
@@ -12,21 +12,42 @@ AudioTune is a local-first Windows application for personal, device-bound headph
 
 - 30 Hz–18 kHz adaptive hearing test for each ear with autosave and point retesting
 - separate, non-destructive Hearing Profiles and Correction Presets
-- correction model v6 with Fine Tune, stereo-image preservation, and centering
+- correction model v7 with Fine Tune, stereo-image preservation, and centering
 - one fitted parametric-EQ definition for preview and Equalizer APO
 - persistent, per-device Windows DSP with level-matched bypass
 - fully local profile storage under `%LOCALAPPDATA%\AudioTune`
+- original FxSound DSP engine with five enhancement controls, local A/B playback, and an optional native Equalizer APO host for the selected system output
 - offline Windows setup that carries the required .NET 10 Desktop Runtime and installs it only when missing
 
 ## Install
 
-Download `AudioTuneSetup-0.4.17-alpha.exe` from the repository release and run it on 64-bit Windows. The setup contains the application and the verified Microsoft .NET 10 Desktop Runtime prerequisite. Equalizer APO is optional and is offered from the Devices page when system-wide DSP is requested.
+Download `AudioTuneSetup-0.4.18.exe` from the repository release and run it on 64-bit Windows. The setup contains the application and the verified Microsoft .NET 10 Desktop Runtime prerequisite. Equalizer APO is optional and is offered from the Devices page when system-wide DSP is requested.
 
 AudioTune does not silently change Windows master volume. Persistent DSP must be explicitly configured for the intended playback endpoint.
 
+## FxSound engine module
+
+The repository includes the original FxSound `DfxDsp` engine at pinned commit
+`d8e7a23d37ed5939c2a3090a1c1756c7f2500b17`, isolated behind a native AudioTune
+adapter. A deterministic seven-scenario null test compares the adapter with a
+direct call into the original engine and fails on any sample difference.
+
+When enabled, the native host applies these enhancements on the selected Equalizer APO output as well as in AudioTune's listening test. The hearing-profile correction remains a separate processing stage. See [`Documentation/FXSOUND_MODULE.md`](Documentation/FXSOUND_MODULE.md).
+FxSound is AGPL-3.0; see [`LICENSE`](LICENSE) and
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
 ## Development status
 
-Current release: **v0.4.17-alpha (2026-09-19)**. The source builds cleanly on Windows with .NET SDK 10.0.401 (0 warnings, 0 errors). Before changing code, read [`AGENTS.md`](AGENTS.md) and [`Documentation/INDEX.md`](Documentation/INDEX.md).
+Current release: **v0.4.18 (2026-09-22)**. Before changing code, read [`AGENTS.md`](AGENTS.md) and [`Documentation/INDEX.md`](Documentation/INDEX.md).
+
+## v0.4.18
+
+- Added the original FxSound engine's Clarity, Ambience, Surround, Dynamic Boost, and Bass controls to AudioTune and its native Equalizer APO host. The pinned upstream commit is documented in [third-party notices](THIRD_PARTY_NOTICES.md); AudioTune is not affiliated with FxSound.
+- Added a dashboard processing-chain view with independent hearing-profile, Fine Tune, stereo-centering, and enhancement switches beneath the main processing switch.
+- Refined card lighting and the Sound Enhancements page with larger PNG icons and a wave illustration.
+- Updated the versioned native host path and installer package for this release.
+
+Known limits and pending endpoint-specific listening checks are listed in [known issues](Documentation/KNOWN_ISSUES.md).
 
 ## v0.4.17-alpha
 
@@ -114,7 +135,7 @@ Current release: **v0.4.17-alpha (2026-09-19)**. The source builds cleanly on Wi
 
 AudioTune is a Windows C#/WPF prototype for end-to-end personal headphone hearing calibration. It measures left/right hearing thresholds from 30 Hz to 18 kHz, stores the raw measurements permanently, derives a personal correction preset, lets the result be verified with music, and can apply the same DSP persistently to a selected Windows playback endpoint through Equalizer APO.
 
-### Correction model v6
+### Correction model v7
 
 The previous prototype compared every raw threshold against a flat median and scaled the difference. v0.4 replaces that provisional model:
 
@@ -152,7 +173,7 @@ One long hearing test can therefore have multiple correction presets without dup
 
 The new Fine Tuning page performs a shorter moderate-level loudness comparison after the threshold test. It alternates a 1 kHz reference with selected target frequencies for each ear. The user adjusts the test frequency quieter/louder until the pair sounds approximately equally loud, then stores that offset in the active correction preset.
 
-This step is optional. Skipping it leaves correction model v6 to make a conservative estimate from the threshold profile. Fine Tune can be included or excluded in the correction preview; the graph always remains a single left/right final-curve view rather than drawing separate delta lines.
+This step is optional. Skipping it leaves correction model v7 to make a conservative estimate from the threshold profile. Fine Tune can be included or excluded in the correction preview; the graph always remains a single left/right final-curve view rather than drawing separate delta lines.
 
 ### One DSP definition for music A/B and Windows
 
@@ -196,7 +217,7 @@ Updating or uninstalling the application does not intentionally delete those use
 
 ## Build from source
 
-Requires the .NET 10 SDK. From Windows PowerShell 5.1:
+Requires the .NET 10 SDK and Visual Studio Build Tools with **Desktop development with C++**. From Windows PowerShell 5.1:
 
 ```powershell
 .\build.ps1

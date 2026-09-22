@@ -1,5 +1,5 @@
 #define MyAppName "AudioTune"
-#define MyAppVersion "0.4.17-alpha"
+#define MyAppVersion "0.4.18"
 #define MyAppPublisher "AudioTune"
 #define MyAppExeName "AudioTune.exe"
 #define DotNetRuntimeVersion "10.0.12"
@@ -8,7 +8,7 @@
   #define MyAppId "65A9181A-0C39-4D8D-83C0-210682BC7D8B"
 #endif
 #ifndef MyOutputBaseFilename
-  #define MyOutputBaseFilename "AudioTuneSetup-0.4.17-alpha"
+  #define MyOutputBaseFilename "AudioTuneSetup-0.4.18"
 #endif
 
 [Setup]
@@ -36,6 +36,7 @@ CloseApplications=yes
 RestartApplications=no
 
 [Files]
+Source: "..\publish\win-x64\AudioTune.FxSound.Apo.dll"; DestDir: "{commonappdata}\AudioTune\Native"; DestName: "AudioTune.FxSound.Apo.0.4.18.dll"; Flags: ignoreversion onlyifdoesntexist uninsrestartdelete
 Source: "..\publish\win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "Prerequisites\{#DotNetRuntimeExe}"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: NeedsDotNetDesktopRuntime
 
@@ -82,4 +83,52 @@ begin
       FindClose(FindRec);
     end;
   end;
+end;
+procedure RemoveAudioTuneEqualizerApoConfig;
+var
+  ConfigDir: String;
+  InstallDir: String;
+  MainConfig: String;
+  Lines: TArrayOfString;
+  KeptLines: TArrayOfString;
+  I: Integer;
+  Count: Integer;
+begin
+  ConfigDir := '';
+  if not RegQueryStringValue(HKLM64, 'SOFTWARE\EqualizerAPO', 'ConfigPath', ConfigDir) then
+  begin
+    if RegQueryStringValue(HKLM64, 'SOFTWARE\EqualizerAPO', 'InstallPath', InstallDir) then
+      ConfigDir := AddBackslash(InstallDir) + 'config';
+  end;
+
+  if ConfigDir = '' then
+    Exit;
+
+  MainConfig := AddBackslash(ConfigDir) + 'config.txt';
+  if LoadStringsFromFile(MainConfig, Lines) then
+  begin
+    Count := 0;
+    SetArrayLength(KeptLines, GetArrayLength(Lines));
+    for I := 0 to GetArrayLength(Lines) - 1 do
+    begin
+      if (CompareText(Trim(Lines[I]), 'Include: AudioTune.txt') <> 0) and
+         (CompareText(Trim(Lines[I]), '# AudioTune managed persistent DSP include') <> 0) and
+         (CompareText(Trim(Lines[I]), '# AudioTune managed include') <> 0) then
+      begin
+        KeptLines[Count] := Lines[I];
+        Count := Count + 1;
+      end;
+    end;
+    SetArrayLength(KeptLines, Count);
+    SaveStringsToFile(MainConfig, KeptLines, False);
+  end;
+
+  DelTree(AddBackslash(ConfigDir) + 'AudioTune', True, True, True);
+  DeleteFile(AddBackslash(ConfigDir) + 'AudioTune.txt');
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usUninstall then
+    RemoveAudioTuneEqualizerApoConfig;
 end;

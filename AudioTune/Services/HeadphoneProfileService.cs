@@ -14,7 +14,7 @@ public sealed class HeadphoneProfileService
             Type = "Open-back",
             FrequencyRange = "5 Hz – 40 kHz",
             Impedance = "250 Ω",
-            ImageUri = "pack://application:,,,/Assets/Headphones/AmironHome.png",
+            ImageUri = "pack://application:,,,/Assets/Headphones/AmironHomeCutout.png",
             HasVerifiedReferenceCorrection = false,
             ReferenceStatus = "Measurement sources identified; correction dataset pending verification"
         }

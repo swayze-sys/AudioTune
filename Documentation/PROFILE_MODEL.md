@@ -77,7 +77,7 @@ Do not discard trial history in migrations.
 
 ## CorrectionPreset
 
-Current schema version: 2.
+Current schema version: 3.
 
 Fields:
 
@@ -85,10 +85,14 @@ Fields:
 - `HearingProfileId`
 - `Name`
 - `StrengthPercent` (0–200)
+- `HearingProfileEnabled`
 - `FineTuneEnabled`
 - `FineTuneAdjustments`
+- `StereoCenteringEnabled`
 - `StereoCenterBalanceDb`
 - timestamps
+
+The three correction stages are independently bypassable. Turning a stage OFF does not delete its raw hearing measurements, Fine Tune points or saved Stereo Centering balance.
 
 A profile may have multiple correction presets.
 
@@ -175,7 +179,9 @@ Keep migration tolerant: alpha versions have changed schemas several times.
 
 Correction preset schema v2 introduced `FineTuneEnabled`.
 
-Old presets are migrated with Fine Tune enabled to preserve historical behavior.
+Schema v3 introduced `HearingProfileEnabled` and `StereoCenteringEnabled`.
+
+Older presets are migrated with all three stages enabled to preserve historical behavior.
 
 ## Device-bound meaning
 

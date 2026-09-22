@@ -1,3 +1,4 @@
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -27,6 +28,7 @@ public partial class DashboardView : UserControl
         AppServices.Profiles.ProfilesChanged += Profiles_ProfilesChanged;
         AppServices.CorrectionPresets.PresetsChanged += Presets_PresetsChanged;
         AppServices.SystemDsp.DspStateChanged += SystemDsp_DspStateChanged;
+        AppServices.FxSoundEnhancements.StateChanged += FxSoundEnhancements_StateChanged;
         ApplyDebugSettings();
         RefreshProfilePreview();
         RefreshActivity();
@@ -40,11 +42,13 @@ public partial class DashboardView : UserControl
         AppServices.Profiles.ProfilesChanged -= Profiles_ProfilesChanged;
         AppServices.CorrectionPresets.PresetsChanged -= Presets_PresetsChanged;
         AppServices.SystemDsp.DspStateChanged -= SystemDsp_DspStateChanged;
+        AppServices.FxSoundEnhancements.StateChanged -= FxSoundEnhancements_StateChanged;
     }
 
     private void Profiles_ProfilesChanged() => Dispatcher.Invoke(RefreshProfilePreview);
     private void Presets_PresetsChanged() => Dispatcher.Invoke(RefreshProfilePreview);
     private void SystemDsp_DspStateChanged() => Dispatcher.Invoke(RefreshProfilePreview);
+    private void FxSoundEnhancements_StateChanged() => Dispatcher.Invoke(RefreshProfilePreview);
 
     private void RefreshProfilePreview()
     {
@@ -65,21 +69,31 @@ public partial class DashboardView : UserControl
                 AudioProcessingStatusText.Foreground = (Brush)FindResource("MutedBrush");
                 AudioProcessingDescriptionText.Text = "Select or complete a hearing profile before enabling processing.";
 
+                HearingProfileToggle.IsChecked = false;
+                HearingProfileToggle.IsEnabled = false;
+                HearingProfileStatusText.Text = "No active profile";
+
                 FineTuneToggle.IsChecked = false;
                 FineTuneToggle.IsEnabled = false;
                 FineTuneStatusText.Text = "No active preset";
                 FineTuneStatusText.Foreground = (Brush)FindResource("MutedBrush");
 
+                StereoCenteringToggle.IsChecked = false;
+                StereoCenteringToggle.IsEnabled = false;
+                StereoCenteringStatusText.Text = "No active preset";
+
+                FxSoundToggle.IsChecked = AppServices.FxSoundEnhancements.Enabled;
+                FxSoundToggle.IsEnabled = false;
+                FxSoundStatusText.Text = "Profile required";
+
                 CalibrationReviewStatusText.Text = "No measurements";
                 CalibrationReviewStatusText.Foreground = (Brush)FindResource("MutedBrush");
-                CalibrationReviewDescriptionText.Text = "Complete a hearing profile to review confidence.";
                 ReviewResultsButton.IsEnabled = false;
 
                 ListeningStateText.Text = "Profile required";
                 ListeningStateText.Foreground = (Brush)FindResource("AmberBrush");
                 ListeningStateDot.Fill = (Brush)FindResource("AmberBrush");
                 OpenAbButton.IsEnabled = false;
-                StereoCenteringButton.IsEnabled = false;
 
                 CorrectionMetaText.Text = "No active correction";
                 FineTuneLegendText.Text = "Fine Tune (off)";
@@ -152,25 +166,39 @@ public partial class DashboardView : UserControl
                 AudioProcessingDescriptionText.Text = dspStatus?.Message ?? "Persistent processing is not configured.";
             }
 
+            HearingProfileToggle.IsChecked = preset.HearingProfileEnabled;
+            HearingProfileToggle.IsEnabled = profileComplete;
+            HearingProfileStatusText.Text = $"{(preset.HearingProfileEnabled ? "On" : "Bypassed")} · personal correction {preset.StrengthPercent:0}%";
+            HearingProfileStatusText.Foreground = (Brush)FindResource(preset.HearingProfileEnabled ? "GreenBrush" : "MutedBrush");
+
             FineTuneToggle.IsChecked = preset.FineTuneEnabled;
             FineTuneToggle.IsEnabled = profileComplete;
-            FineTuneStatusText.Text = $"{(preset.FineTuneEnabled ? "Enabled" : "Disabled")} · {fineTuneCount}/{FineTuneEngine.Frequencies.Length * 2} points";
+            FineTuneStatusText.Text = $"{(preset.FineTuneEnabled ? "On" : "Off")} · {fineTuneCount}/{FineTuneEngine.Frequencies.Length * 2} points";
             FineTuneStatusText.Foreground = (Brush)FindResource(preset.FineTuneEnabled ? "GreenBrush" : "MutedBrush");
+
+            StereoCenteringToggle.IsChecked = preset.StereoCenteringEnabled;
+            StereoCenteringToggle.IsEnabled = profileComplete;
+            StereoCenteringStatusText.Text = $"{(preset.StereoCenteringEnabled ? "On" : "Off")} · {preset.StereoCenterBalanceDb:+0.00;-0.00;0.00} dB";
+            StereoCenteringStatusText.Foreground = (Brush)FindResource(preset.StereoCenteringEnabled ? "GreenBrush" : "MutedBrush");
+
+            var effects = AppServices.FxSoundEnhancements.CurrentEffects;
+            FxSoundToggle.IsChecked = AppServices.FxSoundEnhancements.Enabled;
+            FxSoundToggle.IsEnabled = profileComplete && File.Exists(AppServices.FxSoundEnhancements.GetApoHostPath());
+            FxSoundStatusText.Text = AppServices.FxSoundEnhancements.Enabled
+                ? $"On · Clarity {effects.Clarity:0.#} · Surround {effects.Surround:0.#}"
+                : $"Off · Clarity {effects.Clarity:0.#} · Surround {effects.Surround:0.#}";
+            FxSoundStatusText.Foreground = (Brush)FindResource(AppServices.FxSoundEnhancements.Enabled ? "GreenBrush" : "MutedBrush");
 
             CalibrationReviewStatusText.Text = lowConfidence == 0
                 ? "No low-confidence points"
                 : $"{lowConfidence} {(lowConfidence == 1 ? "point needs" : "points need")} review";
             CalibrationReviewStatusText.Foreground = (Brush)FindResource(lowConfidence == 0 ? "GreenBrush" : "AmberBrush");
-            CalibrationReviewDescriptionText.Text = lowConfidence == 0
-                ? "All completed measurements currently have usable confidence."
-                : "Re-evaluate low-confidence measurements individually.";
             ReviewResultsButton.IsEnabled = session.Measurements.Count > 0;
 
             ListeningStateText.Text = profileComplete ? "Ready" : "Profile incomplete";
             ListeningStateText.Foreground = (Brush)FindResource(profileComplete ? "GreenBrush" : "AmberBrush");
             ListeningStateDot.Fill = (Brush)FindResource(profileComplete ? "GreenBrush" : "AmberBrush");
             OpenAbButton.IsEnabled = profileComplete;
-            StereoCenteringButton.IsEnabled = profileComplete;
 
             FineTuneLegendText.Text = $"Fine Tune ({(preset.FineTuneEnabled ? "on" : "off")})";
             var filterSet = DspFilterService.BuildFilterSet(session, preset);
@@ -280,9 +308,70 @@ public partial class DashboardView : UserControl
         RefreshActivity();
     }
 
+    private void HearingProfileToggle_Changed(object sender, RoutedEventArgs e)
+        => UpdatePresetStage(
+            "Hearing Profile",
+            preset =>
+            {
+                preset.HearingProfileEnabled = HearingProfileToggle.IsChecked == true;
+                return preset.HearingProfileEnabled;
+            });
+
+    private void StereoCenteringToggle_Changed(object sender, RoutedEventArgs e)
+        => UpdatePresetStage(
+            "Stereo Centering",
+            preset =>
+            {
+                preset.StereoCenteringEnabled = StereoCenteringToggle.IsChecked == true;
+                return preset.StereoCenteringEnabled;
+            });
+
+    private void UpdatePresetStage(string stageName, Func<CorrectionPreset, bool> update)
+    {
+        if (_refreshingControls || !IsLoaded) return;
+        var session = AppServices.Profiles.LastSession;
+        if (session is null)
+        {
+            RefreshProfilePreview();
+            return;
+        }
+
+        var preset = AppServices.CorrectionPresets.GetActiveForProfile(session);
+        bool enabled = update(preset);
+        AppServices.CorrectionPresets.Save(preset);
+        AppServices.Log.Log(
+            $"{stageName} {(enabled ? "enabled" : "bypassed")} from Dashboard for preset '{preset.Name}'. Stored data was preserved.",
+            LogLevel.Info);
+
+        var autoApply = AppServices.SystemDsp.TryAutoApplyPreset(session, preset);
+        if (autoApply.Attempted && !autoApply.Applied)
+            AppServices.Log.Log($"Dashboard {stageName} DSP update: {autoApply.Message}", LogLevel.Warning);
+
+        RefreshProfilePreview();
+        RefreshActivity();
+    }
+
+    private void FxSoundToggle_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_refreshingControls || !IsLoaded) return;
+        bool enabled = FxSoundToggle.IsChecked == true;
+        var effects = AppServices.FxSoundEnhancements.CurrentEffects;
+        var autoApply = AppServices.FxSoundEnhancements.Update(enabled, effects);
+        AppServices.Log.Log(
+            $"FxSound enhancements {(enabled ? "enabled" : "disabled")} from Dashboard. Saved effect values were preserved.",
+            LogLevel.Info);
+        if (autoApply.Attempted && !autoApply.Applied)
+            AppServices.Log.Log($"Dashboard FxSound DSP update: {autoApply.Message}", LogLevel.Warning);
+
+        RefreshProfilePreview();
+        RefreshActivity();
+    }
+
     private void ChangeHeadphone_Click(object sender, RoutedEventArgs e) => OpenDevices();
     private void ManageDsp_Click(object sender, RoutedEventArgs e) => OpenDevices();
+    private void ViewResults_Click(object sender, RoutedEventArgs e) => (Window.GetWindow(this) as MainWindow)?.OpenResults();
     private void EditFineTune_Click(object sender, RoutedEventArgs e) => (Window.GetWindow(this) as MainWindow)?.OpenFineTune();
+    private void EditEnhancements_Click(object sender, RoutedEventArgs e) => (Window.GetWindow(this) as MainWindow)?.OpenEnhancements();
     private void ReviewResults_Click(object sender, RoutedEventArgs e) => (Window.GetWindow(this) as MainWindow)?.OpenResults();
     private void OpenAbTest_Click(object sender, RoutedEventArgs e) => (Window.GetWindow(this) as MainWindow)?.OpenListeningTest();
     private void StereoCentering_Click(object sender, RoutedEventArgs e) => (Window.GetWindow(this) as MainWindow)?.OpenStereoCentering();

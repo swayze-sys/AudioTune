@@ -59,7 +59,7 @@
         <Grid Margin="18">
             <Grid.RowDefinitions>
                 <RowDefinition Height="238"/>
-                <RowDefinition Height="128"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="244"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -71,7 +71,7 @@
                     <ColumnDefinition Width="286"/>
                 </Grid.ColumnDefinitions>
 
-                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,12,0">
+                <controls:AccentBorder Style="{StaticResource LuminousCardStyle}" Margin="0,0,12,0">
                     <Grid Margin="20,12">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="230"/>
@@ -80,21 +80,46 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Column="0" Margin="0,0,10,0" ClipToBounds="False">
-                            <Ellipse Width="230" Height="178" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.92">
+                            <Ellipse Width="230" Height="184" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                     Opacity="1" Panel.ZIndex="0" IsHitTestVisible="False">
                                 <Ellipse.Fill>
                                     <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
-                                        <GradientStop Color="#90148CFF" Offset="0"/>
-                                        <GradientStop Color="#4A0E6FB0" Offset="0.5"/>
+                                        <GradientStop Color="#D0189CFF" Offset="0"/>
+                                        <GradientStop Color="#7A0E77C4" Offset="0.48"/>
                                         <GradientStop Color="#00101F2C" Offset="1"/>
                                     </RadialGradientBrush>
                                 </Ellipse.Fill>
                                 <Ellipse.Effect>
-                                    <BlurEffect Radius="30"/>
+                                    <BlurEffect Radius="38"/>
                                 </Ellipse.Effect>
                             </Ellipse>
-                            <Border Width="226" Height="214" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Ellipse Width="158" Height="128" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                     Opacity="0.9" Panel.ZIndex="0" IsHitTestVisible="False">
+                                <Ellipse.Fill>
+                                    <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+                                        <GradientStop Color="#C72EDBFF" Offset="0"/>
+                                        <GradientStop Color="#4D148CFF" Offset="0.58"/>
+                                        <GradientStop Color="#00101F2C" Offset="1"/>
+                                    </RadialGradientBrush>
+                                </Ellipse.Fill>
+                                <Ellipse.Effect>
+                                    <BlurEffect Radius="24"/>
+                                </Ellipse.Effect>
+                            </Ellipse>
+                            <!-- The supplied product cutout is intentionally translucent almost everywhere. -->
+                            <Border Width="226" Height="214" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Background="#11202D" Panel.ZIndex="1" IsHitTestVisible="False">
+                                <Border.OpacityMask>
+                                    <ImageBrush ImageSource="/Assets/Headphones/AmironHomeOcclusionMask.png"
+                                                Viewbox="0.14,0.06,0.70,0.86"
+                                                ViewboxUnits="RelativeToBoundingBox"
+                                                Stretch="Uniform"/>
+                                </Border.OpacityMask>
+                            </Border>
+                            <Border Width="226" Height="214" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Panel.ZIndex="2" IsHitTestVisible="False">
                                 <Border.Background>
-                                    <ImageBrush ImageSource="/Assets/Headphones/AmironHome.png"
+                                    <ImageBrush ImageSource="/Assets/Headphones/AmironHomeCutout.png"
                                                 Viewbox="0.14,0.06,0.70,0.86"
                                                 ViewboxUnits="RelativeToBoundingBox"
                                                 Stretch="Uniform"/>
@@ -142,14 +167,13 @@
                             </Border>
                         </StackPanel>
                     </Grid>
-                </Border>
+                </controls:AccentBorder>
 
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                <controls:AccentBorder Grid.Column="1" Style="{StaticResource GreenLuminousCardStyle}" AccentColor="#42DAA1" AccentEdge="TopRight">
                     <Grid Margin="18,15">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
@@ -169,91 +193,157 @@
                                 <TextBlock Text="Open A/B Test" FontWeight="SemiBold"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="StereoCenteringButton" Grid.Row="3" Style="{StaticResource FlatButtonStyle}" Click="StereoCentering_Click" Margin="0,8,0,0" Padding="11,8">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <controls:LineIcon Kind="Balance" Width="15" Height="15" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,8,0"/>
-                                <TextBlock Text="Stereo Centering" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="11"/>
-                            </StackPanel>
-                        </Button>
+
                     </Grid>
-                </Border>
+                </controls:AccentBorder>
             </Grid>
 
-            <!-- Quick controls -->
-            <Grid Grid.Row="1" Margin="0,12,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.12*"/>
-                    <ColumnDefinition Width="1.12*"/>
-                    <ColumnDefinition Width="0.96*"/>
-                </Grid.ColumnDefinitions>
+            <!-- Processing chain -->
+            <controls:AccentBorder Grid.Row="1" Style="{StaticResource LuminousCardStyle}" Margin="0,12,0,0">
+                <Grid Margin="16,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="44"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="78"/>
+                    </Grid.RowDefinitions>
 
-                <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,6,0">
-                    <Grid Margin="16,13">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="52"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <Border Width="40" Height="40" CornerRadius="8" Background="#12345A" VerticalAlignment="Top">
-                            <controls:LineIcon Kind="Waveform" Width="21" Height="21" Stroke="#71C8FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
-                            <TextBlock Text="Audio Processing" FontWeight="SemiBold" FontSize="14"/>
-                            <TextBlock x:Name="AudioProcessingStatusText" Text="Checking…" Foreground="{StaticResource MutedBrush}" FontWeight="SemiBold" FontSize="11" Margin="0,4,0,0"/>
-                            <TextBlock x:Name="AudioProcessingDescriptionText" Text="Personal correction for the selected output." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="10" LineHeight="14" Margin="0,4,0,0"/>
-                            <Button Style="{StaticResource DashboardLinkButtonStyle}" Click="ManageDsp_Click" Margin="0,7,0,0"><StackPanel Orientation="Horizontal"><TextBlock Text="Manage DSP" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><controls:LineIcon Kind="ChevronDown" Width="10" Height="10" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="6,0,0,0" RenderTransformOrigin="0.5,0.5"><controls:LineIcon.RenderTransform><RotateTransform Angle="-90"/></controls:LineIcon.RenderTransform></controls:LineIcon></StackPanel></Button>
-                        </StackPanel>
-                        <CheckBox x:Name="AudioProcessingToggle" Grid.Column="2" Style="{StaticResource DashboardSwitchStyle}" VerticalAlignment="Top"
-                                  ToolTip="Enable correction or switch to a level-matched bypass. Your profile remains saved."
-                                  Checked="AudioProcessingToggle_Changed" Unchecked="AudioProcessingToggle_Changed"/>
-                    </Grid>
-                </Border>
+                    <!-- Header: chain title, master switch, and compact review notice share one line. -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="292"/>
+                            <ColumnDefinition Width="330"/>
+                        </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="6,0">
-                    <Grid Margin="16,13">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="52"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <Border Width="40" Height="40" CornerRadius="8" Background="#12345A" VerticalAlignment="Top">
-                            <controls:LineIcon Kind="Sliders" Width="21" Height="21" Stroke="#71C8FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
-                            <TextBlock Text="Fine Tune" FontWeight="SemiBold" FontSize="14"/>
-                            <TextBlock x:Name="FineTuneStatusText" Text="No active preset" Foreground="{StaticResource MutedBrush}" FontWeight="SemiBold" FontSize="11" Margin="0,4,0,0"/>
-                            <TextBlock Text="Preference adjustments are layered onto your hearing profile." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="10" LineHeight="14" Margin="0,4,0,0"/>
-                            <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
-                                <Button Style="{StaticResource DashboardLinkButtonStyle}" Click="EditFineTune_Click"><StackPanel Orientation="Horizontal"><TextBlock Text="Edit Fine Tune" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/><controls:LineIcon Kind="ChevronDown" Width="10" Height="10" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="6,0,0,0" RenderTransformOrigin="0.5,0.5"><controls:LineIcon.RenderTransform><RotateTransform Angle="-90"/></controls:LineIcon.RenderTransform></controls:LineIcon></StackPanel></Button>
-                                <TextBlock Text="Measurements stay saved" Foreground="#6F8298" FontSize="9" Margin="14,1,0,0"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Width="38" Height="38" CornerRadius="8" Background="#12345A" Margin="0,0,12,0">
+                                <controls:LineIcon Kind="Waveform" Width="21" Height="21" Stroke="#71C8FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Processing Chain" FontWeight="SemiBold" FontSize="14"/>
+                                <TextBlock Text="Control the complete signal path or each stage individually." Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="0,3,0,0"/>
                             </StackPanel>
                         </StackPanel>
-                        <CheckBox x:Name="FineTuneToggle" Grid.Column="2" Style="{StaticResource DashboardSwitchStyle}" VerticalAlignment="Top"
-                                  ToolTip="Include or bypass saved Fine Tune measurements without deleting them."
-                                  Checked="FineTuneToggle_Changed" Unchecked="FineTuneToggle_Changed"/>
-                    </Grid>
-                </Border>
 
-                <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}" Margin="6,0,0,0">
-                    <Grid Margin="16,13">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="52"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                        <Border Width="40" Height="40" CornerRadius="8" Background="#3B2C13" VerticalAlignment="Top">
-                            <controls:LineIcon Kind="Alert" Width="21" Height="21" Stroke="{StaticResource AmberBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Grid Grid.Column="1" Margin="12,0">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Audio Processing" FontWeight="SemiBold" FontSize="12"/>
+                                <TextBlock x:Name="AudioProcessingStatusText" Text="Checking…" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock x:Name="AudioProcessingDescriptionText" Text="Master processing state" Visibility="Collapsed"/>
+                            </StackPanel>
+                            <CheckBox x:Name="AudioProcessingToggle" Grid.Column="1" Style="{StaticResource DashboardSwitchStyle}" VerticalAlignment="Center"
+                                      ToolTip="Enable the complete processing chain or switch to level-matched bypass. All stage settings remain saved."
+                                      Checked="AudioProcessingToggle_Changed" Unchecked="AudioProcessingToggle_Changed"/>
+                        </Grid>
+
+                        <Border Grid.Column="2" Background="#241D10" BorderBrush="#72501B" BorderThickness="1" CornerRadius="8" Padding="10,6" Margin="10,0,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="24"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <controls:LineIcon Kind="Alert" Width="17" Height="17" Stroke="{StaticResource AmberBrush}" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="CalibrationReviewStatusText" Grid.Column="1" Text="No measurements" Foreground="{StaticResource AmberBrush}" FontWeight="SemiBold" FontSize="10" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                <Button x:Name="ReviewResultsButton" Grid.Column="2" Style="{StaticResource FlatButtonStyle}" Click="ReviewResults_Click" Padding="9,4" Margin="8,0,0,0">
+                                    <TextBlock Text="Review" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="9"/>
+                                </Button>
+                            </Grid>
                         </Border>
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="Calibration Review" FontWeight="SemiBold" FontSize="14"/>
-                            <TextBlock x:Name="CalibrationReviewStatusText" Text="No measurements" Foreground="{StaticResource AmberBrush}" FontWeight="SemiBold" FontSize="11" Margin="0,4,0,0"/>
-                            <TextBlock x:Name="CalibrationReviewDescriptionText" Text="Complete a hearing profile to review confidence." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="10" LineHeight="14" Margin="0,4,0,0"/>
-                            <Button x:Name="ReviewResultsButton" Style="{StaticResource FlatButtonStyle}" Click="ReviewResults_Click" Margin="0,8,0,0" Padding="10,6" HorizontalAlignment="Stretch">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <controls:LineIcon Kind="Measurement" Width="14" Height="14" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,7,0"/>
-                                    <TextBlock Text="Review Results" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="10"/>
+                    </Grid>
+
+                    <!-- Independently switchable processing stages -->
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <controls:AccentBorder Style="{StaticResource LuminousCardStyle}" CornerRadius="9" Padding="11,9">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="38"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <Border Width="30" Height="30" CornerRadius="7" Background="#11385C" VerticalAlignment="Top">
+                                    <controls:LineIcon Kind="Measurement" Width="17" Height="17" Stroke="#5CC4FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="4,0,7,0">
+                                    <TextBlock Text="Hearing Profile" FontWeight="SemiBold" FontSize="11"/>
+                                    <TextBlock x:Name="HearingProfileStatusText" Text="Personal correction" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+                                    <Button Style="{StaticResource DashboardLinkButtonStyle}" Click="ViewResults_Click" Margin="0,6,0,0" Content="View results"/>
                                 </StackPanel>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </Grid>
+                                <CheckBox x:Name="HearingProfileToggle" Grid.Column="2" Style="{StaticResource DashboardSwitchStyle}" VerticalAlignment="Top"
+                                          ToolTip="Include or bypass the modeled Hearing Profile correction. Raw measurements remain unchanged."
+                                          Checked="HearingProfileToggle_Changed" Unchecked="HearingProfileToggle_Changed"/>
+                            </Grid>
+                        </controls:AccentBorder>
 
+                        <controls:LineIcon Grid.Column="1" Kind="ArrowRight" Width="18" Height="18" Stroke="#20C9E8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                        <controls:AccentBorder Grid.Column="2" Style="{StaticResource PurpleLuminousCardStyle}" AccentColor="#AA8CFF" AccentEdge="TopRight" CornerRadius="9" Padding="11,9">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="38"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <Border Width="30" Height="30" CornerRadius="7" Background="#11385C" VerticalAlignment="Top">
+                                    <controls:LineIcon Kind="Sliders" Width="17" Height="17" Stroke="#5CC4FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="4,0,7,0">
+                                    <TextBlock Text="Fine Tune" FontWeight="SemiBold" FontSize="11"/>
+                                    <TextBlock x:Name="FineTuneStatusText" Text="No active preset" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+                                    <Button Style="{StaticResource DashboardLinkButtonStyle}" Click="EditFineTune_Click" Margin="0,6,0,0" Content="Edit"/>
+                                </StackPanel>
+                                <CheckBox x:Name="FineTuneToggle" Grid.Column="2" Style="{StaticResource DashboardSwitchStyle}" VerticalAlignment="Top"
+                                          ToolTip="Include or bypass saved Fine Tune measurements without deleting them."
+                                          Checked="FineTuneToggle_Changed" Unchecked="FineTuneToggle_Changed"/>
+                            </Grid>
+                        </controls:AccentBorder>
+
+                        <controls:LineIcon Grid.Column="3" Kind="ArrowRight" Width="18" Height="18" Stroke="#20C9E8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                        <controls:AccentBorder Grid.Column="4" Style="{StaticResource LuminousCardStyle}" CornerRadius="9" Padding="11,9">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="38"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <Border Width="30" Height="30" CornerRadius="7" Background="#11385C" VerticalAlignment="Top">
+                                    <controls:LineIcon Kind="Balance" Width="17" Height="17" Stroke="#5CC4FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="4,0,7,0">
+                                    <TextBlock Text="Stereo Centering" FontWeight="SemiBold" FontSize="11"/>
+                                    <TextBlock x:Name="StereoCenteringStatusText" Text="0.00 dB" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+                                    <Button Style="{StaticResource DashboardLinkButtonStyle}" Click="StereoCentering_Click" Margin="0,6,0,0" Content="Adjust"/>
+                                </StackPanel>
+                                <CheckBox x:Name="StereoCenteringToggle" Grid.Column="2" Style="{StaticResource DashboardSwitchStyle}" VerticalAlignment="Top"
+                                          ToolTip="Apply or bypass the saved attenuation-only Stereo Centering trim."
+                                          Checked="StereoCenteringToggle_Changed" Unchecked="StereoCenteringToggle_Changed"/>
+                            </Grid>
+                        </controls:AccentBorder>
+
+                        <controls:LineIcon Grid.Column="5" Kind="ArrowRight" Width="18" Height="18" Stroke="#20C9E8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                        <controls:AccentBorder Grid.Column="6" Style="{StaticResource AmberLuminousCardStyle}" AccentColor="#FFC66A" AccentEdge="TopRight" CornerRadius="9" Padding="11,9">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="38"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <Border Width="30" Height="30" CornerRadius="7" Background="#11385C" VerticalAlignment="Top">
+                                    <controls:LineIcon Kind="Processor" Width="17" Height="17" Stroke="#5CC4FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="4,0,7,0">
+                                    <TextBlock Text="FxSound Enhancements" FontWeight="SemiBold" FontSize="11"/>
+                                    <TextBlock x:Name="FxSoundStatusText" Text="Neutral" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+                                    <Button Style="{StaticResource DashboardLinkButtonStyle}" Click="EditEnhancements_Click" Margin="0,6,0,0" Content="Edit enhancements"/>
+                                </StackPanel>
+                                <CheckBox x:Name="FxSoundToggle" Grid.Column="2" Style="{StaticResource DashboardSwitchStyle}" VerticalAlignment="Top"
+                                          ToolTip="Enable or bypass the saved FxSound enhancement settings."
+                                          Checked="FxSoundToggle_Changed" Unchecked="FxSoundToggle_Changed"/>
+                            </Grid>
+                        </controls:AccentBorder>
+                    </Grid>
+                </Grid>
+            </controls:AccentBorder>
             <!-- Active correction and activity -->
             <Grid Grid.Row="2" Margin="0,12,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2.15*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,7,0">
+                <controls:AccentBorder Style="{StaticResource LuminousCardStyle}" Margin="0,0,7,0">
                     <Grid Margin="16,11">
                         <Grid.RowDefinitions><RowDefinition Height="39"/><RowDefinition Height="*"/></Grid.RowDefinitions>
                         <Grid>
@@ -276,9 +366,9 @@
                             <TextBlock x:Name="PreviewValueText" Text="Hover or click a point" Foreground="#6F8298" FontSize="9" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,4,0"/>
                         </Grid>
                     </Grid>
-                </Border>
+                </controls:AccentBorder>
 
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="5,0,0,0">
+                <controls:AccentBorder Grid.Column="1" Style="{StaticResource LuminousCardStyle}" Margin="5,0,0,0">
                     <StackPanel Margin="16,11">
                         <Grid>
                             <TextBlock Text="Recent Activity" FontWeight="SemiBold" FontSize="13"/>
@@ -297,7 +387,7 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </StackPanel>
-                </Border>
+                </controls:AccentBorder>
             </Grid>
 
             <!-- Debug remains optional and compact -->
@@ -310,7 +400,7 @@
                         <TextBlock Text="Audio engine running" Foreground="{StaticResource GreenBrush}" FontSize="10" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Expander.Header>
-                <Border Style="{StaticResource CardBorderStyle}" Margin="0,8,0,0" MinHeight="130">
+                <controls:AccentBorder Style="{StaticResource LuminousCardStyle}" Margin="0,8,0,0" MinHeight="130">
                     <Grid Margin="14">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                         <TextBox x:Name="DebugTextBox" Background="Transparent" BorderThickness="0" Foreground="#AFC0D2" FontFamily="Consolas" FontSize="10" IsReadOnly="True" VerticalScrollBarVisibility="Auto"/>
@@ -319,10 +409,10 @@
                             <Grid Margin="0,8,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Sample Rate" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="48,000 Hz" FontSize="11"/></Grid>
                             <Grid Margin="0,6,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Test format" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="32-bit float / stereo" FontSize="11"/></Grid>
                             <Grid Margin="0,6,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Output" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="WASAPI shared" FontSize="11"/></Grid>
-                            <Grid Margin="0,6,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Build" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="0.4.17-alpha" FontSize="11"/></Grid>
+                            <Grid Margin="0,6,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="Build" Style="{StaticResource MutedTextStyle}"/><TextBlock Grid.Column="1" Text="0.4.18" FontSize="11"/></Grid>
                         </StackPanel>
                     </Grid>
-                </Border>
+                </controls:AccentBorder>
             </Expander>
         </Grid>
     </ScrollViewer>

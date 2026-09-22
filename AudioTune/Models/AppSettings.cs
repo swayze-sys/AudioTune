@@ -22,4 +22,12 @@ public sealed class AppSettings
     // in the localization-critical midrange. Low bass and upper treble are allowed more.
     public bool StereoPreservationEnabled { get; set; } = true;
     public double MaxInterauralCorrectionDifferenceDb { get; set; } = 2.0;
+
+    // Original FxSound DfxDsp module. Currently active in AudioTune Listening Test playback.
+    public bool FxSoundEnhancementsEnabled { get; set; } = false;
+    public double FxSoundClarity { get; set; } = 0.0;
+    public double FxSoundAmbience { get; set; } = 0.0;
+    public double FxSoundSurround { get; set; } = 0.0;
+    public double FxSoundDynamicBoost { get; set; } = 0.0;
+    public double FxSoundBass { get; set; } = 0.0;
 }

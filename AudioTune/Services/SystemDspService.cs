@@ -183,12 +183,22 @@ public sealed class SystemDspService
         double appliedStrength = ParseAppliedStrengthPercent(managedText) ?? 100.0;
         int appliedAlgorithmVersion = ParseAppliedAlgorithmVersion(managedText) ?? 1;
         string? appliedSignature = ParseAppliedSignature(managedText);
+        string? appliedEnhancementSignature = ParseAppliedEnhancementSignature(managedText);
+        bool appliedFxSoundHostEnabled = managedText.Contains("# FxSound native host: ON", StringComparison.Ordinal);
+        string currentFxSoundHostPath = AppServices.FxSoundEnhancements.GetApoHostPath();
+        bool enhancementHostPathMatches = !appliedFxSoundHostEnabled ||
+                                          (File.Exists(currentFxSoundHostPath) &&
+                                           managedText.Contains($"Library \"{currentFxSoundHostPath}\"", StringComparison.OrdinalIgnoreCase));
+        bool enhancementMatches = (appliedEnhancementSignature is null
+            ? !AppServices.FxSoundEnhancements.Enabled
+            : string.Equals(appliedEnhancementSignature, AppServices.FxSoundEnhancements.CreateSignature(), StringComparison.OrdinalIgnoreCase)) &&
+                                  enhancementHostPathMatches;
         bool strengthMatches = activeStrengthPercent is null || Math.Abs(appliedStrength - activeStrengthPercent.Value) < 0.1;
         bool algorithmMatches = appliedAlgorithmVersion == CorrectionPreviewService.AlgorithmVersion;
         bool signatureMatches = string.IsNullOrWhiteSpace(activeSignature) || string.Equals(appliedSignature, activeSignature, StringComparison.OrdinalIgnoreCase);
         bool profileMatches = activeProfileId is null
-            ? appliedProfileId is not null && algorithmMatches && signatureMatches
-            : appliedProfileId == activeProfileId && strengthMatches && algorithmMatches && signatureMatches;
+            ? appliedProfileId is not null && algorithmMatches && signatureMatches && enhancementMatches
+            : appliedProfileId == activeProfileId && strengthMatches && algorithmMatches && signatureMatches && enhancementMatches;
 
         bool? apoOnDevice = null;
         bool? enhancementsEnabled = null;
@@ -268,8 +278,15 @@ public sealed class SystemDspService
         CorrectionPreset preset,
         string? deviceId = null,
         string? deviceName = null,
-        bool enabled = true)
+        bool enabled = true,
+        bool? fxSoundEnabled = null,
+        FxSoundEffectSettings? fxSoundEffects = null,
+        string? fxSoundHostPath = null)
     {
+        bool includeFxSound = fxSoundEnabled ?? AppServices.FxSoundEnhancements.Enabled;
+        FxSoundEffectSettings selectedFxSoundEffects = fxSoundEffects ?? AppServices.FxSoundEnhancements.CurrentEffects;
+        string selectedFxSoundHostPath = fxSoundHostPath ?? AppServices.FxSoundEnhancements.GetApoHostPath();
+        selectedFxSoundEffects.Validate();
         var filterSet = DspFilterService.BuildFilterSet(session, preset);
         var left = filterSet.Left;
         var right = filterSet.Right;
@@ -287,10 +304,15 @@ public sealed class SystemDspService
         sb.AppendLine($"# Profile ID: {session.Id:D}");
         sb.AppendLine($"# Correction strength: {Math.Clamp(preset.StrengthPercent, 0.0, 200.0).ToString("0.0", CultureInfo.InvariantCulture)}%");
         sb.AppendLine($"# Correction preset ID: {preset.Id:D}");
+        sb.AppendLine($"# Hearing Profile stage: {(preset.HearingProfileEnabled ? "ON" : "OFF")}");
         sb.AppendLine($"# Fine Tune state: {(preset.FineTuneEnabled ? "ON" : "OFF")}");
         sb.AppendLine($"# Fine Tune points: {preset.FineTuneAdjustments.Count}");
+        sb.AppendLine($"# Stereo Centering state: {(preset.StereoCenteringEnabled ? "ON" : "OFF")}");
+        sb.AppendLine($"# Saved Stereo Centering balance: {preset.StereoCenterBalanceDb.ToString("0.00", CultureInfo.InvariantCulture)} dB");
         sb.AppendLine($"# Correction signature: {signature}");
         sb.AppendLine($"# Correction algorithm: {CorrectionPreviewService.AlgorithmVersion}");
+        sb.AppendLine($"# FxSound native host: {(includeFxSound ? "ON" : "OFF")}");
+        sb.AppendLine($"# FxSound signature: {FxSoundEnhancementService.CreateSignature(includeFxSound, selectedFxSoundEffects)}");
         sb.AppendLine($"# Generated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
         sb.AppendLine("# Experimental personal hearing correction. Headphone compensation is disabled.");
 
@@ -316,6 +338,7 @@ public sealed class SystemDspService
             return sb.ToString();
         }
 
+        AppendResponseExplanation(sb, session, preset, filterSet);
         sb.AppendLine("# AudioTune enabled");
         sb.AppendLine($"Device: {endpointGuid}");
         sb.AppendLine($"Preamp: {preampDb:0.00} dB".Replace(',', '.'));
@@ -326,7 +349,116 @@ public sealed class SystemDspService
         if (filterSet.RightTrimDb < -0.001) sb.AppendLine($"Preamp: {filterSet.RightTrimDb:0.00} dB".Replace(',', '.'));
         foreach (var line in DspFilterService.ToEqualizerApoLines(right)) sb.AppendLine(line);
         sb.AppendLine("Channel: ALL");
+        if (includeFxSound)
+        {
+            sb.AppendLine("# FxSound parameters use normalized VST values; 1.000 equals 10.0 on the AudioTune scale.");
+            sb.AppendLine(FxSoundEnhancementService.BuildApoConfigLine(selectedFxSoundEffects, selectedFxSoundHostPath));
+        }
         return sb.ToString();
+    }
+
+    public bool IsFxSoundHostActiveForDevice(string? deviceId)
+    {
+        try
+        {
+            string? configDir = FindEqualizerApoConfigDirectory();
+            string? endpointGuid = ExtractEndpointGuid(deviceId);
+            if (configDir is null || endpointGuid is null || !IsManagedIncludePresent(Path.Combine(configDir, "config.txt")))
+                return false;
+            string path = GetManagedDeviceFilePath(configDir, endpointGuid);
+            if (!File.Exists(path)) return false;
+            string text = File.ReadAllText(path);
+            string hostPath = AppServices.FxSoundEnhancements.GetApoHostPath();
+            return File.Exists(hostPath) &&
+                   text.Contains("# AudioTune enabled", StringComparison.Ordinal) &&
+                   text.Contains("# FxSound native host: ON", StringComparison.Ordinal) &&
+                   text.Contains($"Library \"{hostPath}\"", StringComparison.OrdinalIgnoreCase);
+        }
+        catch { return false; }
+    }
+
+    private static void AppendResponseExplanation(
+        StringBuilder sb,
+        HearingSession session,
+        CorrectionPreset preset,
+        DspFilterSet filterSet)
+    {
+        bool includeFineTune = preset.FineTuneEnabled;
+        var leftComponents = CorrectionPreviewService.CreateComponentsBeforeStereoPreservation(
+            session, preset, EarChannel.Left, includeFineTune);
+        var rightComponents = CorrectionPreviewService.CreateComponentsBeforeStereoPreservation(
+            session, preset, EarChannel.Right, includeFineTune);
+        var finalTargets = CorrectionPreviewService.CreateStereoPair(session, preset, includeFineTune);
+
+        sb.AppendLine("#");
+        sb.AppendLine("# DSP response explanation (all values are dB):");
+        sb.AppendLine("# Hearing  = hearing-test/model contribution before correction strength.");
+        sb.AppendLine("# FineTune = saved/interpolated Fine Tune contribution used by this preset (0.00 when OFF).");
+        sb.AppendLine($"# Target   = clamp((Hearing + FineTune) * {Math.Clamp(preset.StrengthPercent, 0.0, 200.0).ToString("0.0", CultureInfo.InvariantCulture)}%, -12.00, +12.00), then stereo preservation.");
+        sb.AppendLine("# RealDSP  = summed response of every PK filter at this frequency, before preamp/centering.");
+        sb.AppendLine("# Output   = RealDSP + global preamp + per-channel Stereo Centering trim.");
+        sb.AppendLine("# A Filter line's Gain is only that filter's own center gain, not the final response.");
+        AppendChannelResponseExplanation(
+            sb, "L", leftComponents, finalTargets.Left, filterSet.Left,
+            filterSet.AppliedPreampDb, filterSet.LeftTrimDb);
+        AppendChannelResponseExplanation(
+            sb, "R", rightComponents, finalTargets.Right, filterSet.Right,
+            filterSet.AppliedPreampDb, filterSet.RightTrimDb);
+        sb.AppendLine("#");
+    }
+
+    private static void AppendChannelResponseExplanation(
+        StringBuilder sb,
+        string channel,
+        IReadOnlyList<CorrectionPreviewService.CorrectionPointComponents> components,
+        IReadOnlyList<(double Frequency, double GainDb)> finalTarget,
+        IReadOnlyList<ParametricEqFilter> filters,
+        double preampDb,
+        double channelTrimDb)
+    {
+        var hearing = components.Select(x => (x.Frequency, Value: x.HearingModelDb)).ToList();
+        var fineTune = components.Select(x => (x.Frequency, Value: x.FineTuneDb)).ToList();
+        var target = finalTarget.Select(x => (x.Frequency, Value: x.GainDb)).ToList();
+
+        sb.AppendLine($"# Channel {channel} band response:");
+        sb.AppendLine("#       Hz | Hearing | FineTune |   Target |  RealDSP |   Output");
+        foreach (double frequency in DspFilterService.Bands)
+        {
+            double hearingDb = InterpolateLog(hearing, frequency);
+            double fineTuneDb = InterpolateLog(fineTune, frequency);
+            double targetDb = InterpolateLog(target, frequency);
+            double realDspDb = filters.Sum(filter => DspFilterService.PeakingMagnitudeDb(filter, frequency, 48000));
+            double outputDb = realDspDb + preampDb + channelTrimDb;
+            sb.AppendLine(
+                $"# {frequency.ToString("0.##", CultureInfo.InvariantCulture).PadLeft(8)} |" +
+                $" {FormatSignedDb(hearingDb).PadLeft(7)} |" +
+                $" {FormatSignedDb(fineTuneDb).PadLeft(8)} |" +
+                $" {FormatSignedDb(targetDb).PadLeft(8)} |" +
+                $" {FormatSignedDb(realDspDb).PadLeft(8)} |" +
+                $" {FormatSignedDb(outputDb).PadLeft(8)}");
+        }
+    }
+
+    private static string FormatSignedDb(double value)
+        => value.ToString("+0.00;-0.00;0.00", CultureInfo.InvariantCulture);
+
+    private static double InterpolateLog(
+        IReadOnlyList<(double Frequency, double Value)> points,
+        double frequency)
+    {
+        if (points.Count == 0) return 0.0;
+        if (frequency <= points[0].Frequency) return points[0].Value;
+        if (frequency >= points[^1].Frequency) return points[^1].Value;
+        for (int i = 0; i < points.Count - 1; i++)
+        {
+            var a = points[i];
+            var b = points[i + 1];
+            if (frequency < a.Frequency || frequency > b.Frequency) continue;
+            double t = (Math.Log(frequency) - Math.Log(a.Frequency)) /
+                       (Math.Log(b.Frequency) - Math.Log(a.Frequency));
+            return a.Value + ((b.Value - a.Value) * t);
+        }
+        return 0.0;
     }
 
     public double CalculateHeadroomDb(HearingSession session) => DspFilterService.CalculateHeadroomDb(session);
@@ -351,6 +483,8 @@ public sealed class SystemDspService
 
         string endpointGuid = ValidateTargetDevice(deviceId, deviceName);
         PreparePersistentConfig(configDir);
+        if (AppServices.FxSoundEnhancements.Enabled && !File.Exists(AppServices.FxSoundEnhancements.GetApoHostPath()))
+            throw new FileNotFoundException("The native AudioTune FxSound APO host is missing from the application folder.", AppServices.FxSoundEnhancements.GetApoHostPath());
 
         string deviceFile = GetManagedDeviceFilePath(configDir, endpointGuid);
         Directory.CreateDirectory(Path.GetDirectoryName(deviceFile)!);
@@ -573,6 +707,18 @@ public sealed class SystemDspService
             var trimmed = line.Trim();
             if (!trimmed.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) continue;
             return trimmed[prefix.Length..].Trim();
+        }
+        return null;
+    }
+
+    private static string? ParseAppliedEnhancementSignature(string text)
+    {
+        foreach (var line in text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            const string prefix = "# FxSound signature:";
+            var trimmed = line.Trim();
+            if (trimmed.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                return trimmed[prefix.Length..].Trim();
         }
         return null;
     }
