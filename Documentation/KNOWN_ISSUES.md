@@ -1,3 +1,5 @@
+> **Historical 0.4.18 documentation.** Current installation, features and support information for WinUI 0.4.127: [Current release](CURRENT_RELEASE.md).
+
 # Known Issues, Limitations and Regression Risks
 
 ## Baseline verification status

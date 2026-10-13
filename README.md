@@ -1,269 +1,89 @@
 # AudioTune
 
-AudioTune is a local-first Windows application for personal, device-bound headphone calibration. It measures left/right hearing thresholds, preserves the raw measurement history, derives an adjustable correction, supports level-matched music A/B testing, and can apply persistent per-device DSP through Equalizer APO.
+**Hear more. Tune to you.** Personal hearing correction, individually calibrated Loudness Adaptation and system-wide sound processing for Windows.
 
-> **Experimental software:** AudioTune is not a medical audiometer. Its measurements are relative digital levels in dBFS and must not be interpreted as dB HL, a diagnosis, or a clinical hearing-loss assessment.
+**Stable release: 0.4.127 · 13 October 2026**
 
-![AudioTune dashboard](AudioTune/Assets/DesignReferences/DashboardReference.png)
+[**Download Windows setup**](https://github.com/swayze-sys/AudioTune/releases/download/v0.4.127/AudioTuneSetup-0.4.127.exe) · [Release notes](https://github.com/swayze-sys/AudioTune/releases/tag/v0.4.127) · [Deutsch](README.de.md) · [Installation and support](Documentation/CURRENT_RELEASE.md)
 
-[Deutsche README](README.de.md) · [Documentation index](Documentation/INDEX.md) · [Known issues](Documentation/KNOWN_ISSUES.md) · [Roadmap](Documentation/ROADMAP.md)
+![AudioTune 0.4.127 — hearing measurements and personal correction in the new Windows interface](Documentation/Images/AudioTune-0.4.127.png)
 
-## Highlights
+*Actual 0.4.127 interface with synthetic demo measurements. The screenshot contains no personal hearing data; audio playback and system DSP changes are disabled in this demonstration.*
 
-- 30 Hz–18 kHz adaptive hearing test for each ear with autosave and point retesting
-- separate, non-destructive Hearing Profiles and Correction Presets
-- correction model v7 with Fine Tune, stereo-image preservation, and centering
-- one fitted parametric-EQ definition for preview and Equalizer APO
-- persistent, per-device Windows DSP with level-matched bypass
-- fully local profile storage under `%LOCALAPPDATA%\AudioTune`
-- original FxSound DSP engine with five enhancement controls, local A/B playback, and an optional native Equalizer APO host for the selected system output
-- offline Windows setup that carries the required .NET 10 Desktop Runtime and installs it only when missing
+## The important changes since 0.4.18
 
-## Install
+### Interface and explanations
 
-Download `AudioTuneSetup-0.4.18.exe` from the repository release and run it on 64-bit Windows. The setup contains the application and the verified Microsoft .NET 10 Desktop Runtime prerequisite. Equalizer APO is optional and is offered from the Devices page when system-wide DSP is requested.
+1. **A complete WinUI 3 interface.** The Windows application has been rebuilt with consistent navigation, native controls and blue/red themes while preserving the calibration workflow.
+2. **A clearer processing dashboard.** The five processing stages show their state and calibration progress together, with direct access to the relevant settings.
+3. **Applied-correction graphs.** Inspect the saved processing response and the contribution of individual stages, with separate left/right views instead of inferring the result from sliders alone.
+4. **Three GPU spectrum styles.** Choose bars, a neon contour or a ribbon, with adjustable display height and visual correction overlays.
+5. **Contextual cat guides.** Page-specific help and step-by-step setup instructions highlight the relevant controls. Completed hearing tests lead into Fine Tune, Loudness and DSP setup, with the cats' usual dry humor.
 
-AudioTune does not silently change Windows master volume. Persistent DSP must be explicitly configured for the intended playback endpoint.
+### System-wide audio processing
 
-## FxSound engine module
+6. **AudioTune's own Windows APO.** Native system-wide processing can run the hearing correction and effects directly in the Windows audio path.
+7. **Automatic native-route checks and fallback.** Setup checks suitable endpoint stages, preserves supported manufacturer chains and offers Equalizer APO fallback when the native route cannot be established.
+8. **Native 7.1 playback compatibility.** The hearing correction acts on front left/right while preserving the remaining channels. This is not eight-channel hearing calibration.
+9. **A useful idle DSP state.** Pausing playback no longer alone invalidates the last confirmed native configuration; retained processing curves remain distinguishable from fresh live telemetry.
+10. **Bounded DSP recovery.** Unexpected inactive/unconfirmed states trigger a limited recovery sequence. A deliberate off or level-matched bypass choice remains respected. Version 0.4.127 also recovers a stopped native controller at app startup, during setup and before manual DSP activation, retaining newer saved settings.
 
-The repository includes the original FxSound `DfxDsp` engine at pinned commit
-`d8e7a23d37ed5939c2a3090a1c1756c7f2500b17`, isolated behind a native AudioTune
-adapter. A deterministic seven-scenario null test compares the adapter with a
-direct call into the original engine and fails on any sample difference.
+### Individual Loudness Adaptation
 
-When enabled, the native host applies these enhancements on the selected Equalizer APO output as well as in AudioTune's listening test. The hearing-profile correction remains a separate processing stage. See [`Documentation/FXSOUND_MODULE.md`](Documentation/FXSOUND_MODULE.md).
-FxSound is AGPL-3.0; see [`LICENSE`](LICENSE) and
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+11. **Calibration at several listening levels.** Paired-tone comparisons build an individual level-dependent correction, with up to 90 matches across both ears.
+12. **Personal music listening limits.** Capture your quietest and loudest usual music levels so the measured correction follows your own listening range.
+13. **Volume and signal-level control modes.** Choose how Windows level and the measured input signal contribute to Loudness Adaptation; the required references are stored with the calibration.
+14. **Browser/Spotify player-volume detection.** Supported player controls contribute their attenuation in dB. A hidden control can retain its validated level while playback continues.
+15. **Observation after closing the main window.** `AudioTune.PlayerObserver.exe` keeps supported player-volume observation running in the logged-in session.
+16. **Windows audio-session events.** App volume, mute and playback-state changes use session notifications; browsers retain occasional safety scans where accessibility events are incomplete.
 
-## Development status
+### Devices and clarity
 
-Current release: **v0.4.18 (2026-09-22)**. Before changing code, read [`AGENTS.md`](AGENTS.md) and [`Documentation/INDEX.md`](Documentation/INDEX.md).
+17. **Saved profiles per output.** Remember the chosen profile for a device and keep the prepared correction on already configured outputs even without the main window.
+18. **Improved USB/Bluetooth recognition.** Stable hardware/function identities help recover device assignments after supported endpoint changes or Bluetooth re-pairing; ambiguous devices are not guessed.
+19. **Selective measurement transfer.** Reuse selected hearing, Fine Tune, Loudness or stereo-centering measurements for another profile/output, retaining transfer provenance and the original source data.
+20. **Optional Personalized Clarity.** Profile-aware Presence, Definition, Detail and Air controls complement the original FxSound effects.
+21. **Reworked Clarity peak handling.** The personalized effect uses a shared effect budget and lookahead protection for its added signal. This does not remove the need to monitor overall output clipping.
 
-## v0.4.18
+### Saving and updating
 
-- Added the original FxSound engine's Clarity, Ambience, Surround, Dynamic Boost, and Bass controls to AudioTune and its native Equalizer APO host. The pinned upstream commit is documented in [third-party notices](THIRD_PARTY_NOTICES.md); AudioTune is not affiliated with FxSound.
-- Added a dashboard processing-chain view with independent hearing-profile, Fine Tune, stereo-centering, and enhancement switches beneath the main processing switch.
-- Refined card lighting and the Sound Enhancements page with larger PNG icons and a wave illustration.
-- Updated the versioned native host path and installer package for this release.
+22. **One readable document per profile.** Hearing measurements, correction presets, the selected preset and unfinished Loudness tests share a file named after the profile.
+23. **Resumable tests and transparent save reports.** Confirmed Loudness points can be resumed later. Reports identify the actual file and values saved during the current test; individual hearing-point retakes use a non-blocking confirmation.
+24. **Verified migration backups.** Existing separate files are consolidated only after backup verification. Import, export, Save Copy and restore carry the complete profile contents; unused default presets no longer displace a measured correction automatically.
+25. **One AudioTune installation.** Recognized WPF/AppData installations are migrated to `C:\Program Files\AudioTune`. The installer waits for the observer's actual exit and can resume cleanup after a partial uninstall.
+26. **No bundled .NET runtime.** The installer requires the system-wide .NET 10 Desktop Runtime x64, checks the payload and removes recognized stale private runtimes from the application folder.
+27. **Stable-release update checks.** Check the public stable feed from the app, with an optional per-user scheduled check. New releases no longer require browsing repository files to find an installer.
 
-Known limits and pending endpoint-specific listening checks are listed in [known issues](Documentation/KNOWN_ISSUES.md).
+## What AudioTune does
 
-## v0.4.17-alpha
+Measure each ear from **30 Hz to 18 kHz**, refine the result with Fine Tune, compare original/corrected playback and apply a persistent correction to a chosen output. Adjust correction intensity from **0–200%** while retaining the raw measurements. Stereo-image protection and attenuation-only centering help preserve the left/right balance.
 
-- Smoothed the fitted DSP only in the final 14/16/18 kHz filter cluster: Q = 1.5 prevents narrow visible/audible peaks and valleys while preserving the 12.5 kHz transition and every lower-band Q rule.
-- Added deterministic high-treble ripple tests alongside the existing correction-model tests.
-- Replaced all remaining Profiles glyphs with DPI-sharp WPF vectors for profile information, preset metrics, import/new-test actions and Quick Actions.
-- Added semantic vector nodes and connectors to the Devices signal chain, plus matching vector action controls.
+The original FxSound engine provides Clarity, Ambience, Surround, Dynamic Boost and Bass. AudioTune is not affiliated with FxSound.
 
+> AudioTune is not a medical audiometer. Hearing measurements are relative digital levels in **dBFS**, not calibrated dB HL or a medical diagnosis. “Stable” identifies the regular release channel, not clinical validation or guaranteed compatibility with every audio driver.
 
-## v0.4.16-alpha
+## Install or update
 
-### Profiles UI polish
+1. Use **Windows 10 build 19041 or newer / Windows 11, x64**.
+2. Install the **Microsoft .NET 10 Desktop Runtime, x64** if needed. [Microsoft download](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). This setup **does not bundle or install .NET runtimes**; the .NET SDK is not needed to use AudioTune.
+3. Run `AudioTuneSetup-0.4.127.exe`. AudioTune installs as `C:\Program Files\AudioTune\AudioTune.exe`.
+4. Open **Devices**, select the intended output and complete its audio setup. Equalizer APO is optional when the native APO works; an existing Equalizer APO installation can serve as the fallback.
 
-- Correction Presets now render by preset name with a visual preset icon instead of the CLR type name.
-- Correction preset summary metrics now include compact icons.
-- Quick Actions now use the icon + label layout from the approved mockup.
-- The selected active hearing profile now shows a dedicated green `Active Profile` status badge instead of a disabled grey button.
+The installer retires recognized older WPF and AppData installations, preserves user data and creates a migration backup. It waits for AudioTune's observer to finish before removing old program DLLs. A regular Windows restart may be required to activate prepared native audio components.
 
+Your data remains under `%LOCALAPPDATA%\AudioTune`. Each profile uses one readable document in `Profiles`; previous files and migrations are backed up under `Backups`. Raw measurements and tuning remain separate sections inside the document.
 
-- Profiles page redesigned into a compact profile manager matching the new Devices design language.
-- Saved hearing profiles use searchable cards with clear active/archive status.
-- Selected profile, correction preset, quick actions and measurement summary are separated into focused panels.
-- Correction intensity remains only on Devices and now ranges from 0% to 200% (100% is the unchanged default).
-- Correction/DSP graph ranges expand to support up to 200% intensity.
+## Compatibility and support
 
+- Native playback supports stereo and 7.1 layouts. In 7.1, the personal hearing correction acts on the front left/right pair; other channels are preserved. This is not an eight-channel hearing calibration.
+- Manufacturer APOs, exclusive/raw playback and individual drivers can affect whether system effects are processed. Native setup includes compatibility checks and fallback; universal hardware support is not claimed.
+- Browser/Spotify control detection depends on the player exposing a usable control. Windows-session observation remains available when a player control cannot be read.
+- Bitdefender has reported some unsigned AudioTune installers/helpers through behavioral detection. Earlier clean-file feedback did not resolve every later behavior alert; a general antivirus clearance is not claimed.
 
-### Auto-apply reliability fix
+For a problem, include the AudioTune version, output device, Windows channel layout and the relevant diagnostic message in a [GitHub issue](https://github.com/swayze-sys/AudioTune/issues). Do not post personal profile files unless you intend to share their hearing measurements.
 
-- Fine Tune ON/OFF, correction intensity and stereo-centering updates now call the exact same persistent APO write path as the manual **Apply / Update DSP** action whenever **Auto-apply DSP changes** is enabled.
-- A stale correction signature is no longer treated as a reason to skip auto-apply; that stale signature is the state auto-apply is intended to replace.
-- An explicit level-matched bypass is still preserved and will not be silently re-enabled.
+## Release and source information
 
+The downloadable release asset is the Windows setup. Current WinUI development source remains private. The existing WPF source, GitHub's automatically generated source archives and older documents in this repository describe the historical 0.4.18 implementation; they do not build the current WinUI application. Current installation, data migration and limitations are documented in [Current release](Documentation/CURRENT_RELEASE.md).
 
-- Fixed DSP auto-apply after Fine Tune/intensity changes: an existing persistent DSP is now rewritten immediately even though its previous correction signature is intentionally stale.
-- Fine Tune ON/OFF passes the exact edited preset into auto-apply instead of resolving it again.
-- Apply / Update DSP no longer shows the large confirmation/details dialog; normal application is immediate. Blocking errors and exceptional signal-path warnings remain.
-
-
-### Devices crash fix
-- Fixed a startup-order crash when opening the redesigned **Devices** page with Auto-apply enabled. The correction-intensity slider could raise `ValueChanged` while WPF was still running `InitializeComponent()`, before the auto-apply timer existed.
-- Devices UI events now ignore XAML initialization and the timer is created before the visual tree is loaded.
-- Devices-page initialization is guarded so a future registry/status/UI error reports a message and log entry instead of terminating the entire AudioTune process.
-
-### Devices redesign / DSP auto-apply
-- Rebuilt **Devices** as a compact DSP control center based on the approved mockup: DSP target selector, status chips, visual signal chain, four primary DSP actions, concise DSP summary and a collapsed playback-device section.
-- Removed the large explanatory/warning text blocks from the normal Devices view; explanations now live behind small info buttons.
-- The detected playback-device section is collapsed by default and is now functional: any detected endpoint can be assigned directly as the AudioTune test output or DSP target.
-- Added **Auto-apply DSP changes** (enabled by default for new settings). Fine Tune ON/OFF and correction-intensity changes automatically rewrite an already-active persistent DSP for the same profile/device.
-- Auto-apply never silently creates new DSP routing, replaces a different profile, or turns an intentional level-matched bypass back on.
-- Fine Tune ON/OFF reports whether the Windows DSP was updated immediately or whether an update is pending.
-- Stereo Centering save also participates in the same safe auto-apply path.
-
-### Fine Tune → APO bugfix / diagnostics
-- Persistent DSP generation now receives the exact active `CorrectionPreset` object explicitly; it no longer re-resolves the preset between confirmation and file write.
-- Generated APO configuration now records `# Fine Tune state: ON/OFF` and the Fine Tune point count, so the applied state is visible directly in `AudioTune.txt`.
-- Devices shows the Fine Tune state used by DSP. Graph Fine Tune checkboxes are labeled as display-only to avoid confusing preview toggles with the actual preset master switch.
-
-
-- Added a large preset-level Fine Tune master switch. Disabling it preserves all fine-tune measurements but removes them from A/B playback and Equalizer APO until re-enabled.
-
-- Fine Tune display now replaces the L/R target curves with the final Fine-Tune-inclusive curves instead of drawing confusing delta lines.
-- Results can show the actual AudioTune → Equalizer APO transfer function, calculated from the exact fitted PK filters, applied preamp and stereo-centering channel trim.
-- The normal correction preview remains the desired target curve; the APO view is the actual generated DSP transfer.
-
-### DSP curve fitting / headroom fix
-- Parametric EQ filter gains are now fitted to the desired correction curve instead of copying each curve point directly into an overlapping PK filter.
-- Filter Q is derived from logarithmic band spacing; tightly packed 12.5–18 kHz filters are correspondingly narrower.
-- This prevents several neighbouring positive filters from stacking into a composite boost far above the visible correction curve.
-- Headroom continues to be calculated from the signed composite transfer response. Negative cuts therefore never count as positive clipping risk; they can only reduce the real composite peak where they overlap boosts.
-- The persistent-DSP confirmation now shows both the target-curve maximum boost and the actual fitted DSP peak.
-
-
-- Adds configurable **DSP preamp/headroom** under Settings: automatic safe mode or a manual `-12 … 0 dB` slider.
-- Adds an explicit clipping warning when a manual preamp is less negative than the calculated composite filter peak.
-- Adds optional **positive-boost limiting**: cuts remain unchanged while positive PEQ gains are scaled until the full cascade fits the selected preamp headroom.
-- Frequencies that are still not heard at the test ceiling are no longer dropped from correction. They receive the maximum allowed positive correction for that ear/preset intensity.
-- Fine Tuning is hidden from correction graphs by default. Enabling the Fine Tune preview replaces the normal left/right target with the final left/right correction including Fine Tune, without adding extra delta lines.
-- adds **Stereo Image Preservation** after threshold-model + Fine Tuning: the common tonal correction is retained while L/R correction differences are smoothed and limited in the localization-critical 150 Hz–5 kHz range;
-- the default maximum L/R correction difference is 2.0 dB in that range and can be adjusted or disabled under Settings; bass and upper treble are allowed progressively wider differences;
-- a ceiling result still keeps its maximum requested boost; when necessary the opposite channel is pulled closer instead of reducing the ceiling-side boost;
-- adds an optional **Stereo Centering** test using identical 300 Hz–4 kHz corrected noise. Its saved post-EQ balance trim only attenuates one side and never adds gain;
-- Equalizer APO and the internal A/B DSP use the same stereo-preserved filters and the same saved centering trim;
-- Results can optionally overlay the pre-stereo L/R curves for diagnostics.
-- The DSP path (A/B and Equalizer APO) still uses Fine Tuning when it exists; hiding it affects visualization only.
-
-AudioTune is a Windows C#/WPF prototype for end-to-end personal headphone hearing calibration. It measures left/right hearing thresholds from 30 Hz to 18 kHz, stores the raw measurements permanently, derives a personal correction preset, lets the result be verified with music, and can apply the same DSP persistently to a selected Windows playback endpoint through Equalizer APO.
-
-### Correction model v7
-
-The previous prototype compared every raw threshold against a flat median and scaled the difference. v0.4 replaces that provisional model:
-
-- raw hearing measurements remain unchanged and can always be reinterpreted by newer algorithms;
-- the median is now used only to align the unknown dBFS measurement scale with a frequency-dependent human threshold-shape prior;
-- the human sensitivity baseline uses the relative ISO 226:2023 threshold shape through 12.5 kHz;
-- AudioTune lowers population-model confidence at very low frequencies and above 10 kHz, where headphone coupling and individual variability make a population/free-field reference less transferable;
-- common L/R residuals and interaural differences are modeled separately;
-- large threshold differences use a saturating transfer instead of a linear `threshold difference = EQ gain` rule;
-- optional moderate-level Fine Tuning can add the user's own loudness-matching offsets to the correction preset;
-- frequencies not detected at the test ceiling are treated as thresholds beyond the measurable range and receive the maximum allowed positive correction instead of being silently excluded.
-
-The baseline is a psychoacoustic prior, not a clinical diagnosis and not a calibrated dB-HL audiogram.
-
-### Hearing-test verification
-
-- No catch trials are used.
-- Every actual Heard / Not Heard response is stored in the profile trial history.
-- After the main left/right test, AudioTune detects strong local outliers relative to neighboring frequencies.
-- Up to three suspicious frequencies per ear are automatically retested.
-- If a verification disagrees strongly with the initial result, exactly one additional verification is performed.
-- Initial and verification results remain stored; the final threshold receives High / Medium / Low confidence.
-- Completed points can still be manually retested individually from Hearing Test.
-
-### Hearing profiles vs correction presets
-
-These are now separate concepts:
-
-- **Hearing Profile** = raw device-bound measurement, trial history, verification data and measurement setup. It is never altered by tuning intensity.
-- **Correction Preset** = interpretation/tuning of one hearing profile, including correction intensity and optional Fine-Tune offsets.
-
-One long hearing test can therefore have multiple correction presets without duplicating or modifying the raw measurement.
-
-### Optional Fine Tuning
-
-The new Fine Tuning page performs a shorter moderate-level loudness comparison after the threshold test. It alternates a 1 kHz reference with selected target frequencies for each ear. The user adjusts the test frequency quieter/louder until the pair sounds approximately equally loud, then stores that offset in the active correction preset.
-
-This step is optional. Skipping it leaves correction model v7 to make a conservative estimate from the threshold profile. Fine Tune can be included or excluded in the correction preview; the graph always remains a single left/right final-curve view rather than drawing separate delta lines.
-
-### One DSP definition for music A/B and Windows
-
-A/B music playback and Equalizer APO now use the same set of parametric EQ filters. The previous A/B approximation and Windows GraphicEQ path have been removed.
-
-Headroom is calculated from the **composite response of the entire cascaded filter set** over the audible band. There is no additional fixed 0.5 dB safety margin. By default AudioTune automatically applies an equal negative preamp. Settings can switch to a manual preamp; AudioTune then warns about potential overshoot. An optional protection switch scales only positive PEQ gains until the complete cascade fits the selected headroom. Level-matched bypass always retains the same selected preamp so comparison does not jump in volume.
-
-### Device-path protection
-
-End-to-end hearing profiles remember the Windows playback endpoint used during measurement. Applying a profile to a different DSP endpoint now produces a clear warning before AudioTune allows the override.
-
-### Persistent Windows DSP
-
-Under **Devices** AudioTune provides:
-
-- separate test-output and DSP-target selection;
-- a visual signal path: test output → hearing profile/preset → DSP → target;
-- Equalizer APO installation / endpoint registration status;
-- correction intensity and calculated composite headroom;
-- persistent correction;
-- persistent level-matched bypass;
-- removal of AudioTune DSP from one selected endpoint;
-- per-device Equalizer APO configuration that remains active after reboot without AudioTune running.
-
-The top bar also reports **ACTIVE**, **BYPASS**, **UPDATE**, or **OFF** for the current AudioTune system-DSP state.
-
-### Profiles and measurement metadata
-
-Profiles can be renamed, imported, exported, duplicated as protected copies, archived/unarchived, restored from the previous `.bak` revision, compared with the active profile, and reopened for point-by-point retesting.
-
-New profiles store schema/app/test-protocol/correction-model versions, output endpoint ID/name, AudioTune reference-session volume, observed Windows master volume, sample rate, audio API, headphone ID and raw trial/verification data.
-
-Saved hearing data remains under:
-
-```text
-%LOCALAPPDATA%\AudioTune\Profiles
-%LOCALAPPDATA%\AudioTune\CorrectionPresets
-```
-
-Updating or uninstalling the application does not intentionally delete those user-data folders.
-
-## Build from source
-
-Requires the .NET 10 SDK and Visual Studio Build Tools with **Desktop development with C++**. From Windows PowerShell 5.1:
-
-```powershell
-.\build.ps1
-.\run.ps1
-```
-
-`run.ps1` starts the built `AudioTune.exe` as an independent GUI process; the PowerShell window can then be closed.
-
-## Publish the Windows application payload
-
-```powershell
-.\publish.ps1
-```
-
-This creates a framework-dependent, single-file Windows x64 application payload under:
-
-```text
-publish\win-x64
-```
-
-The publish script fails if private .NET runtime files are found in the application payload. The packaged setup supplies the official runtime prerequisite separately.
-
-## Build AudioTuneSetup.exe
-
-Run:
-
-```powershell
-.\build-installer.ps1
-```
-
-The script downloads and verifies the official .NET 10 Desktop Runtime prerequisite, bootstraps the signed Inno Setup 6 compiler into a repository-local cache when necessary, and then builds:
-
-```text
-dist\AudioTuneSetup-0.4.16-alpha.exe
-```
-
-The offline installer creates normal Start-menu integration, optionally a desktop shortcut, and does **not** add AudioTune to Windows startup. It installs the .NET Desktop Runtime only when no compatible .NET 10 Windows Desktop Runtime is present. Old self-contained runtime files are removed from the AudioTune program directory during upgrades. Persistent correction is handled by Equalizer APO and therefore does not require AudioTune to run in the background.
-
-## Optional profile backup before upgrading
-
-```powershell
-.\backup-profiles.ps1
-```
-
-## Important measurement note
-
-AudioTune's threshold values are relative digital levels in dBFS for the complete device/headphone/ear chain. They are not clinical dB HL measurements. Keep the Windows/device volume and any external amplifier gain unchanged when comparing measurement sessions.
-
-Headphone frequency-response compensation remains disabled for now, as requested. The current workflow is end-to-end calibration of the measured signal path.
+AudioTune includes AGPL-3.0 FxSound code. See [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md).
