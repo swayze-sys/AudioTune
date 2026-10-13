@@ -45,4 +45,4 @@ The existing WPF project, its build scripts and the older architecture/testing d
 
 The current WinUI development source remains private. GitHub's automatically generated source archives correspond to the public historical source, not the current installer.
 
-The screenshot in the README was captured from the actual 0.4.127 executable using fully synthetic profile data; no real hearing profile or audio recording is published.
+The README uses a promotional image supplied by the project author, showing AudioTune 0.4.127 and its overview, spectrum and processing chain.

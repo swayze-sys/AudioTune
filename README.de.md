@@ -6,9 +6,9 @@
 
 [**Windows-Setup herunterladen**](https://github.com/swayze-sys/AudioTune/releases/download/v0.4.127/AudioTuneSetup-0.4.127.exe) · [Versionshinweise](https://github.com/swayze-sys/AudioTune/releases/tag/v0.4.127) · [English](README.md) · [Installation und Hilfe](Documentation/CURRENT_RELEASE.md)
 
-![AudioTune 0.4.127 — Hörmessungen und persönliche Korrektur in der neuen Windows-Oberfläche](Documentation/Images/AudioTune-0.4.127.png)
+![AudioTune 0.4.127 — Übersicht, Live-Spektrum und Verarbeitungskette](Documentation/Images/AudioTune-0.4.127-GitHub.png)
 
-*Echte Oberfläche der Version 0.4.127 mit erfundenen Demomessungen. Das Bild enthält keine persönlichen Hördaten; Wiedergabe und systemweite DSP-Änderungen sind in dieser Demonstration gesperrt.*
+*AudioTune 0.4.127 — vom Projektautor bereitgestelltes Präsentationsbild mit Übersicht, Spektrum und Verarbeitungskette.*
 
 ## Die wichtigsten Neuerungen seit 0.4.18
 
